@@ -3,23 +3,23 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gestión de Quirófanos – VIOS</title>
+  <title>Gestión de Quirófanos – QuirófanosH9O</title>
 
   
   <!-- Iconos / previsualización al compartir -->
-  <meta name="description" content="Gestión de quirófanos: parrilla, lista de espera y herramientas de coordinación – VIOS" />
+  <meta name="description" content="Gestión de quirófanos: parrilla, lista de espera y herramientas de coordinación – QuirófanosH9O." />
 
   <link rel="icon" type="image/png" href="https://ceovlnst.github.io/vios/og-image.png" />
   <link rel="apple-touch-icon" href="https://ceovlnst.github.io/vios/og-image.png" />
 
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Gestión de Quirófanos – VIOS" />
+  <meta property="og:title" content="Gestión de Quirófanos – QuirófanosH9O" />
   <meta property="og:description" content="Parrilla de quirófanos, lista de espera y coordinación." />
   <meta property="og:image" content="https://ceovlnst.github.io/vios/og-image.png" />
   <meta property="og:url" content="https://ceovlnst.github.io/vios/" />
 
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Gestión de Quirófanos – VIOS" />
+  <meta name="twitter:title" content="Gestión de Quirófanos – QuirófanosH9O" />
   <meta name="twitter:description" content="Parrilla de quirófanos, lista de espera y coordinación." />
   <meta name="twitter:image" content="https://ceovlnst.github.io/vios/og-image.png" />
 <style>
@@ -1164,7 +1164,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
         <img class="logo" src="https://ceovlnst.github.io/vios/og-image.png" alt="QuirófanosH9O" />
         <div>
           <h1>QuirófanosH9O</h1>
-          <small id="appSubtitle">Hospital Vithas 9 de Octubre</small>
+          <small id="appSubtitle">Solicitud de quirófano</small>
         </div>
       </div>
 
@@ -1405,7 +1405,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
               <div class="row">
                 <div style="flex:1;min-width:240px">
-                  <label>Quirófano</label>
+                  <label>Ubicación</label>
                   <select id="stOr"></select>
                 </div>
                 <div style="width:160px">
@@ -1644,7 +1644,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
     </div>
 
     <div class="field">
-      <label>Quirófano</label>
+      <label>Ubicación</label>
       <select id="mfOr"></select>
     </div>
 
@@ -1675,13 +1675,8 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 <script>
   // ===== CONSTANTES FRONT =====
   const OR_LIST = [
-    "Sótano 1","Sótano 2","Sótano 3","Sótano 4","Sótano 5","Sótano 6",
-    "Quirófano Híbrido",
-    "Centrales 1","Centrales 2","Centrales 3","Centrales 4","Centrales 5","Centrales 6","Centrales 7","Centrales 8",
-    "Maternidad 1","Maternidad 2","Maternidad 3",
-    "Urgencias",
-    "Paritorio 1","Paritorio 2"
-  ];
+  "Consulta 9", "Consulta 10", "Consulta 11", "Consulta 12", "Consulta 13", "Consulta 14", "Quirófano 1", "Quirófano 2"
+];
 
   const SPECIALTIES = [
     "Traumatología y Cirugía Ortopédica",
@@ -2200,7 +2195,7 @@ S.doctor = doc;
         const wrap = $("mineBox");
         const table = document.createElement("table");
         const thead = document.createElement("thead");
-        thead.innerHTML = "<tr><th>Fecha</th><th>Hora</th><th>Fin</th><th>Quirófano</th><th>Título</th><th></th></tr>";
+        thead.innerHTML = "<tr><th>Fecha</th><th>Hora</th><th>Fin</th><th>Ubicación</th><th>Título</th><th></th></tr>";
         table.appendChild(thead);
         const tbody = document.createElement("tbody");
         list.forEach(r=>{
@@ -2282,7 +2277,7 @@ S.doctor = doc;
     const thead = document.createElement("thead");
     const trh = document.createElement("tr");
     const thOr = document.createElement("th");
-    thOr.textContent = "Quirófano";
+    thOr.textContent = "Ubicación";
     trh.appendChild(thOr);
 
     data.hoursOrder.forEach(h=>{
@@ -3102,7 +3097,7 @@ function renderStructFiltersAndList(){
 
     const table = document.createElement("table");
     const thead = document.createElement("thead");
-    thead.innerHTML = "<tr><th>ID</th><th>Equipo</th><th>Quirófano</th><th>Inicio</th><th>Fin</th><th>Hora</th><th>Duración</th><th>Cadencia</th><th>Días</th></tr>";
+    thead.innerHTML = "<tr><th>ID</th><th>Equipo</th><th>Ubicación</th><th>Inicio</th><th>Fin</th><th>Hora</th><th>Duración</th><th>Cadencia</th><th>Días</th></tr>";
     table.appendChild(thead);
     const tbody = document.createElement("tbody");
 
