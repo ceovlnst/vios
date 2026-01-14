@@ -1194,6 +1194,20 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
         <div class="hr"></div>
 
+        <h3 style="margin:0 0 8px 0">¿Olvidaste tu PIN?</h3>
+        <div class="row" style="gap:10px;flex-wrap:wrap;align-items:flex-end">
+          <div style="flex:1;min-width:240px">
+            <label>Email</label>
+            <input id="recoverEmail" type="email" placeholder="tuemail@dominio.com" />
+          </div>
+          <div class="actions" style="margin-top:26px">
+            <button class="btn" id="btnRecoverPin">Enviar PIN</button>
+          </div>
+        </div>
+        <div id="msgRecover" class="msg hide"></div>
+
+        <div class="hr"></div>
+
         <div class="actions">
           <button class="btn" id="btnToggleSignup">Darme de alta</button>
         </div>
@@ -1275,6 +1289,49 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
           <div class="hint">Nota: si olvidas la salida, la sesión quedará como <b>ABIERTA</b> hasta que registres la siguiente salida.</div>
           <div id="timeReportBox" style="margin-top:10px"></div>
+
+          <div class="hr"></div>
+
+          <h3 style="margin:0 0 8px 0">Cambiar mi PIN</h3>
+          <div class="row" style="align-items:flex-end;gap:12px;flex-wrap:wrap">
+            <div style="flex:1;min-width:200px">
+              <label>Nuevo PIN</label>
+              <input id="newPin" type="password" inputmode="numeric" placeholder="4-10 dígitos" />
+            </div>
+            <div style="flex:1;min-width:200px">
+              <label>Repetir nuevo PIN</label>
+              <input id="newPin2" type="password" inputmode="numeric" placeholder="Repite el PIN" />
+            </div>
+            <div class="actions" style="margin-top:26px">
+              <button class="btn" id="btnChangePin">Actualizar PIN</button>
+            </div>
+          </div>
+          <div id="msgChangePin" class="msg hide"></div>
+
+          <div id="masterTimeSection" class="hide">
+            <div class="hr"></div>
+            <h3 style="margin:0 0 8px 0">Reporte mensual (todos - Master)</h3>
+            <div class="row" style="align-items:flex-end;gap:12px;flex-wrap:wrap">
+              <div style="flex:1;min-width:220px">
+                <label>Mes</label>
+                <input id="allTimeMonth" type="month" />
+              </div>
+              <div style="flex:1;min-width:280px">
+                <label>Usuario</label>
+                <select id="allTimeUser">
+                  <option value="ALL">Todos</option>
+                </select>
+              </div>
+              <div class="actions" style="margin-top:26px">
+                <button class="btn primary" id="btnLoadAllTimeReport">Generar</button>
+                <button class="btn" id="btnDownloadAllTimeCSV">Descargar CSV</button>
+                <button class="btn" id="btnDownloadAllTimeXLSX">Descargar XLSX</button>
+              </div>
+            </div>
+            <div id="msgAllTime" class="msg hide"></div>
+            <div id="allTimeReportBox" style="margin-top:10px"></div>
+          </div>
+
         </div>
 
         <!-- USER: RESERVAR -->
@@ -1811,7 +1868,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
   }
   function hideAllViews(){
-    ["viewWelcome","viewReserve","viewMine","viewGrid","viewStruct","viewWait","viewReport","viewGroups"]
+    ["viewWelcome","viewReserve","viewMine","viewTime","viewGrid","viewStruct","viewWait","viewReport","viewGroups"]
       .forEach(v => $(v).classList.add("hide"));
   }
   function go(viewId){
@@ -2287,15 +2344,8 @@ S.doctor = doc;
 
   
   // ===== CONTROL HORARIO (USUARIO) =====
-  function initTimeView(){
-    hideMsg($("msgTime"));
-    $("timeReportBox").innerHTML = "";
-    // mes actual por defecto
-    const d = new Date();
-    const ym = d.toISOString().slice(0,7);
-    if($("timeMonth") && !$("timeMonth").value) $("timeMonth").value = ym;
-    refreshTimeStatus();
-  }
+  
+
 
   function refreshTimeStatus(){
     if(!S.pin) return;
@@ -2410,6 +2460,269 @@ S.doctor = doc;
 
     S._lastTimeReport = { month: res?.month||"", rows };
   }
+
+
+  function recoverPin(){
+    hideMsg($("msgRecover"));
+    const email = ($("recoverEmail")?.value || "").trim();
+    if(!email) return showMsg($("msgRecover"), "Introduce tu email.", "warn");
+    callGAS("recoverPinByEmail", [email], {
+      key:"recoverPin",
+      disable:[$("btnRecoverPin")],
+      msg:"Enviando PIN…",
+      onSuccess:(res)=>{
+        showMsg($("msgRecover"), res?.message || "Revisa tu correo.", "ok");
+      },
+      onFailure:(e)=> showMsg($("msgRecover"), e?.message || String(e), "bad")
+    });
+  }
+
+  function changePin(){
+    hideMsg($("msgChangePin"));
+    const p1 = ($("newPin")?.value || "").trim();
+    const p2 = ($("newPin2")?.value || "").trim();
+    if(!p1 || !p2) return showMsg($("msgChangePin"), "Introduce el nuevo PIN dos veces.", "warn");
+    if(p1 !== p2) return showMsg($("msgChangePin"), "Los PIN no coinciden.", "warn");
+
+    callGAS("changeMyPin", [S.pin, p1], {
+      key:"changePin",
+      disable:[$("btnChangePin")],
+      msg:"Actualizando PIN…",
+      onSuccess:(res)=>{
+        // Actualiza estado local
+        S.pin = p1;
+        $("pinInput").value = p1;
+        setSessionPill();
+        showMsg($("msgChangePin"), res?.message || "PIN actualizado.", "ok");
+        $("newPin").value = "";
+        $("newPin2").value = "";
+      },
+      onFailure:(e)=> showMsg($("msgChangePin"), e?.message || String(e), "bad")
+    });
+  }
+
+  function initTimeView(){
+    // asegura que el month picker tenga mes actual por defecto
+    const now = new Date();
+    const ym = now.toISOString().slice(0,7);
+    if($("timeMonth") && !$("timeMonth").value) $("timeMonth").value = ym;
+    if($("allTimeMonth") && !$("allTimeMonth").value) $("allTimeMonth").value = ym;
+
+    // mostrar sección master
+    $("masterTimeSection")?.classList.toggle("hide", !S.isMaster);
+    if(S.isMaster) refreshMasterUsers();
+
+    refreshTimeStatus();
+  }
+
+  function loadAllTimeReport(){
+    hideMsg($("msgAllTime"));
+    const ym = ($("allTimeMonth")?.value || "").trim();
+    if(!ym) return showMsg($("msgAllTime"), "Selecciona un mes.", "warn");
+
+    const u = ($("allTimeUser")?.value || "ALL").trim();
+
+    callGAS("masterGetMonthlyTimeReport", [S.pin, ym, u, false], {
+      key:"allTimeReport",
+      disable:[$("btnLoadAllTimeReport")],
+      msg:"Generando reporte (Master)…",
+      onSuccess:(res)=> renderAllTimeReport(res),
+      onFailure:(e)=> showMsg($("msgAllTime"), e?.message || String(e), "bad")
+    });
+  }
+
+  function renderAllTimeReport(res){
+    const box = $("allTimeReportBox");
+    if(!box) return;
+    box.innerHTML = "";
+    const users = res?.users || [];
+    if(!users.length){
+      const d = document.createElement("div");
+      d.className = "msg warn";
+      d.textContent = "No hay fichajes para ese mes.";
+      box.appendChild(d);
+      S._lastAllTimeReport = { month: res?.month||"", users: [] };
+      return;
+    }
+
+    const table = document.createElement("table");
+    table.className = "tbl";
+    table.innerHTML = `
+      <thead><tr>
+        <th>PIN</th><th>Nombre</th><th>Correo</th><th>Horas</th>
+      </tr></thead>
+    `;
+    const tbody = document.createElement("tbody");
+    users.forEach(u=>{
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${escapeHtml(u.pin||"")}</td>
+        <td>${escapeHtml(u.nombre||"")}</td>
+        <td>${escapeHtml(u.correo||"")}</td>
+        <td>${escapeHtml(String(u.totalHours ?? ""))}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    box.appendChild(table);
+
+    S._lastAllTimeReport = { month: res?.month||"", users };
+  }
+
+  
+  // XLSX (server-side) para entornos donde el CDN está bloqueado
+  async function downloadAllTimeXLSX_Server(){
+    try{
+      if(!S || !S.pin){
+        showMsg($("msgAllTime"), "No hay sesión activa.", "err"); return;
+      }
+      const month = ($("allTimeMonth") && $("allTimeMonth").value) ? $("allTimeMonth").value : monthNow();
+      const userPin = ($("allTimeUser") && $("allTimeUser").value) ? $("allTimeUser").value : "ALL";
+      const res = await callGASAsync("getMasterTimeReportXlsx", [S.pin, month, userPin]);
+      if(!res || !res.ok){
+        showMsg($("msgAllTime"), res?.error || "No se pudo generar el XLSX.", "err"); return;
+      }
+      const b64 = res.b64;
+      const mime = res.mime || "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+      const filename = res.filename || ("reporte_horas_" + month + ".xlsx");
+      const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+      const blob = new Blob([bytes], {type:mime});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url), 2000);
+      showMsg($("msgAllTime"), "✅ XLSX descargado.", "ok");
+    }catch(e){
+      showMsg($("msgAllTime"), "❌ " + (e?.message || String(e)), "err");
+    }
+  }
+
+function downloadAllTimeCSV(){
+    hideMsg($("msgAllTime"));
+    const ym = ($("allTimeMonth")?.value || "").trim();
+    const u = ($("allTimeUser")?.value || "ALL").trim();
+    if(!ym) return showMsg($("msgAllTime"), "Selecciona un mes.", "warn");
+
+    callGAS("masterGetMonthlyTimeReport", [S.pin, ym, u, false], {
+      key:"allTimeCsv",
+      disable:[$("btnDownloadAllTimeCSV")],
+      msg:"Generando CSV…",
+      onSuccess:(res)=>{
+        const users = res?.users || [];
+        const header = ["Mes","PIN","Nombre","Correo","Horas"].join(",");
+        const lines = [header];
+        users.forEach(r=>{
+          const row = [
+            res?.month || ym,
+            r.pin||"",
+            (r.nombre||"").replaceAll('"','""'),
+            (r.correo||"").replaceAll('"','""'),
+            String(r.totalHours ?? "").replace(".", ",")
+          ];
+          // escapamos campos con comas
+          const safe = row.map(v=>{
+            const s = String(v ?? "");
+            return (s.includes(",") || s.includes('"') || s.includes("\n")) ? `"${s.replaceAll('"','""')}"` : s;
+          });
+          lines.push(safe.join(","));
+        });
+        const csv = lines.join("\n");
+        const blob = new Blob([csv], { type:"text/csv;charset=utf-8" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `control_horario_master_${u==="ALL"?"TODOS":u}_${ym}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      },
+      onFailure:(e)=> showMsg($("msgAllTime"), e?.message || String(e), "bad")
+    });
+  }
+
+
+
+
+  async function refreshMasterUsers(){
+    if(!S.isMaster) return;
+    const sel = $("allTimeUser");
+    if(!sel) return;
+    // Si ya se cargó y no está vacío, no machacamos (pero mantenemos "Todos")
+    if(sel.options.length > 1) return;
+
+    callGAS("masterListUsers", [S.pin], {
+      key:"masterListUsers",
+      msg:"Cargando usuarios…",
+      onSuccess:(users)=>{
+        const list = Array.isArray(users) ? users : [];
+        // limpiamos dejando "Todos"
+        sel.innerHTML = `<option value="ALL">Todos</option>`;
+        list.forEach(u=>{
+          const opt = document.createElement("option");
+          opt.value = u.pin;
+          opt.textContent = `${u.nombre || u.pin}${u.correo ? " · "+u.correo : ""} (${u.pin})`;
+          sel.appendChild(opt);
+        });
+      },
+      onFailure:(e)=>{
+        // no bloqueamos la UI, solo avisamos
+        showMsg($("msgAllTime"), e?.message || String(e), "warn");
+      }
+    });
+  }
+
+  function downloadAllTimeXLSX(){
+    hideMsg($("msgAllTime"));
+    const ym = ($("allTimeMonth")?.value || "").trim();
+    const u = ($("allTimeUser")?.value || "ALL").trim();
+    if(!ym) return showMsg($("msgAllTime"), "Selecciona un mes.", "warn");
+    if(typeof XLSX === "undefined") return showMsg($("msgAllTime"), "No se ha podido cargar la librería XLSX.", "bad");
+
+    callGAS("masterGetMonthlyTimeReport", [S.pin, ym, u, true], {
+      key:"allTimeXlsx",
+      disable:[$("btnDownloadAllTimeXLSX")],
+      msg:"Generando XLSX…",
+      onSuccess:(res)=>{
+        const month = res?.month || ym;
+        const users = res?.users || [];
+
+        // Hoja 1: Resumen
+        const summary = [["Mes","PIN","Nombre","Correo","Horas"]];
+        users.forEach(r=>{
+          summary.push([month, r.pin||"", r.nombre||"", r.correo||"", r.totalHours ?? ""]);
+        });
+
+        // Hoja 2: Detalle de sesiones (si viene)
+        const detail = [["Mes","PIN","Nombre","Entrada (ISO)","Salida (ISO)","Horas"]];
+        users.forEach(r=>{
+          const sessions = Array.isArray(r.sessions) ? r.sessions : [];
+          if(!sessions.length){
+            // si está filtrado por un usuario, puede ser útil dejar una fila vacía
+            return;
+          }
+          sessions.forEach(s=>{
+            detail.push([month, r.pin||"", r.nombre||"", s.in||"", s.out||"", s.hours ?? ""]);
+          });
+        });
+
+        const wb = XLSX.utils.book_new();
+        const ws1 = XLSX.utils.aoa_to_sheet(summary);
+        XLSX.utils.book_append_sheet(wb, ws1, "Resumen");
+
+        // Solo añadimos detalle si hay filas > header
+        if(detail.length > 1){
+          const ws2 = XLSX.utils.aoa_to_sheet(detail);
+          XLSX.utils.book_append_sheet(wb, ws2, "Detalle");
+        }
+
+        const filename = `control_horario_master_${u==="ALL"?"TODOS":u}_${month}.xlsx`;
+        XLSX.writeFile(wb, filename);
+      },
+      onFailure:(e)=> showMsg($("msgAllTime"), e?.message || String(e), "bad")
+    });
+  }
+
+
 
   function downloadTimeCSV(){
     const rep = S._lastTimeReport || null;
@@ -2837,6 +3150,12 @@ $("modalBack").classList.add("hide");
   }
 }
 
+
+  function callGASAsync(fn, args){
+    return new Promise((resolve)=>{
+      callGAS(fn, args, { key:"async_"+fn, onOk: resolve, onErr: (e)=>resolve({ok:false,error:e?.message||String(e)}) });
+    });
+  }
   function openModalFree(ctx){
     const body = `
       Hueco libre\n
@@ -4755,6 +5074,7 @@ function openStructReportBlockModal(info){
 
     if($("btnToggleSignup")) $("btnToggleSignup").onclick = toggleSignup;
     if($("btnSignup")) $("btnSignup").onclick = signup;
+    if($("btnRecoverPin")) $("btnRecoverPin").onclick = recoverPin;
 
     if($("btnGoReserve")) $("btnGoReserve").onclick = ()=>go("viewReserve");
     if($("btnGoMine")) $("btnGoMine").onclick    = ()=>go("viewMine");
@@ -4769,7 +5089,14 @@ function openStructReportBlockModal(info){
     if($("btnGoWait")) $("btnGoWait").onclick    = openWaitlist;
     if($("btnGoReport")) $("btnGoReport").onclick  = ()=>go("viewReport");
 
-    
+
+    // Control horario - extra
+    if($("btnChangePin")) $("btnChangePin").onclick = changePin;
+    if($("btnLoadAllTimeReport")) $("btnLoadAllTimeReport").onclick = loadAllTimeReport;
+    if($("btnDownloadAllTimeCSV")) $("btnDownloadAllTimeCSV").onclick = downloadAllTimeCSV;
+    if($("btnDownloadAllTimeXLSX")) $("btnDownloadAllTimeXLSX").onclick = downloadAllTimeXLSX_Server;
+
+
 
     if($("btnCheckSlots")) $("btnCheckSlots").onclick = checkSlots;
     if($("btnOpenWaitlistFromReserve")) $("btnOpenWaitlistFromReserve").onclick = openWaitlistFromReserve;
