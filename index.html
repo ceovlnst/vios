@@ -1220,6 +1220,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
           <button class="btn hide" id="btnGoReserve">Solicitar quirófano</button>
           <button class="btn hide" id="btnGoMine">Mis solicitudes</button>
 
+          <button class="btn hide" id="btnGoTime">Control horario</button>
           <button class="btn hide" id="btnGoGrid">Calendario</button>
           <button class="btn hide" id="btnGoStruct">Gestor de Actividad</button>
           <button class="btn hide" id="btnGoWait">Lista de espera</button>
@@ -1231,8 +1232,53 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
       <!-- RIGHT -->
       <div class="rightCol">
+
 <div class="card">
+        <!-- USER: CONTROL HORARIO -->
+        <div id="viewTime" class="hide">
+          <h2>Control horario</h2>
+
+          <div class="row" style="align-items:flex-end;gap:12px;flex-wrap:wrap">
+            <div class="pill" style="padding:10px 12px">
+              <small>Estado</small> <span id="timeState">—</span>
+              <small style="margin-left:10px">Último</small> <span id="timeLast">—</span>
+            </div>
+          </div>
+
+          <div class="row" style="align-items:flex-end;gap:12px;flex-wrap:wrap">
+            <div style="flex:1;min-width:260px">
+              <label>Nota (opcional)</label>
+              <input id="timeNote" placeholder="Ej: reunión, guardia, salida a quirófano…" />
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn good" id="btnPunchIn">Entrada</button>
+            <button class="btn bad" id="btnPunchOut">Salida</button>
+          </div>
+
+          <div id="msgTime" class="msg hide"></div>
+
+          <div class="hr"></div>
+
+          <h3 style="margin:0 0 8px 0">Mi reporte mensual</h3>
+          <div class="row" style="align-items:flex-end;gap:12px;flex-wrap:wrap">
+            <div style="flex:1;min-width:240px">
+              <label>Mes</label>
+              <input id="timeMonth" type="month" />
+            </div>
+            <div class="actions" style="margin-top:26px">
+              <button class="btn primary" id="btnLoadTimeReport">Generar</button>
+              <button class="btn" id="btnDownloadTimeCSV">Descargar CSV</button>
+            </div>
+          </div>
+
+          <div class="hint">Nota: si olvidas la salida, la sesión quedará como <b>ABIERTA</b> hasta que registres la siguiente salida.</div>
+          <div id="timeReportBox" style="margin-top:10px"></div>
+        </div>
+
         <!-- USER: RESERVAR -->
+
         <div id="viewReserve" class="hide">
           <h2>Gestor de Actividad</h2>
           <div class="row">
@@ -1804,6 +1850,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
     const master = isMaster();
     $("btnGoReserve").classList.toggle("hide", !S.pin || master);
     $("btnGoMine").classList.toggle("hide", !S.pin || master);
+    $("btnGoTime").classList.toggle("hide", !S.pin || master);
 
     $("btnGoGrid").classList.toggle("hide", !S.pin);
 
@@ -2238,7 +2285,169 @@ S.doctor = doc;
     });
   }
 
-  // ===== GRID =====
+  
+  // ===== CONTROL HORARIO (USUARIO) =====
+  function initTimeView(){
+    hideMsg($("msgTime"));
+    $("timeReportBox").innerHTML = "";
+    // mes actual por defecto
+    const d = new Date();
+    const ym = d.toISOString().slice(0,7);
+    if($("timeMonth") && !$("timeMonth").value) $("timeMonth").value = ym;
+    refreshTimeStatus();
+  }
+
+  function refreshTimeStatus(){
+    if(!S.pin) return;
+    callGAS("getPunchStatus", [S.pin], {
+      key:"punchStatus",
+      msg:"Actualizando estado…",
+      onSuccess:(res)=>{
+        const state = res?.state || "—";
+        $("timeState").textContent = state;
+        $("timeLast").textContent = res?.lastWhenISO ? new Date(res.lastWhenISO).toLocaleString("es-ES") : "—";
+
+        const active = (String(state).toUpperCase()==="ACTIVO");
+        $("btnPunchIn").disabled = active;
+        $("btnPunchOut").disabled = !active;
+      },
+      onFailure:(e)=>{
+        showMsg($("msgTime"), e?.message || String(e), "bad");
+      }
+    });
+  }
+
+  function doPunchIn(){
+    hideMsg($("msgTime"));
+    const note = ($("timeNote").value || "").trim();
+    callGAS("punchIn", [S.pin, note, navigator.userAgent], {
+      key:"punchIn",
+      disable:[$("btnPunchIn"), $("btnPunchOut")],
+      msg:"Registrando entrada…",
+      onSuccess:(res)=>{
+        showMsg($("msgTime"), res?.message || "Entrada registrada.", "ok");
+        refreshTimeStatus();
+      },
+      onFailure:(e)=> showMsg($("msgTime"), e?.message || String(e), "bad")
+    });
+  }
+
+  function doPunchOut(){
+    hideMsg($("msgTime"));
+    const note = ($("timeNote").value || "").trim();
+    callGAS("punchOut", [S.pin, note, navigator.userAgent], {
+      key:"punchOut",
+      disable:[$("btnPunchIn"), $("btnPunchOut")],
+      msg:"Registrando salida…",
+      onSuccess:(res)=>{
+        showMsg($("msgTime"), res?.message || "Salida registrada.", "ok");
+        refreshTimeStatus();
+      },
+      onFailure:(e)=> showMsg($("msgTime"), e?.message || String(e), "bad")
+    });
+  }
+
+  function loadTimeReport(){
+    hideMsg($("msgTime"));
+    const ym = ($("timeMonth").value || "").trim();
+    if(!ym) return showMsg($("msgTime"), "Selecciona un mes.", "warn");
+
+    callGAS("getMonthlyTimeReport", [S.pin, ym], {
+      key:"timeReport",
+      disable:[$("btnLoadTimeReport")],
+      msg:"Generando reporte…",
+      onSuccess:(res)=>{
+        renderTimeReport(res);
+      },
+      onFailure:(e)=> showMsg($("msgTime"), e?.message || String(e), "bad")
+    });
+  }
+
+  function renderTimeReport(res){
+    const box = $("timeReportBox");
+    box.innerHTML = "";
+    const rows = res?.rows || [];
+    const total = res?.totalHours ?? 0;
+
+    const head = document.createElement("div");
+    head.className = "pill";
+    head.style.padding = "10px 12px";
+    head.innerHTML = `<small>Total</small> <span>${escapeHtml(String(total))} h</span> <small style="margin-left:10px">Mes</small> <span>${escapeHtml(res?.month||"")}</span>`;
+    box.appendChild(head);
+
+    if(!rows.length){
+      const d = document.createElement("div");
+      d.className = "msg warn";
+      d.textContent = "No hay fichajes en ese mes.";
+      d.style.marginTop = "10px";
+      box.appendChild(d);
+      S._lastTimeReport = { month: res?.month||"", rows: [] };
+      return;
+    }
+
+    const table = document.createElement("table");
+    table.style.marginTop = "10px";
+    const thead = document.createElement("thead");
+    thead.innerHTML = "<tr><th>Día</th><th>Entrada</th><th>Salida</th><th>Horas</th><th>Estado</th></tr>";
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    rows.forEach(r=>{
+      const tr = document.createElement("tr");
+      const inTxt = r.inISO ? new Date(r.inISO).toLocaleString("es-ES") : "";
+      const outTxt = r.outISO ? new Date(r.outISO).toLocaleString("es-ES") : "";
+      tr.innerHTML = `
+        <td>${escapeHtml(r.day||"")}</td>
+        <td>${escapeHtml(inTxt)}</td>
+        <td>${escapeHtml(outTxt)}</td>
+        <td>${escapeHtml(String(r.hours ?? ""))}</td>
+        <td>${escapeHtml(r.status||"")}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    box.appendChild(table);
+
+    S._lastTimeReport = { month: res?.month||"", rows };
+  }
+
+  function downloadTimeCSV(){
+    const rep = S._lastTimeReport || null;
+    if(!rep || !rep.rows || !rep.rows.length){
+      return showMsg($("msgTime"), "Primero genera el reporte del mes para poder descargar.", "warn");
+    }
+
+    const rows = rep.rows;
+    const header = ["Dia","EntradaISO","SalidaISO","Horas","Estado","SessionId"];
+    const lines = [header.join(",")];
+    rows.forEach(r=>{
+      const line = [
+        (r.day||""),
+        (r.inISO||""),
+        (r.outISO||""),
+        (r.hours ?? ""),
+        (r.status||""),
+        (r.sessionId||"")
+      ].map(v=>{
+        const s = String(v);
+        if(/[",\n]/.test(s)) return '"' + s.replace(/"/g,'""') + '"';
+        return s;
+      }).join(",");
+      lines.push(line);
+    });
+
+    const csv = lines.join("\n");
+    const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
+    const a = document.createElement("a");
+    const ym = rep.month || "reporte";
+    a.href = URL.createObjectURL(blob);
+    a.download = `control_horario_${ym}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+// ===== GRID =====
   function loadGrid(){
     hideMsg($("msgGrid"));
     $("gridBox").innerHTML = "";
@@ -4549,6 +4758,7 @@ function openStructReportBlockModal(info){
 
     if($("btnGoReserve")) $("btnGoReserve").onclick = ()=>go("viewReserve");
     if($("btnGoMine")) $("btnGoMine").onclick    = ()=>go("viewMine");
+    if($("btnGoTime")) $("btnGoTime").onclick    = ()=>{ go("viewTime"); initTimeView(); };
     if($("btnGoGrid")) $("btnGoGrid").onclick    = ()=>{ go("viewGrid"); loadGrid(); };
     if($("btnGoStruct")) $("btnGoStruct").onclick  = ()=>{
       go("viewStruct");
@@ -4564,6 +4774,10 @@ function openStructReportBlockModal(info){
     if($("btnCheckSlots")) $("btnCheckSlots").onclick = checkSlots;
     if($("btnOpenWaitlistFromReserve")) $("btnOpenWaitlistFromReserve").onclick = openWaitlistFromReserve;
     if($("btnLoadMine")) $("btnLoadMine").onclick = loadMine;
+    if($("btnPunchIn")) $("btnPunchIn").onclick = doPunchIn;
+    if($("btnPunchOut")) $("btnPunchOut").onclick = doPunchOut;
+    if($("btnLoadTimeReport")) $("btnLoadTimeReport").onclick = loadTimeReport;
+    if($("btnDownloadTimeCSV")) $("btnDownloadTimeCSV").onclick = downloadTimeCSV;
 
     if($("btnLoadGrid")) $("btnLoadGrid").onclick = loadGrid;
 if($("btnToggleAdvanced")) $("btnToggleAdvanced").onclick = ()=>{
