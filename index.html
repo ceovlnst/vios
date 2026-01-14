@@ -3,23 +3,23 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gestión de Quirófanos – QuirófanosH9O</title>
+  <title>Gestión de Quirófanos – VIOS</title>
 
   
   <!-- Iconos / previsualización al compartir -->
-  <meta name="description" content="Gestión de quirófanos: parrilla, lista de espera y herramientas de coordinación – QuirófanosH9O." />
+  <meta name="description" content="Gestión de quirófanos: parrilla, lista de espera y herramientas de coordinación – VIOS" />
 
   <link rel="icon" type="image/png" href="https://ceovlnst.github.io/vios/og-image.png" />
   <link rel="apple-touch-icon" href="https://ceovlnst.github.io/vios/og-image.png" />
 
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Gestión de Quirófanos – QuirófanosH9O" />
+  <meta property="og:title" content="Gestión de Quirófanos – VIOS" />
   <meta property="og:description" content="Parrilla de quirófanos, lista de espera y coordinación." />
   <meta property="og:image" content="https://ceovlnst.github.io/vios/og-image.png" />
   <meta property="og:url" content="https://ceovlnst.github.io/vios/" />
 
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Gestión de Quirófanos – QuirófanosH9O" />
+  <meta name="twitter:title" content="Gestión de Quirófanos – VIOS" />
   <meta name="twitter:description" content="Parrilla de quirófanos, lista de espera y coordinación." />
   <meta name="twitter:image" content="https://ceovlnst.github.io/vios/og-image.png" />
 <style>
@@ -1161,10 +1161,10 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
   <div class="wrap">
     <div class="topbar">
       <div class="brand">
-        <img class="logo" src="https://ceovlnst.github.io/vios/og-image.png" alt="QuirófanosH9O" />
+        <img class="logo" src="https://ceovlnst.github.io/vios/og-image.png" alt="VIOS" />
         <div>
-          <h1>QuirófanosH9O</h1>
-          <small id="appSubtitle">Solicitud de quirófano</small>
+          <h1>VIOS</h1>
+          <small id="appSubtitle">Gestión de Actividad</small>
         </div>
       </div>
 
@@ -1199,7 +1199,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
         </div>
 
         <div id="signupBox" class="hide">
-          <h3 style="margin-top:10px">Alta profesional (solo usuarios vithas)</h3>
+          <h3 style="margin-top:10px">Alta profesional</h3>
 
           <label>Nombre</label><input id="suNombre" placeholder="Nombre" />
           <label>Apellidos</label><input id="suApellidos" placeholder="Apellidos" />
@@ -1220,8 +1220,8 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
           <button class="btn hide" id="btnGoReserve">Solicitar quirófano</button>
           <button class="btn hide" id="btnGoMine">Mis solicitudes</button>
 
-          <button class="btn hide" id="btnGoGrid">Parrilla</button>
-          <button class="btn hide" id="btnGoStruct">Generar Quirófanos</button>
+          <button class="btn hide" id="btnGoGrid">Calendario</button>
+          <button class="btn hide" id="btnGoStruct">Gestor de Actividad</button>
           <button class="btn hide" id="btnGoWait">Lista de espera</button>
           <button class="btn hide" id="btnGoReport">Reporte</button>
 </div>
@@ -1234,7 +1234,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 <div class="card">
         <!-- USER: RESERVAR -->
         <div id="viewReserve" class="hide">
-          <h2>Solicitud de quirófano</h2>
+          <h2>Gestor de Actividad</h2>
           <div class="row">
             <div style="flex:1;min-width:260px">
               <label>Fecha</label>
@@ -1326,12 +1326,12 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
         <!-- MASTER: ESTRUCTURALES + NO ESTRUCTURALES -->
         <div id="viewStruct" class="hide">
-          <h2>Generar quirófanos</h2>
+          <h2>Gestor de Actividad</h2>
 
           <div class="structStack">
             <!-- NO ESTRUCTURALES (ARRIBA) -->
             <div class="structPanel">
-              <h3>Crear quirófano NO estructural (Master)</h3>
+              <h3>Gestor de Actividad No Estructural (puntual)</h3>
 
               <div class="row">
                 <div style="flex:1;min-width:200px">
@@ -1357,14 +1357,14 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
                 </div>
                 <div style="flex:1;min-width:220px">
                   <label>Usuario (email editable)</label>
-                  <input id="stNSDoctorEmail" placeholder="tu@email.com" />
+                  <input id="stNSDoctorEmail" placeholder="nombre@correo.com" />
                 </div>
               </div>
 
               <div class="row">
                 <div style="flex:1;min-width:220px">
-                  <label>Etiqueta (grupo / cirujano)</label>
-                  <input id="stNSLabel" placeholder="Ej: Traumatología Dr. X" />
+                  <label>Cirujano</label>
+                  <input id="stNSLabel" placeholder="Ej: Jaime Alonso" />
                 </div>
               </div>
 
@@ -1389,7 +1389,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
               <div id="msgStructEdit" class="msg hide"></div>
 
               <div class="hr"></div>
-              <h3>Editor de programación estructural</h3>
+              <h3>Gestor de Actividad Estructural</h3>
 
               <div class="row">
                 <div style="flex:1;min-width:240px">
@@ -1397,8 +1397,8 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
                   <input id="stId" placeholder="(vacío para crear)" />
                 </div>
                 <div style="flex:1;min-width:240px">
-                  <label>Equipo / Servicio (etiqueta)</label>
-                  <input id="stLabel" placeholder="Ej: Traumatología COTA" />
+                  <label>Cirujano</label>
+                  <input id="stLabel" placeholder="Ej: Jaime Alonso" />
                 </div>
               </div>
 
@@ -1490,7 +1490,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
                 </div>
 
                 <div class="field">
-                  <label>Filtrar por quirófano</label>
+                  <label>Filtrar por ubicación</label>
                   <select id="structOrFilter">
                     <option value="">(Todos)</option>
                   </select>
@@ -1758,7 +1758,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
     // Subtítulo dinámico
     const sub = $("appSubtitle");
     if(sub){
-      sub.textContent = S.isMaster ? "Solicitud de quirófano + coordinación" : "Solicitud de quirófano";
+      sub.textContent = S.isMaster ? "Gestión de Actividad VIOS" : "Solicitud de quirófano";
     }
 
     document.body.classList.toggle("master", !!S.isMaster);
@@ -4558,7 +4558,10 @@ function openStructReportBlockModal(info){
 
     if($("btnGoWait")) $("btnGoWait").onclick    = openWaitlist;
     if($("btnGoReport")) $("btnGoReport").onclick  = ()=>go("viewReport");
-$("btnCheckSlots").onclick = checkSlots;
+
+    
+
+    if($("btnCheckSlots")) $("btnCheckSlots").onclick = checkSlots;
     if($("btnOpenWaitlistFromReserve")) $("btnOpenWaitlistFromReserve").onclick = openWaitlistFromReserve;
     if($("btnLoadMine")) $("btnLoadMine").onclick = loadMine;
 
