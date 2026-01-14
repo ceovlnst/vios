@@ -1221,7 +1221,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
           <button class="btn hide" id="btnGoMine">Mis solicitudes</button>
 
           <button class="btn hide" id="btnGoGrid">Calendario</button>
-          <button class="btn hide" id="btnGoStruct">Generar Quirófanos</button>
+          <button class="btn hide" id="btnGoStruct">Gestor de Actividad</button>
           <button class="btn hide" id="btnGoWait">Lista de espera</button>
           <button class="btn hide" id="btnGoReport">Reporte</button>
                   <button class="btn hide" id="btnGoGroups">Equipos quirúrgicos</button>
@@ -1327,12 +1327,12 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
         <!-- MASTER: ESTRUCTURALES + NO ESTRUCTURALES -->
         <div id="viewStruct" class="hide">
-          <h2>Generar quirófanos</h2>
+          <h2>Gestor de Actividad</h2>
 
           <div class="structStack">
             <!-- NO ESTRUCTURALES (ARRIBA) -->
             <div class="structPanel">
-              <h3>Crear quirófano NO estructural (Master)</h3>
+              <h3>Gestor de Actividad No Estructural (puntual)</h3>
 
               <div class="row">
                 <div style="flex:1;min-width:200px">
@@ -1364,8 +1364,8 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
               <div class="row">
                 <div style="flex:1;min-width:220px">
-                  <label>Etiqueta (grupo / cirujano)</label>
-                  <input id="stNSLabel" placeholder="Ej: Traumatología Dr. X" />
+                  <label>Cirujano</label>
+                  <input id="stNSLabel" placeholder="Ej: Jaime Alonso" />
                 </div>
               </div>
 
@@ -1390,7 +1390,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
               <div id="msgStructEdit" class="msg hide"></div>
 
               <div class="hr"></div>
-              <h3>Editor de programación estructural</h3>
+              <h3>Gestor de Actividad Estructural</h3>
 
               <div class="row">
                 <div style="flex:1;min-width:240px">
@@ -1398,8 +1398,8 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
                   <input id="stId" placeholder="(vacío para crear)" />
                 </div>
                 <div style="flex:1;min-width:240px">
-                  <label>Equipo / Servicio (etiqueta)</label>
-                  <input id="stLabel" placeholder="Ej: Traumatología COTA" />
+                  <label>Cirujano</label>
+                  <input id="stLabel" placeholder="Ej: Jaime Alonso" />
                 </div>
               </div>
 
@@ -1491,7 +1491,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
                 </div>
 
                 <div class="field">
-                  <label>Filtrar por quirófano</label>
+                  <label>Filtrar por ubicación</label>
                   <select id="structOrFilter">
                     <option value="">(Todos)</option>
                   </select>
