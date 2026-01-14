@@ -3,24 +3,24 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>GestiÃ³n de QuirÃ³fanos â€“ VIOS</title>
+  <title>Gestión de Quirófanos – QuirófanosH9O</title>
 
   
-  <!-- Iconos / previsualizaciÃ³n al compartir -->
-  <meta name="description" content="GestiÃ³n de quirÃ³fanos: parrilla, lista de espera y herramientas de coordinaciÃ³n â€“ VIOS" />
+  <!-- Iconos / previsualización al compartir -->
+  <meta name="description" content="Gestión de quirófanos: parrilla, lista de espera y herramientas de coordinación – QuirófanosH9O." />
 
   <link rel="icon" type="image/png" href="https://ceovlnst.github.io/vios/og-image.png" />
   <link rel="apple-touch-icon" href="https://ceovlnst.github.io/vios/og-image.png" />
 
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="GestiÃ³n de QuirÃ³fanos â€“ VIOS" />
-  <meta property="og:description" content="Parrilla de quirÃ³fanos, lista de espera y coordinaciÃ³n." />
+  <meta property="og:title" content="Gestión de Quirófanos – QuirófanosH9O" />
+  <meta property="og:description" content="Parrilla de quirófanos, lista de espera y coordinación." />
   <meta property="og:image" content="https://ceovlnst.github.io/vios/og-image.png" />
   <meta property="og:url" content="https://ceovlnst.github.io/vios/" />
 
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="GestiÃ³n de QuirÃ³fanos â€“ VIOS" />
-  <meta name="twitter:description" content="Parrilla de quirÃ³fanos, lista de espera y coordinaciÃ³n." />
+  <meta name="twitter:title" content="Gestión de Quirófanos – QuirófanosH9O" />
+  <meta name="twitter:description" content="Parrilla de quirófanos, lista de espera y coordinación." />
   <meta name="twitter:image" content="https://ceovlnst.github.io/vios/og-image.png" />
 <style>
     :root{
@@ -409,7 +409,7 @@
       display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;
     }
 
-    /* ===== MEJORA: huecos NO estructurales agrupados por ubicaciÃ³n ===== */
+    /* ===== MEJORA: huecos NO estructurales agrupados por ubicación ===== */
     .slotsByOr{
       display:flex;
       flex-direction:column;
@@ -449,7 +449,7 @@
       min-width:0;
     }
   
-    /* --- Equipos quirÃºrgicos (modal compacto + buscador) --- */
+    /* --- Equipos quirúrgicos (modal compacto + buscador) --- */
     .groupsWrap{margin-top:8px}
     .groupsTools{display:flex;gap:8px;align-items:center;margin:8px 0 10px 0}
     .groupsTools input{
@@ -459,7 +459,7 @@
     .groupsTools input:focus{border-color: rgba(29,78,216,.45); box-shadow: 0 0 0 3px rgba(29,78,216,.10)}
     .groupsCount{color:var(--muted); font-size:12px; margin:0 0 6px 0}
     .groupsList{max-height: 70vh; overflow:auto; padding-right:6px}
-    /* --- Equipos quirÃºrgicos: tarjetas bonitas y compactas (accordion) --- */
+    /* --- Equipos quirúrgicos: tarjetas bonitas y compactas (accordion) --- */
 .gGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
 @media (max-width: 720px){ .gGrid{grid-template-columns:1fr} }
 
@@ -538,8 +538,8 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
   color:var(--muted);
   font-size:12px;
 }
-/* --- fin equipos quirÃºrgicos --- */
-/* --- Modal genÃ©rico --- */
+/* --- fin equipos quirúrgicos --- */
+/* --- Modal genérico --- */
   .modal{position:fixed;inset:0;background:rgba(15,23,42,.45);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px}
   .modalCard{width:min(640px,100%);background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 30px rgba(2,6,23,.25);padding:14px}
   .modalTop{display:flex;align-items:center;justify-content:space-between;gap:10px}
@@ -550,7 +550,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
 
   /* ===============================
-     Grupos quirÃºrgicos (UI mejorada)
+     Grupos quirúrgicos (UI mejorada)
      =============================== */
   .gToolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:12px}
   .gSearchWrap{flex:1;position:relative}
@@ -591,7 +591,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
     z-index:2;
   }
 
-  /* --- Equipos quirÃºrgicos: lista simple --- */
+  /* --- Equipos quirúrgicos: lista simple --- */
   .teamTools{display:flex;gap:10px;align-items:center;margin-top:8px}
   .teamTools input{flex:1;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:#fff}
   .teamList{display:flex;flex-direction:column;gap:8px;margin-top:8px}
@@ -633,7 +633,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
   @media(min-width: 980px){
     .rightCol{position:sticky; top:12px; align-self:start; display:flex; flex-direction:column; gap:12px; height:calc(100vh - 24px); overflow:auto; padding-right:2px}
   }
-  /* Equipos quirÃºrgicos: lista 1:1 con el menÃº (botones en .actions) */
+  /* Equipos quirúrgicos: lista 1:1 con el menú (botones en .actions) */
   #groupsPanelList .btn{
     justify-content:space-between;
     text-align:left;
@@ -658,7 +658,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
   #modalBack .modal{width:min(560px,92vw) !important; max-height:86vh; overflow:auto; background:var(--card) !important;}
 
 
-  /* --- Modal centrado (solo cuando estÃ¡ visible) + cerrar claro --- */
+  /* --- Modal centrado (solo cuando está visible) + cerrar claro --- */
   #modalBack.hide{display:none !important;}
   #modalBack:not(.hide){
     display:flex;
@@ -710,7 +710,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
   .blkBtnRow{display:flex;justify-content:flex-end;gap:10px;margin-top:4px}
 
 
-  /* --- Modal centrado ligero (diÃ¡logo de bloque) --- */
+  /* --- Modal centrado ligero (diálogo de bloque) --- */
   #modalBack.hide{display:none !important;}
   #modalBack:not(.hide){
     display:flex;
@@ -757,7 +757,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
   }
 
 
-  /* --- Evitar cortes en textos del diÃ¡logo --- */
+  /* --- Evitar cortes en textos del diálogo --- */
   .dlgV{white-space:normal !important; overflow:visible !important; text-overflow:clip !important;}
   .dlgGrid{align-items:start;}
 
@@ -826,7 +826,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
     margin:0 !important;
   }
 
-  /* DiÃ¡logo Solicitud de cambio: centrado absoluto y consistente */
+  /* Diálogo Solicitud de cambio: centrado absoluto y consistente */
   #swapModal.modal{
     position:fixed !important;
     left:0 !important; top:0 !important; right:0 !important; bottom:0 !important;
@@ -844,7 +844,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
   }
 
 
-  /* --- Swap modal (Solicitud de cambio) igual que diÃ¡logo --- */
+  /* --- Swap modal (Solicitud de cambio) igual que diálogo --- */
   #swapModal.modal{
     position:fixed !important;
     inset:0 !important;
@@ -886,7 +886,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
   }
 
 
-  /* --- Chapa y pintura: diÃ¡logo de bloque mÃ¡s simple --- */
+  /* --- Chapa y pintura: diálogo de bloque más simple --- */
   #modalTitle:empty{display:none;}
   .dlgGrid.compact{grid-template-columns:92px minmax(0,1fr); gap:6px 10px; margin-top:6px;}
   .dlgGrid.compact .dlgK{font-size:12px;}
@@ -895,7 +895,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
   .dlgFooter{margin-top:14px; padding-top:12px; border-top:1px solid var(--line);}
 
 
-  /* --- Compactar diÃ¡logo de bloque --- */
+  /* --- Compactar diálogo de bloque --- */
   .dlgSection{margin-top:8px; padding-top:8px;}
   .dlgFooter{margin-top:10px; padding-top:10px;}
   .dlgActions{gap:8px;}
@@ -911,7 +911,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
   .dlgV{line-height:1.25;}
 
 
-  /* --- Centrar texto en diÃ¡logo --- */
+  /* --- Centrar texto en diálogo --- */
   #modalBack .modal .modalBody { text-align: center; }
   .dlgGrid.compact { justify-items: center; }
   .dlgGrid.compact .dlgK { text-align: right; }
@@ -937,7 +937,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
   #modalForm .hint{ color:var(--muted); font-size:12px; line-height:1.25; }
 
 
-  /* --- Master: formulario mÃ¡s ordenado y compacto --- */
+  /* --- Master: formulario más ordenado y compacto --- */
   #modalForm{ text-align:left; }
   #modalForm .formGrid{
     display:grid;
@@ -980,13 +980,13 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
   #modal.wide .modalBody{ max-height:calc(86vh - 40px) !important; overflow:auto !important; }
 
 
-  /* --- Master: modo ediciÃ³n inline dentro del mismo diÃ¡logo --- */
+  /* --- Master: modo edición inline dentro del mismo diálogo --- */
   #blockView.hide{display:none !important;}
   #modalForm.hide{display:none !important;}
   #modalForm{ margin-top:10px; }
 
 
-  /* --- Master: botones siempre visibles en ediciÃ³n --- */
+  /* --- Master: botones siempre visibles en edición --- */
   #modalForm .actions{
     position: sticky;
     bottom: 0;
@@ -995,7 +995,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
   }
 
 
-  /* --- Fix: botones ediciÃ³n visibles --- */
+  /* --- Fix: botones edición visibles --- */
   #modalActions.actions{
     display:flex !important;
     justify-content:flex-end !important;
@@ -1008,7 +1008,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
   #modal.wide .modalBody{ padding-bottom:18px !important; }
 
 
-  /* --- Master: diÃ¡logo ultra discreto --- */
+  /* --- Master: diálogo ultra discreto --- */
   .masterMini{ padding:10px !important; margin-top:8px !important; }
   .masterMini .dlgActions{ margin:0 !important; }
   .masterMini .btn{ padding:8px 12px !important; border-radius:14px !important; }
@@ -1161,17 +1161,17 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
   <div class="wrap">
     <div class="topbar">
       <div class="brand">
-        <img class="logo" src="https://ceovlnst.github.io/vios/og-image.png" alt="QuirÃ³fanosH9O" />
+        <img class="logo" src="https://ceovlnst.github.io/vios/og-image.png" alt="QuirófanosH9O" />
         <div>
-          <h1>QuirÃ³fanosH9O</h1>
-          <small id="appSubtitle">Hospital Vithas 9 de Octubre</small>
+          <h1>QuirófanosH9O</h1>
+          <small id="appSubtitle">Solicitud de quirófano</small>
         </div>
       </div>
 
       <div class="row">
         <div class="pill" id="pillSession">
-          <small>Usuario</small> <span id="pillUser">â€”</span>
-          <small>Perfil</small> <span id="pillRole">â€”</span>
+          <small>Usuario</small> <span id="pillUser">—</span>
+          <small>Perfil</small> <span id="pillRole">—</span>
         </div>
         <button class="btn small ghost hide" id="btnLogout">Salir</button>
       </div>
@@ -1182,7 +1182,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
       <div class="card">
         <h2>Acceso</h2>
 
-        <label>PIN (contraseÃ±a)</label>
+        <label>PIN (contraseña)</label>
         <input id="pinInput" type="password" inputmode="numeric" placeholder="Introduce tu PIN" />
 
         <div class="actions">
@@ -1204,8 +1204,8 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
           <label>Nombre</label><input id="suNombre" placeholder="Nombre" />
           <label>Apellidos</label><input id="suApellidos" placeholder="Apellidos" />
           <label>Servicio / Especialidad</label><select id="suEsp"></select>
-          <label>Correo</label><input id="suCorreo" placeholder="Correo electrÃ³nico" />
-          <label>TelÃ©fono</label><input id="suTel" placeholder="TelÃ©fono" />
+          <label>Correo</label><input id="suCorreo" placeholder="Correo electrónico" />
+          <label>Teléfono</label><input id="suTel" placeholder="Teléfono" />
 
           <div class="actions">
             <button class="btn good" id="btnSignup">Completar alta</button>
@@ -1217,14 +1217,13 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
         <h2>Panel</h2>
         <div class="actions">
-          <button class="btn hide" id="btnGoReserve">Solicitar quirÃ³fano</button>
+          <button class="btn hide" id="btnGoReserve">Solicitar quirófano</button>
           <button class="btn hide" id="btnGoMine">Mis solicitudes</button>
 
           <button class="btn hide" id="btnGoGrid">Parrilla</button>
-          <button class="btn hide" id="btnGoStruct">Generar QuirÃ³fanos</button>
+          <button class="btn hide" id="btnGoStruct">Generar Quirófanos</button>
           <button class="btn hide" id="btnGoWait">Lista de espera</button>
           <button class="btn hide" id="btnGoReport">Reporte</button>
-                  <button class="btn hide" id="btnGoGroups">Equipos quirÃºrgicos</button>
 </div>
 
         <div id="msgMenu" class="msg hide"></div>
@@ -1235,18 +1234,18 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 <div class="card">
         <!-- USER: RESERVAR -->
         <div id="viewReserve" class="hide">
-          <h2>Solicitud de quirÃ³fano</h2>
+          <h2>Solicitud de quirófano</h2>
           <div class="row">
             <div style="flex:1;min-width:260px">
               <label>Fecha</label>
               <div class="row" style="gap:6px">
                 <input id="rvDate" type="date" style="flex:1;min-width:0" />
-                <button class="btn small" id="btnRvPrevDay" title="DÃ­a anterior">â†</button>
-                <button class="btn small" id="btnRvNextDay" title="DÃ­a siguiente">â†’</button>
+                <button class="btn small" id="btnRvPrevDay" title="Día anterior">←</button>
+                <button class="btn small" id="btnRvNextDay" title="Día siguiente">→</button>
               </div>
             </div>
             <div style="width:160px">
-              <label>DuraciÃ³n (h)</label>
+              <label>Duración (h)</label>
               <select id="rvHours">
                 <option>1</option><option>2</option><option>3</option><option>4</option>
                 <option>5</option><option>6</option><option>7</option><option>8</option>
@@ -1269,7 +1268,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
           <div class="row">
             <div style="width:220px">
-              <label>Horizonte (dÃ­as)</label>
+              <label>Horizonte (días)</label>
               <select id="mineDays">
                 <option value="30">30</option>
                 <option value="60">60</option>
@@ -1288,18 +1287,18 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
         <!-- MASTER: GRID -->
         <div id="viewGrid" class="hide">
-          <h2>Parrilla quirÃºrgica</h2>
+          <h2>Parrilla quirúrgica</h2>
           <div class="row">
             <div style="flex:1;min-width:260px">
               <label>Fecha</label>
               <div class="row" style="gap:6px">
                 <input id="gdDate" type="date" style="flex:1;min-width:0" />
-                <button class="btn small" id="btnGridPrevDay" title="DÃ­a anterior">â†</button>
-                <button class="btn small" id="btnGridNextDay" title="DÃ­a siguiente">â†’</button>
+                <button class="btn small" id="btnGridPrevDay" title="Día anterior">←</button>
+                <button class="btn small" id="btnGridNextDay" title="Día siguiente">→</button>
               </div>
             </div>
             <div style="width:160px; display:none">
-              <label>DuraciÃ³n (h) reserva</label>
+              <label>Duración (h) reserva</label>
               <select id="gdHours">
                 <option>1</option><option>2</option><option>3</option><option>4</option>
                 <option>5</option><option>6</option><option>7</option><option>8</option>
@@ -1314,10 +1313,10 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
           <div class="kpi" id="gridKpis"></div>
 
           <div class="actions" style="margin-top:8px">
-            <button class="btn small" id="btnToggleAdvanced">BÃºsqueda avanzada</button>
+            <button class="btn small" id="btnToggleAdvanced">Búsqueda avanzada</button>
           </div>
           <div id="advancedBox" class="hide" style="margin-top:4px">
-            <label>QuirÃ³fanos incluidos en KPIs</label>
+            <label>Quirófanos incluidos en KPIs</label>
             <div id="orCalcChips" class="weekPick"></div>
           </div>
 
@@ -1327,12 +1326,12 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
         <!-- MASTER: ESTRUCTURALES + NO ESTRUCTURALES -->
         <div id="viewStruct" class="hide">
-          <h2>Generar quirÃ³fanos</h2>
+          <h2>Generar quirófanos</h2>
 
           <div class="structStack">
             <!-- NO ESTRUCTURALES (ARRIBA) -->
             <div class="structPanel">
-              <h3>Crear quirÃ³fano NO estructural (Master)</h3>
+              <h3>Crear quirófano NO estructural (Master)</h3>
 
               <div class="row">
                 <div style="flex:1;min-width:200px">
@@ -1340,7 +1339,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
                   <input id="stNSDate" type="date" />
                 </div>
                 <div style="width:160px">
-                  <label>DuraciÃ³n (h)</label>
+                  <label>Duración (h)</label>
                   <select id="stNSDur">
                     <option>1</option><option>2</option><option>3</option><option>4</option>
                     <option>5</option><option>6</option><option>7</option><option>8</option>
@@ -1353,19 +1352,19 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
                 <div style="flex:1;min-width:220px">
                   <label>Usuario (lista)</label>
                   <select id="stNSDoctorSelect">
-                    <option value="">(Cargando profesionalesâ€¦)</option>
+                    <option value="">(Cargando profesionales…)</option>
                   </select>
                 </div>
                 <div style="flex:1;min-width:220px">
                   <label>Usuario (email editable)</label>
-                  <input id="stNSDoctorEmail" placeholder="nombre@vithas.es" />
+                  <input id="stNSDoctorEmail" placeholder="tu@email.com" />
                 </div>
               </div>
 
               <div class="row">
                 <div style="flex:1;min-width:220px">
                   <label>Etiqueta (grupo / cirujano)</label>
-                  <input id="stNSLabel" placeholder="Ej: TraumatologÃ­a Dr. X" />
+                  <input id="stNSLabel" placeholder="Ej: Traumatología Dr. X" />
                 </div>
               </div>
 
@@ -1390,22 +1389,22 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
               <div id="msgStructEdit" class="msg hide"></div>
 
               <div class="hr"></div>
-              <h3>Editor de programaciÃ³n estructural</h3>
+              <h3>Editor de programación estructural</h3>
 
               <div class="row">
                 <div style="flex:1;min-width:240px">
-                  <label>ID (vacÃ­o = nuevo)</label>
-                  <input id="stId" placeholder="(vacÃ­o para crear)" />
+                  <label>ID (vacío = nuevo)</label>
+                  <input id="stId" placeholder="(vacío para crear)" />
                 </div>
                 <div style="flex:1;min-width:240px">
                   <label>Equipo / Servicio (etiqueta)</label>
-                  <input id="stLabel" placeholder="Ej: TraumatologÃ­a COTA" />
+                  <input id="stLabel" placeholder="Ej: Traumatología COTA" />
                 </div>
               </div>
 
               <div class="row">
                 <div style="flex:1;min-width:240px">
-                  <label>QuirÃ³fano</label>
+                  <label>Ubicación</label>
                   <select id="stOr"></select>
                 </div>
                 <div style="width:160px">
@@ -1413,7 +1412,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
                   <select id="stStartHour"></select>
                 </div>
                 <div style="width:160px">
-                  <label>DuraciÃ³n (h)</label>
+                  <label>Duración (h)</label>
                   <select id="stDur">
                     <option>1</option><option>2</option><option>3</option><option>4</option>
                     <option>5</option><option>6</option><option>7</option><option>8</option>
@@ -1428,12 +1427,12 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
                   <input id="stStartDate" type="date" />
                 </div>
                 <div style="flex:1;min-width:240px">
-                  <label>Fin (vacÃ­o = 31/12)</label>
+                  <label>Fin (vacío = 31/12)</label>
                   <input id="stEndDate" type="date" />
                 </div>
               </div>
 
-              <label>DÃ­as de la semana</label>
+              <label>Días de la semana</label>
               <div class="row">
                 <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" class="stDow" value="MONDAY">L</label>
                 <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" class="stDow" value="TUESDAY">M</label>
@@ -1454,7 +1453,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
                 </div>
 
                 <div style="flex:1;min-width:240px" id="boxWeekly">
-                  <label>Cada cuÃ¡ntas semanas</label>
+                  <label>Cada cuántas semanas</label>
                   <select id="stIntervalWeeks">
                     <option>1</option><option>2</option><option>3</option><option>4</option>
                   </select>
@@ -1463,20 +1462,20 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
                 <div style="flex:1;min-width:240px" id="boxMonthWeeks" class="hide">
                   <label>Semanas del mes</label>
                   <div class="weekPick">
-                    <label class="wchip"><input type="checkbox" class="stWom" value="1"><b>1</b>Âª</label>
-                    <label class="wchip"><input type="checkbox" class="stWom" value="2"><b>2</b>Âª</label>
-                    <label class="wchip"><input type="checkbox" class="stWom" value="3"><b>3</b>Âª</label>
-                    <label class="wchip"><input type="checkbox" class="stWom" value="4"><b>4</b>Âª</label>
-                    <label class="wchip"><input type="checkbox" class="stWom" value="5"><b>5</b>Âª</label>
+                    <label class="wchip"><input type="checkbox" class="stWom" value="1"><b>1</b>ª</label>
+                    <label class="wchip"><input type="checkbox" class="stWom" value="2"><b>2</b>ª</label>
+                    <label class="wchip"><input type="checkbox" class="stWom" value="3"><b>3</b>ª</label>
+                    <label class="wchip"><input type="checkbox" class="stWom" value="4"><b>4</b>ª</label>
+                    <label class="wchip"><input type="checkbox" class="stWom" value="5"><b>5</b>ª</label>
                   </div>
-                  <div class="hint">InterpretaciÃ³n por â€œ1Âº/3Âº lunesâ€, etc. segÃºn el/los weekday seleccionados.</div>
+                  <div class="hint">Interpretación por “1º/3º lunes”, etc. según el/los weekday seleccionados.</div>
                 </div>
               </div>
             </div>
 
             <!-- LISTA ESTRUCTURAL -->
             <div class="structPanel">
-              <h3>Listado de programaciÃ³n estructural</h3>
+              <h3>Listado de programación estructural</h3>
 
               <div id="structSummary" class="msg" style="margin-top:8px"></div>
 
@@ -1491,7 +1490,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
                 </div>
 
                 <div class="field">
-                  <label>Filtrar por quirÃ³fano</label>
+                  <label>Filtrar por quirófano</label>
                   <select id="structOrFilter">
                     <option value="">(Todos)</option>
                   </select>
@@ -1503,15 +1502,15 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
                   </select>
                 </div>
                 <div class="field">
-                  <label>Filtrar por dÃ­a</label>
+                  <label>Filtrar por día</label>
                   <select id="structDayFilter">
                     <option value="">(Todos)</option>
                     <option value="L">Lunes</option>
                     <option value="M">Martes</option>
-                    <option value="X">MiÃ©rcoles</option>
+                    <option value="X">Miércoles</option>
                     <option value="J">Jueves</option>
                     <option value="V">Viernes</option>
-                    <option value="S">SÃ¡bado</option>
+                    <option value="S">Sábado</option>
                     <option value="D">Domingo</option>
                   </select>
                 </div>
@@ -1526,7 +1525,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
           </div>
         </div>
 
-        <!-- MASTER: WAIT (ACTUALIZADO a â€œfunciÃ³n nuevaâ€) -->
+        <!-- MASTER: WAIT (ACTUALIZADO a “función nueva”) -->
         <div id="viewWait" class="hide">
           <h2>Lista de espera</h2>
 
@@ -1567,9 +1566,9 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
             </div>
           </div>
           <div class="actions">
-            <button class="btn primary" id="btnSendReport">Enviar reporte (DirecciÃ³n)</button>
+            <button class="btn primary" id="btnSendReport">Enviar reporte (Dirección)</button>
           </div>
-          <div class="hint">Incluye visiÃ³n global y desglosa <b>Programado</b>, <b>Especiales (HÃ­brido)</b> y <b>Urgencias/24h</b>. MÃ©trica: <b>horas reales</b> (no nÃºmero de eventos).</div>
+          <div class="hint">Incluye visión global y desglosa <b>Programado</b>, <b>Especiales (Híbrido)</b> y <b>Urgencias/24h</b>. Métrica: <b>horas reales</b> (no número de eventos).</div>
           <div id="msgReport" class="msg hide"></div>
 
           <div class="hr"></div>
@@ -1580,20 +1579,20 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
               <button class="btn small primary" id="btnStructVisualReport">Generar / actualizar</button>
             </div>
           </div>
-          <div class="hint">DistribuciÃ³n de quirÃ³fanos estructurales por <b>dÃ­a</b>, <b>quirÃ³fano</b> y <b>sesiÃ³n</b> (maÃ±ana/tarde).</div>
+          <div class="hint">Distribución de quirófanos estructurales por <b>día</b>, <b>quirófano</b> y <b>sesión</b> (mañana/tarde).</div>
           <div id="structVisualReport" class="reportGrid hide"></div>
         </div>
 
 
-        <!-- MASTER: EQUIPOS QUIRÃšRGICOS -->
+        <!-- MASTER: EQUIPOS QUIRÚRGICOS -->
         <div id="viewGroups" class="hide">
           <div class="row" style="justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap">
             <div>
-              <h2 style="margin:0">Equipos quirÃºrgicos</h2>
-              <div class="mut" id="groupsCount" style="margin-top:4px">â€”</div>
+              <h2 style="margin:0">Equipos quirúrgicos</h2>
+              <div class="mut" id="groupsCount" style="margin-top:4px">—</div>
             </div>
             <div class="row" style="gap:8px;min-width:280px;flex:1;max-width:520px">
-              <input id="groupsSearch" type="search" placeholder="Buscar equipo, nombre, rol, email o telÃ©fonoâ€¦" />
+              <input id="groupsSearch" type="search" placeholder="Buscar equipo, nombre, rol, email o teléfono…" />
               <button class="btn small ghost" id="groupsClear" type="button">Limpiar</button>
             </div>
           </div>
@@ -1608,8 +1607,8 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
           <h2>Bienvenido</h2>
           <div class="msg">
             1) Introduce tu PIN.<br/>
-            2) Si no tienes PIN, pulsa <b>â€œDarme de altaâ€</b>.<br/>
-            3) Al acceder, verÃ¡s el panel segÃºn tu perfil.
+            2) Si no tienes PIN, pulsa <b>“Darme de alta”</b>.<br/>
+            3) Al acceder, verás el panel según tu perfil.
           </div>
         </div>
       </div>
@@ -1627,7 +1626,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 <div id="modalForm" class="hide" style="margin-top:10px">
   <div class="formGrid">
     <div class="field hide" id="mfActionWrap">
-      <label>AcciÃ³n</label>
+      <label>Acción</label>
       <select id="mfAction" disabled>
         <option value="STRUCT_EDIT_BLOCK">Editar bloque estructural</option>
         <option value="NON_EDIT">Editar bloque NO estructural</option>
@@ -1635,7 +1634,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
     </div>
 
     <div class="field">
-      <label>DuraciÃ³n (h)</label>
+      <label>Duración (h)</label>
       <select id="mfHours">
         <option>1</option><option>2</option><option>3</option><option>4</option>
         <option>5</option><option>6</option><option>7</option><option>8</option>
@@ -1644,7 +1643,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
     </div>
 
     <div class="field">
-      <label>QuirÃ³fano</label>
+      <label>Ubicación</label>
       <select id="mfOr"></select>
     </div>
 
@@ -1666,7 +1665,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
   <!-- Loading -->
   <div id="loadingBar" class="loadingBar hide" aria-live="polite">
     <div>
-      <div class="txt" id="loadingText">Procesandoâ€¦</div>
+      <div class="txt" id="loadingText">Procesando…</div>
       <div class="sub" id="loadingSub">Por favor, espera</div>
     </div>
     <div class="dot" title="Procesando"></div>
@@ -1675,29 +1674,24 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 <script>
   // ===== CONSTANTES FRONT =====
   const OR_LIST = [
-    "SÃ³tano 1","SÃ³tano 2","SÃ³tano 3","SÃ³tano 4","SÃ³tano 5","SÃ³tano 6",
-    "QuirÃ³fano HÃ­brido",
-    "Centrales 1","Centrales 2","Centrales 3","Centrales 4","Centrales 5","Centrales 6","Centrales 7","Centrales 8",
-    "Maternidad 1","Maternidad 2","Maternidad 3",
-    "Urgencias",
-    "Paritorio 1","Paritorio 2"
-  ];
+  "Consulta 9", "Consulta 10", "Consulta 11", "Consulta 12", "Consulta 13", "Consulta 14", "Quirófano 1", "Quirófano 2"
+];
 
   const SPECIALTIES = [
-    "TraumatologÃ­a y CirugÃ­a OrtopÃ©dica",
-    "CirugÃ­a General y Digestiva",
-    "AnestesiologÃ­a y ReanimaciÃ³n",
-    "GinecologÃ­a y Obstetricia",
-    "UrologÃ­a",
-    "OftalmologÃ­a",
-    "OtorrinolaringologÃ­a (ORL)",
-    "NeurocirugÃ­a",
-    "CirugÃ­a Vascular",
-    "CirugÃ­a TorÃ¡cica",
-    "CirugÃ­a CardÃ­aca",
-    "CirugÃ­a PlÃ¡stica, EstÃ©tica y Reparadora",
-    "CirugÃ­a Maxilofacial",
-    "CirugÃ­a PediÃ¡trica",
+    "Traumatología y Cirugía Ortopédica",
+    "Cirugía General y Digestiva",
+    "Anestesiología y Reanimación",
+    "Ginecología y Obstetricia",
+    "Urología",
+    "Oftalmología",
+    "Otorrinolaringología (ORL)",
+    "Neurocirugía",
+    "Cirugía Vascular",
+    "Cirugía Torácica",
+    "Cirugía Cardíaca",
+    "Cirugía Plástica, Estética y Reparadora",
+    "Cirugía Maxilofacial",
+    "Cirugía Pediátrica",
     "Otros"
   ];
 
@@ -1757,14 +1751,14 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
   }
 
   function setSessionPill(){
-    $("pillUser").textContent = S.emailVisible || "â€”";
+    $("pillUser").textContent = S.emailVisible || "—";
     $("pillRole").textContent = (S.isMaster ? "Master" : "Usuario");
     $("btnLogout").classList.toggle("hide", !S.pin);
 
-    // SubtÃ­tulo dinÃ¡mico
+    // Subtítulo dinámico
     const sub = $("appSubtitle");
     if(sub){
-      sub.textContent = S.isMaster ? "Solicitud de quirÃ³fano + coordinaciÃ³n" : "Solicitud de quirÃ³fano";
+      sub.textContent = S.isMaster ? "Solicitud de quirófano + coordinación" : "Solicitud de quirófano";
     }
 
     document.body.classList.toggle("master", !!S.isMaster);
@@ -1805,7 +1799,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
   }
 
 
-  // menÃº: quitar parrilla a usuarios generales
+  // menú: quitar parrilla a usuarios generales
   function setMenuButtons(){
     const master = isMaster();
     $("btnGoReserve").classList.toggle("hide", !S.pin || master);
@@ -1816,7 +1810,6 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
     $("btnGoStruct").classList.toggle("hide", !S.pin || !master);
     $("btnGoWait").classList.toggle("hide", !S.pin || !master);
     $("btnGoReport").classList.toggle("hide", !S.pin || !master);
-    $("btnGoGroups").classList.toggle("hide", !S.pin || !master);
   }
 
   function todayISO(){
@@ -1847,7 +1840,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
     return iso;
   }
 
-  // NavegaciÃ³n dÃ­as
+  // Navegación días
   function moveGridDay(delta){
     shiftDate("gdDate", delta);
     loadGrid();
@@ -1869,14 +1862,14 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
     const sub = $("loadingSub");
     if(isBusy){
       busyCount++;
-      txt.textContent = msg || "Procesandoâ€¦";
+      txt.textContent = msg || "Procesando…";
       sub.textContent = "Por favor, espera";
       bar.classList.remove("hide");
     }else{
       busyCount = Math.max(0, busyCount - 1);
       if(busyCount === 0){
         bar.classList.add("hide");
-        txt.textContent = "Procesandoâ€¦";
+        txt.textContent = "Procesando…";
         sub.textContent = "Por favor, espera";
       }
     }
@@ -1906,7 +1899,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
   }
 
   
-  // ðŸ”§ URL del Worker (Cloudflare) que hace proxy al WebApp de Apps Script (para GitHub Pages)
+  // 🔧 URL del Worker (Cloudflare) que hace proxy al WebApp de Apps Script (para GitHub Pages)
   // Ejemplo: "https://tu-worker.tudominio.workers.dev"
   const API_WORKER_URL = "https://vios.ceo-vlnst.workers.dev"; // URL del Worker (Cloudflare) -> GAS
 
@@ -1917,7 +1910,7 @@ function callGAS(fnName, args, opt){
     if(key) inFlightKeys.add(key);
 
     const myToken = sessionToken;
-    setBusy(true, o.msg || "Procesandoâ€¦");
+    setBusy(true, o.msg || "Procesando…");
     disableEls(o.disable || [], true);
 
     const finalize = ()=>{
@@ -1959,7 +1952,7 @@ function callGAS(fnName, args, opt){
 
   // ===== OR filter para KPIs parrilla =====
   function initOrCalcDefaults(){
-    const exclude = new Set(["SÃ³tano 6","QuirÃ³fano HÃ­brido","Urgencias","Paritorio 1","Paritorio 2"]);
+    const exclude = new Set(["Sótano 6","Quirófano Híbrido","Urgencias","Paritorio 1","Paritorio 2"]);
     S.orCalcSelected = OR_LIST.filter(name => !exclude.has(name));
   }
 
@@ -1994,7 +1987,7 @@ function callGAS(fnName, args, opt){
     return arr.slice();
   }
 
-  // âœ… NUEVO: inferir duraciÃ³n del bloque NO estructural desde la fila
+  // ✅ NUEVO: inferir duración del bloque NO estructural desde la fila
   function inferEventHoursInRow_(row, startIdx){
     const id = row.cells[startIdx]?.eventId;
     if(!id) return 1;
@@ -2015,17 +2008,17 @@ function callGAS(fnName, args, opt){
     callGAS("getDoctorByPin", [pin], {
       key: "login",
       disable: [$("btnLogin"), $("btnClear"), $("pinInput")],
-      msg: "Validando accesoâ€¦",
+      msg: "Validando acceso…",
       onSuccess: (doc)=>{
         S.pin = pin;
         
-      // precarga equipos quirÃºrgicos (para botÃ³n de cambio en parrilla)
+      // precarga equipos quirúrgicos (para botón de cambio en parrilla)
       loadGroupsCache(true);
 S.doctor = doc;
         const tipo = String(doc.tipo || doc.rol || "").trim();
         S.isMaster = /^(master|administrador|admin)$/i.test(tipo) || tipo.toLowerCase().includes("admin");
         S.role = S.isMaster ? "Administrador" : "Usuario";
-        S.emailVisible = (doc.correo || doc.email || doc.mail || "â€”");
+        S.emailVisible = (doc.correo || doc.email || doc.mail || "—");
 
         setSessionPill();
         setMenuButtons();
@@ -2090,7 +2083,7 @@ S.doctor = doc;
     callGAS("signupDoctor", [data], {
       key:"signup",
       disable:[$("btnSignup")],
-      msg:"Registrando altaâ€¦",
+      msg:"Registrando alta…",
       onSuccess:(res)=>{
         showMsg($("msgSignup"), res?.message || "Alta completada.", "ok");
       },
@@ -2114,13 +2107,13 @@ S.doctor = doc;
     callGAS("getDisponibilidadAuto", [S.pin, dateStr, hours], {
       key:"slots",
       disable:[$("btnCheckSlots")],
-      msg:"Buscando huecos disponiblesâ€¦",
+      msg:"Buscando huecos disponibles…",
       onSuccess:(res)=>{
         S.lastSlots = res.slots || [];
         S.lastReserveQuery = { dateStr, hours };
 
         if(!res.slots || !res.slots.length){
-          showMsg($("msgReserve"), "No hay huecos disponibles para esa fecha y duraciÃ³n.", "warn");
+          showMsg($("msgReserve"), "No hay huecos disponibles para esa fecha y duración.", "warn");
           $("btnOpenWaitlistFromReserve").classList.remove("hide");
           return;
         }
@@ -2145,11 +2138,11 @@ S.doctor = doc;
 
   function reserveSlot(startISO, hours, dateStr){
     hideMsg($("msgReserve"));
-    if(!confirm("Â¿Confirmar la reserva en ese hueco?")) return;
+    if(!confirm("¿Confirmar la reserva en ese hueco?")) return;
 
     callGAS("reservarAuto", [S.pin, startISO, hours], {
       key:"reserve",
-      msg:"Creando reservaâ€¦",
+      msg:"Creando reserva…",
       onSuccess:(res)=>{
         showMsg($("msgReserve"), "Reserva creada correctamente.", "ok");
       },
@@ -2165,11 +2158,11 @@ S.doctor = doc;
     if(!q || !q.dateStr){
       return showMsg($("msgReserve"), "Primero busca disponibilidad para poder enviar a lista de espera.", "warn");
     }
-    const note = prompt("AÃ±ade una nota opcional para la lista de espera (diagnÃ³stico, prioridad, etc.):","");
+    const note = prompt("Añade una nota opcional para la lista de espera (diagnóstico, prioridad, etc.):","");
 
     callGAS("submitWaitlist", [S.pin, q.dateStr, q.hours, "ANY", note || ""], {
       key:"waitlistFromReserve",
-      msg:"Enviando solicitud a lista de esperaâ€¦",
+      msg:"Enviando solicitud a lista de espera…",
       onSuccess:(res)=>{
         showMsg($("msgReserve"), res?.message || "Solicitud enviada a lista de espera.", "ok");
       },
@@ -2189,7 +2182,7 @@ S.doctor = doc;
     callGAS("getMyReservations", [S.pin, days], {
       key:"mine",
       disable:[$("btnLoadMine")],
-      msg:"Cargando tus reservasâ€¦",
+      msg:"Cargando tus reservas…",
       onSuccess:(res)=>{
         const list = res.reservations || [];
         if(!list.length){
@@ -2200,7 +2193,7 @@ S.doctor = doc;
         const wrap = $("mineBox");
         const table = document.createElement("table");
         const thead = document.createElement("thead");
-        thead.innerHTML = "<tr><th>Fecha</th><th>Hora</th><th>Fin</th><th>QuirÃ³fano</th><th>TÃ­tulo</th><th></th></tr>";
+        thead.innerHTML = "<tr><th>Fecha</th><th>Hora</th><th>Fin</th><th>Ubicación</th><th>Título</th><th></th></tr>";
         table.appendChild(thead);
         const tbody = document.createElement("tbody");
         list.forEach(r=>{
@@ -2231,10 +2224,10 @@ S.doctor = doc;
   }
 
   function cancelMyReservation(eventId){
-    if(!confirm("Â¿Seguro que quieres cancelar esta reserva?")) return;
+    if(!confirm("¿Seguro que quieres cancelar esta reserva?")) return;
     callGAS("cancelReservation", [S.pin, eventId], {
       key:"cancelMy",
-      msg:"Cancelando reservaâ€¦",
+      msg:"Cancelando reserva…",
       onSuccess:(res)=>{
         showMsg($("msgMine"), res?.message || "Reserva cancelada.", "ok");
         loadMine();
@@ -2257,7 +2250,7 @@ S.doctor = doc;
     callGAS("getGridOccupancy", [S.pin, dateStr], {
       key:"grid",
       disable:[$("btnLoadGrid")],
-      msg:"Cargando parrillaâ€¦",
+      msg:"Cargando parrilla…",
       onSuccess:(res)=>{
         S.lastGrid = res;
         renderGrid(res);
@@ -2273,7 +2266,7 @@ S.doctor = doc;
     const box = $("gridBox");
     box.innerHTML = "";
     if(!data || !data.rows || !data.rows.length){
-      showMsg($("msgGrid"), "No hay informaciÃ³n para esa fecha.", "warn");
+      showMsg($("msgGrid"), "No hay información para esa fecha.", "warn");
       return;
     }
     hideMsg($("msgGrid"));
@@ -2282,7 +2275,7 @@ S.doctor = doc;
     const thead = document.createElement("thead");
     const trh = document.createElement("tr");
     const thOr = document.createElement("th");
-    thOr.textContent = "QuirÃ³fano";
+    thOr.textContent = "Ubicación";
     trh.appendChild(thOr);
 
     data.hoursOrder.forEach(h=>{
@@ -2362,9 +2355,9 @@ S.doctor = doc;
       return d;
     };
 
-    box.appendChild(mkBox("Huecos libres", free, "Celdas libres en quirÃ³fanos seleccionados"));
+    box.appendChild(mkBox("Huecos libres", free, "Celdas libres en quirófanos seleccionados"));
     box.appendChild(mkBox("Bloques no estructurales", non, "Reservas no estructurales"));
-    box.appendChild(mkBox("Bloques estructurales", struct, "ProgramaciÃ³n estructural ese dÃ­a"));
+    box.appendChild(mkBox("Bloques estructurales", struct, "Programación estructural ese día"));
   }
 
   function buildEventBlockInfo(orName, eventId){
@@ -2476,7 +2469,7 @@ S.doctor = doc;
       match = Object.keys(byTeam).find(t => normalizeEquipoKey(t) === key) || null;
     }
     if(!match){
-      if(!S.groupsLoaded) return `<div class="mut">Cargando equipoâ€¦</div>`;
+      if(!S.groupsLoaded) return `<div class="mut">Cargando equipo…</div>`;
       return "";
     }
 
@@ -2488,16 +2481,16 @@ S.doctor = doc;
     });
 
     const first = members[0] || {};
-    const firstName = String(first.cirujano || first.nombre || "â€”").trim();
+    const firstName = String(first.cirujano || first.nombre || "—").trim();
 
     const emailObj = members.find(x=>String(x.correo||x.email||"").trim());
     const hasEmail = !!String((emailObj && (emailObj.correo||emailObj.email)) || "").trim();
 
     if(!hasEmail){
-      return `<div class="mut">Equipo <b>${escapeHtml(match)}</b> sin email en GruposQuirÃºrgicos.</div>`;
+      return `<div class="mut">Equipo <b>${escapeHtml(match)}</b> sin email en GruposQuirúrgicos.</div>`;
     }
 
-    // guarda contexto y crea botÃ³n
+    // guarda contexto y crea botón
     S.selectedCellContext = ctx || null;
     return `
       <div class="blkGrid" style="margin-top:6px">
@@ -2526,10 +2519,10 @@ S.doctor = doc;
     const body = `
       <div class="blkWrap">
         <div class="blkGrid">
-          <div class="blkK">Fecha</div><div class="blkV">${escapeHtml(date||"â€”")}</div>
-          <div class="blkK">QuirÃ³fano</div><div class="blkV">${escapeHtml(orName||"â€”")}</div>
+          <div class="blkK">Fecha</div><div class="blkV">${escapeHtml(date||"—")}</div>
+          <div class="blkK">Quirófano</div><div class="blkV">${escapeHtml(orName||"—")}</div>
           ${h ? `<div class="blkK">Hora</div><div class="blkV">${escapeHtml(h)}:00</div>` : ``}
-          ${dur ? `<div class="blkK">DuraciÃ³n</div><div class="blkV">${escapeHtml(dur)} h</div>` : ``}
+          ${dur ? `<div class="blkK">Duración</div><div class="blkV">${escapeHtml(dur)} h</div>` : ``}
           ${label ? `<div class="blkK">Etiqueta</div><div class="blkV">${escapeHtml(label)}</div>` : ``}
         </div>
         <div id="blkSwapArea">${swapButtonForTeam(teamFromLabel(label), ctx) || ""}</div>
@@ -2579,12 +2572,12 @@ $("modalBack").classList.add("hide");
   const hh = String(h).padStart(2,"0")+":00";
   const eh = String(endHour).padStart(2,"0")+":00";
 
-  const dmy = fmtDMY(ctx.dateStr) || "â€”";
-  const orName = ctx.orName || "â€”";
+  const dmy = fmtDMY(ctx.dateStr) || "—";
+  const orName = ctx.orName || "—";
 
   const sum = getTeamContactSummary(ctx.label);
-  const team = sum.team || (String(ctx.label||"").trim().replace(/^E\b[\s:_-]*/i,"").trim()) || "â€”";
-  const contact = sum.contact || "â€”";
+  const team = sum.team || (String(ctx.label||"").trim().replace(/^E\b[\s:_-]*/i,"").trim()) || "—";
+  const contact = sum.contact || "—";
   const canAskSwap = !!(S.groupsLoaded && sum.team && (S.groupsCache||[]).some(g=>String(g.equipo||"").trim()===sum.team && String(g.correo||g.email||"").trim()));
 
   // guardar para pedir cambio
@@ -2592,7 +2585,7 @@ $("modalBack").classList.add("hide");
 
   const lines = `
     <div class="miniLines">
-      <div class="miniLine">${escapeHtml(dmy)} Â· ${escapeHtml(orName)} Â· ${escapeHtml(hh)}â€“${escapeHtml(eh)} <span class="miniSub">(${dur} h)</span></div>
+      <div class="miniLine">${escapeHtml(dmy)} · ${escapeHtml(orName)} · ${escapeHtml(hh)}–${escapeHtml(eh)} <span class="miniSub">(${dur} h)</span></div>
       <div class="miniLine">Equipo: ${escapeHtml(team)}</div>
       <div class="miniLine">Contacto: ${escapeHtml(contact)}</div>
     </div>
@@ -2639,7 +2632,7 @@ $("modalBack").classList.add("hide");
     const body = `
       Hueco libre\n
       Fecha: ${fmtDMY(ctx.dateStr)}\n
-      QuirÃ³fano: ${ctx.orName}\n
+      Quirófano: ${ctx.orName}\n
       Hora: ${String(ctx.hour).padStart(2,"0")}:00\n
       (Solo consulta desde la parrilla)
     `;
@@ -2670,11 +2663,11 @@ $("modalBack").classList.add("hide");
 
   function deleteNonStructBlock(){
     if(!S.modalCtx || !S.modalCtx.eventId) return;
-    if(!confirm("Â¿Seguro que quieres ELIMINAR este quirÃ³fano NO estructural?")) return;
+    if(!confirm("¿Seguro que quieres ELIMINAR este quirófano NO estructural?")) return;
 
     callGAS("masterDeleteEvent", [S.pin, S.modalCtx.eventId], {
       key:"delNonStruct",
-      msg:"Eliminando quirÃ³fano no estructuralâ€¦",
+      msg:"Eliminando quirófano no estructural…",
       onSuccess:(res)=>{
         showMsg($("modalMsg"), res?.message || "Bloque eliminado.", "ok");
         loadGrid();
@@ -2705,7 +2698,7 @@ $("modalBack").classList.add("hide");
 
     $("mfLabel").value = S.modalCtx.label || "MASTER";
     $("mfHours").value = String(S.modalCtx.hours || 2);
-    $("mfHint").textContent = "EditarÃ¡s SOLO este bloque NO estructural (mismo EventId).";
+    $("mfHint").textContent = "Editarás SOLO este bloque NO estructural (mismo EventId).";
   }
 
   
@@ -2720,7 +2713,7 @@ $("modalBack").classList.add("hide");
       ctx.hours = info.duration;
       ctx.startISO = ctx.startISO || (ctx.dateStr ? isoLocal(ctx.dateStr, info.startHour) : "");
     }else{
-      // fallback mÃ­nimo
+      // fallback mínimo
       const h = (ctx.startHour!=null ? ctx.startHour : ctx.hour);
       ctx.startISO = ctx.startISO || (ctx.dateStr && h!=null ? isoLocal(ctx.dateStr, h) : "");
       ctx.hours = ctx.hours || 1;
@@ -2733,11 +2726,11 @@ $("modalBack").classList.add("hide");
 
   function cancelStructBlock(){
     if(!S.modalCtx || !S.modalCtx.eventId) return;
-    if(!confirm("Â¿Seguro que quieres cancelar este bloque estructural SOLO para este dÃ­a?")) return;
+    if(!confirm("¿Seguro que quieres cancelar este bloque estructural SOLO para este día?")) return;
 
     const payload = {
       eventId: S.modalCtx.eventId,   // id de serie (informativo)
-      startISO: S.modalCtx.startISO, // âœ… clave para identificar la ocurrencia exacta
+      startISO: S.modalCtx.startISO, // ✅ clave para identificar la ocurrencia exacta
       hours: S.modalCtx.hours,
       orName: S.modalCtx.orName,
       ruleId: S.modalCtx.ruleId || ""
@@ -2745,7 +2738,7 @@ $("modalBack").classList.add("hide");
 
     callGAS("masterCancelStructuralOccurrence", [S.pin, payload], {
       key:"cancelStructBlock",
-      msg:"Cancelando bloque estructuralâ€¦",
+      msg:"Cancelando bloque estructural…",
       onSuccess:(res)=>{
         showMsg($("modalMsg"), res?.message || "Bloque cancelado.", "ok");
         loadGrid();
@@ -2766,7 +2759,7 @@ $("modalBack").classList.add("hide");
 
     $("modal").classList.add("wide");
     
-    // Entrar en modo ediciÃ³n "inline" (oculta vista y muestra formulario)
+    // Entrar en modo edición "inline" (oculta vista y muestra formulario)
     const bv = $("blockView");
     if(bv) bv.classList.add("hide");
     const bClose = $("btnCloseBottom"); if(bClose) bClose.classList.add("hide");
@@ -2783,7 +2776,7 @@ const mfOr = $("mfOr");
 
     $("mfLabel").value = S.modalCtx.label || "MASTER";
     $("mfHours").value = String(S.modalCtx.hours || 2);
-    $("mfHint").textContent = "EditarÃ¡s SOLO este bloque: se convertirÃ¡ en NO estructural, sin modificar la serie original.";
+    $("mfHint").textContent = "Editarás SOLO este bloque: se convertirá en NO estructural, sin modificar la serie original.";
   }
 
   function applyModalChanges(){
@@ -2804,7 +2797,7 @@ const mfOr = $("mfOr");
 
       callGAS("masterEditStructuralOccurrence", [S.pin, payload], {
         key:"editStructBlock",
-        msg:"Actualizando bloque estructuralâ€¦",
+        msg:"Actualizando bloque estructural…",
         onSuccess:(res)=>{
           showMsg($("modalMsg"), res?.message || "Bloque actualizado.", "ok");
           loadGrid();
@@ -2828,7 +2821,7 @@ const mfOr = $("mfOr");
 
       callGAS("masterUpdateNonStructural", [S.pin, payload], {
         key:"editNonStruct",
-        msg:"Actualizando bloque NO estructuralâ€¦",
+        msg:"Actualizando bloque NO estructural…",
         onSuccess:(res)=>{
           showMsg($("modalMsg"), res?.message || "Bloque actualizado.", "ok");
           loadGrid();
@@ -2854,7 +2847,7 @@ const mfOr = $("mfOr");
     if(!S.structRulesCache || !S.structRulesCache.length){
       callGAS("listStructuralRules", [S.pin], {
         key:"listStructFromGrid",
-        msg:"Cargando reglas estructuralesâ€¦",
+        msg:"Cargando reglas estructurales…",
         onSuccess:(res)=>{
           S.structRulesCache = res.rules || [];
           renderStructFiltersAndList();
@@ -2943,7 +2936,7 @@ const mfOr = $("mfOr");
   }
 
   
-  // âœ… Deduplicar reglas estructurales (mismo equipo/dÃ­a/hora/quirÃ³fano/cadencia, distintos IDs)
+  // ✅ Deduplicar reglas estructurales (mismo equipo/día/hora/quirófano/cadencia, distintos IDs)
   function dedupeStructuralRules_(rawRules){
     const map = new Map(); // key -> bestRule
     let dupCount = 0;
@@ -2988,10 +2981,10 @@ const mfOr = $("mfOr");
       return parts.join("|");
     }
     function scoreRule_(r){
-      // preferir la que "cubre mÃ¡s" y/o sea mÃ¡s reciente
+      // preferir la que "cubre más" y/o sea más reciente
       const end = normDate_(r.endDate);
       const start = normDate_(r.startDate);
-      // si hay timestamps, Ãºsalos; si no, 0
+      // si hay timestamps, úsalos; si no, 0
       const upd = Number(r.updatedAt || r.updated_at || r.ts || 0) || 0;
       const crt = Number(r.createdAt || r.created_at || 0) || 0;
       return { end, start, upd, crt, id: String(r.id || "") };
@@ -3102,7 +3095,7 @@ function renderStructFiltersAndList(){
 
     const table = document.createElement("table");
     const thead = document.createElement("thead");
-    thead.innerHTML = "<tr><th>ID</th><th>Equipo</th><th>QuirÃ³fano</th><th>Inicio</th><th>Fin</th><th>Hora</th><th>DuraciÃ³n</th><th>Cadencia</th><th>DÃ­as</th></tr>";
+    thead.innerHTML = "<tr><th>ID</th><th>Equipo</th><th>Ubicación</th><th>Inicio</th><th>Fin</th><th>Hora</th><th>Duración</th><th>Cadencia</th><th>Días</th></tr>";
     table.appendChild(thead);
     const tbody = document.createElement("tbody");
 
@@ -3133,11 +3126,11 @@ function renderStructFiltersAndList(){
   function refreshStructList(){
     hideMsg($("msgStruct"));
     $("structList").innerHTML = "";
-    $("structSummary").textContent = "Cargando reglasâ€¦";
+    $("structSummary").textContent = "Cargando reglas…";
 
     callGAS("listStructuralRules", [S.pin], {
       key:"listStruct",
-      msg:"Cargando programaciÃ³n estructuralâ€¦",
+      msg:"Cargando programación estructural…",
       onSuccess:(res)=>{
         S.structRulesCache = res.rules || [];
         renderStructFiltersAndList();
@@ -3197,7 +3190,7 @@ function renderStructFiltersAndList(){
 
     callGAS("upsertStructuralRule", [S.pin, payload], {
       key:"saveStruct",
-      msg:"Guardando programaciÃ³n estructuralâ€¦",
+      msg:"Guardando programación estructural…",
       onSuccess:(res)=>{
         const msg = res?.message || "Guardado.";
         if(res && res.rule && res.rule.id){
@@ -3216,11 +3209,11 @@ function renderStructFiltersAndList(){
     hideMsg($("msgStructEdit"));
     const id = ($("stId").value || "").trim();
     if(!id) return showMsg($("msgStructEdit"), "Indica un ID para eliminar.", "warn");
-    if(!confirm("Â¿Seguro que quieres eliminar TODA la serie estructural asociada a ese ID?")) return;
+    if(!confirm("¿Seguro que quieres eliminar TODA la serie estructural asociada a ese ID?")) return;
 
     callGAS("deleteStructuralRule", [S.pin, id], {
       key:"delStruct",
-      msg:"Eliminando programaciÃ³n estructuralâ€¦",
+      msg:"Eliminando programación estructural…",
       onSuccess:(res)=>{
         showMsg($("msgStructEdit"), res?.message || "Estructural eliminado.", "ok");
         clearStructEditor();
@@ -3266,13 +3259,13 @@ function renderStructFiltersAndList(){
 
   
 
-// ===== GRUPOS QUIRÃšRGICOS (consulta) =====
+// ===== GRUPOS QUIRÚRGICOS (consulta) =====
 function loadGroupsCache(force){
   if(!S.pin) return;
   if(S.groupsLoaded && !force) return;
   callGAS("listSurgicalGroups", [S.pin], {
     key:"listGroups",
-    msg:"Cargando equipos quirÃºrgicosâ€¦",
+    msg:"Cargando equipos quirúrgicos…",
     onSuccess:(res)=>{
       const groups = (res && res.groups) ? res.groups : [];
       S.groupsCache = groups;
@@ -3307,7 +3300,7 @@ function loadGroupsCache(force){
 
     if($("mfCancelBtn")) $("mfCancelBtn").onclick = ()=>{
 
-      // Salir de modo ediciÃ³n
+      // Salir de modo edición
       const bv = $("blockView");
       if(bv) bv.classList.remove("hide");
       const bClose = $("btnCloseBottom"); if(bClose) bClose.classList.remove("hide");
@@ -3323,7 +3316,7 @@ function loadGroupsCache(force){
   }
 
   function wireAskSwapButton(ctx){
-    // Guarda contexto para el email (fecha/quirÃ³fano/hora etc.)
+    // Guarda contexto para el email (fecha/quirófano/hora etc.)
     S.selectedCellContext = ctx || null;
 
     const btn = $("btnAskSwapFromBlock");
@@ -3378,7 +3371,7 @@ function openGroupsView(){
     });
 
     const teams = Object.keys(by).sort((a,b)=>normalizeEquipoKey(a).localeCompare(normalizeEquipoKey(b),"es"));
-    $("groupsCount").textContent = `${teams.length} equipo(s) Â· ${filtered.length} miembro(s)`;
+    $("groupsCount").textContent = `${teams.length} equipo(s) · ${filtered.length} miembro(s)`;
     const list = $("groupsList");
     list.innerHTML = "";
 
@@ -3394,7 +3387,7 @@ function openGroupsView(){
         const r = normalizeStr(m.rol||"");
         return r.includes("admin") || r.includes("administrador");
       }) || null;
-      const adminName = String((admin && (admin.nombre||admin.cirujano)) || "").trim() || "â€”";
+      const adminName = String((admin && (admin.nombre||admin.cirujano)) || "").trim() || "—";
       const others = members.filter(m=> m !== admin);
 
       const linesHtml = others.map(m=>{
@@ -3405,16 +3398,16 @@ function openGroupsView(){
         const tel  = escapeHtml(String(m.telefono||"").trim());
 
         const parts = [];
-        parts.push(`<b>${nombre || "â€”"}</b>`);
+        parts.push(`<b>${nombre || "—"}</b>`);
         const extras = [
-          (rol && rol !== "â€”") ? rol : "",
+          (rol && rol !== "—") ? rol : "",
           esp ? esp : "",
           mail ? mail : "",
           tel ? tel : ""
         ].filter(Boolean);
 
         for(const x of extras){
-          parts.push(`<span class="sep">Â·</span>`);
+          parts.push(`<span class="sep">·</span>`);
           parts.push(`<span>${x}</span>`);
         }
         return `<div class="gLine">${parts.join("")}</div>`;
@@ -3429,7 +3422,7 @@ function openGroupsView(){
                 <span class="gTeamPill">${members.length} miembro(s)</span>
                 <span class="gTeamPill">Admin: <b>${escapeHtml(adminName)}</b></span>
               </div>
-              <div class="gTeamChevron">â–¾</div>
+              <div class="gTeamChevron">▾</div>
             </div>
           </summary>
           <div class="gTeamBody">
@@ -3501,7 +3494,7 @@ function teamColorForLabel(label){
     h = (h*31 + s.charCodeAt(i)) >>> 0;
   }
   const hue = h % 360;
-  // Fondo fuerte (100% saturaciÃ³n) y luminosidad moderada para que no sea pastel
+  // Fondo fuerte (100% saturación) y luminosidad moderada para que no sea pastel
   return {
     bg: `hsl(${hue} 100% 42%)`,
     border: `hsl(${hue} 100% 28%)`,
@@ -3539,7 +3532,7 @@ function normalizeEquipoKey(value){
       match = Object.keys(byTeam).find(t => normalizeEquipoKey(t) === key) || null;
     }
     if(!match){
-      return { team, contact: S.groupsLoaded ? "" : "Cargandoâ€¦" };
+      return { team, contact: S.groupsLoaded ? "" : "Cargando…" };
     }
 
     const members = (byTeam[match]||[]).slice();
@@ -3553,7 +3546,7 @@ function normalizeEquipoKey(value){
     const first = members[0] || {};
     const name = String(first.cirujano || first.nombre || "").trim();
     const spec = String(first.especialidad || "").trim();
-    const contact = (name ? name : "") + (spec ? " Â· "+spec : "");
+    const contact = (name ? name : "") + (spec ? " · "+spec : "");
     return { team: match, contact };
   }
 
@@ -3582,14 +3575,14 @@ function groupInfoHtmlForLabel(label){
   }
 
   if(!match){
-    if(!S.groupsLoaded) return `<div class="mut" style="margin-top:10px">Cargando equipoâ€¦</div>`;
+    if(!S.groupsLoaded) return `<div class="mut" style="margin-top:10px">Cargando equipo…</div>`;
     return "";
   }
 
   const members = (byTeam[match]||[]).slice();
   members.sort((a,b)=>String(a.cirujano||a.nombre||"").localeCompare(String(b.cirujano||b.nombre||""),"es"));
   const first = members[0] || {};
-  const firstName = String(first.cirujano || first.nombre || "â€”").trim();
+  const firstName = String(first.cirujano || first.nombre || "—").trim();
   const firstSpec = String(first.especialidad || "").trim();
 
   const emailObj = members.find(x=>String(x.correo||x.email||"").trim());
@@ -3597,17 +3590,17 @@ function groupInfoHtmlForLabel(label){
 
   const btn = hasEmail
     ? `<div class="dlgActions"><button type="button" class="btn good" id="btnAskSwapFromBlock" data-team="${escapeHtml(match)}">Pedir cambio</button></div>`
-    : `<div class="mut" style="margin-top:10px">Equipo <b>${escapeHtml(match)}</b> sin email en GruposQuirÃºrgicos.</div>`;
+    : `<div class="mut" style="margin-top:10px">Equipo <b>${escapeHtml(match)}</b> sin email en GruposQuirúrgicos.</div>`;
 
   return `
     <div class="dlgGrid">
       <div class="dlgK">Equipo</div><div class="dlgV">${escapeHtml(match)}</div>
-      <div class="dlgK">Contacto</div><div class="dlgV">${escapeHtml(firstName)}${firstSpec ? " Â· "+escapeHtml(firstSpec) : ""}</div>
+      <div class="dlgK">Contacto</div><div class="dlgV">${escapeHtml(firstName)}${firstSpec ? " · "+escapeHtml(firstSpec) : ""}</div>
     </div>
     ${btn}
   `;
 }
-// ===== NO ESTRUCTURALES DESDE MASTER (bÃºsqueda de huecos) =====
+// ===== NO ESTRUCTURALES DESDE MASTER (búsqueda de huecos) =====
   function buildDoctorSelectForMaster(){
     const sel = $("stNSDoctorSelect");
     if(!sel) return;
@@ -3617,7 +3610,7 @@ function groupInfoHtmlForLabel(label){
       const email = d.correo || d.email || d.emailVisible || "";
       if(!email) return;
       const name = [d.nombre, d.apellidos].filter(Boolean).join(" ");
-      const label = name ? `${name} â€“ ${email}` : email;
+      const label = name ? `${name} – ${email}` : email;
       const opt = document.createElement("option");
       opt.value = email;
       opt.textContent = label;
@@ -3629,7 +3622,7 @@ function groupInfoHtmlForLabel(label){
     if(S.doctorListLoaded) return;
     callGAS("listDoctorsForMaster", [S.pin], {
       key:"listDoctorsMaster",
-      msg:"Cargando profesionalesâ€¦",
+      msg:"Cargando profesionales…",
       onSuccess:(res)=>{
         S.doctorList = res.doctors || res.lista || [];
         S.doctorListLoaded = true;
@@ -3671,7 +3664,7 @@ function groupInfoHtmlForLabel(label){
     return results;
   }
 
-  // Render agrupado por ubicaciÃ³n
+  // Render agrupado por ubicación
   function renderMasterNSSlots(){
     const box = $("stNSSlotsBox");
     box.innerHTML = "";
@@ -3682,7 +3675,7 @@ function groupInfoHtmlForLabel(label){
 
     const groups = new Map();
     slots.forEach((s, idx)=>{
-      const key = s.orName || "â€”";
+      const key = s.orName || "—";
       if(!groups.has(key)) groups.set(key, []);
       groups.get(key).push({ s, idx });
     });
@@ -3713,7 +3706,7 @@ function groupInfoHtmlForLabel(label){
 
       const title = document.createElement("div");
       title.className = "slotsRowTitle";
-      title.innerHTML = `<span class="badge">UbicaciÃ³n</span> ${escapeHtml(orName)}`;
+      title.innerHTML = `<span class="badge">Ubicación</span> ${escapeHtml(orName)}`;
 
       const count = document.createElement("div");
       count.className = "badge";
@@ -3732,7 +3725,7 @@ function groupInfoHtmlForLabel(label){
         const btn = document.createElement("button");
         btn.className = "slot" + (idx === S.masterNSSelectedIndex ? " selected" : "");
         btn.textContent = `${d.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}`;
-        btn.title = `${escapeHtml(orName)} Â· ${String(s.startHour).padStart(2,"0")}:00`;
+        btn.title = `${escapeHtml(orName)} · ${String(s.startHour).padStart(2,"0")}:00`;
         btn.onclick = ()=>{
           S.masterNSSelectedIndex = idx;
           renderMasterNSSlots();
@@ -3766,11 +3759,11 @@ function groupInfoHtmlForLabel(label){
     const hours = parseInt((o.hours || $("stNSDur").value),10);
 
     if(!dateStr) return showMsg($("msgStructNon"), "Selecciona una fecha.", "warn");
-    if(!hours || hours <= 0) return showMsg($("msgStructNon"), "Selecciona una duraciÃ³n vÃ¡lida.", "warn");
+    if(!hours || hours <= 0) return showMsg($("msgStructNon"), "Selecciona una duración válida.", "warn");
 
     callGAS("getGridOccupancy", [S.pin, dateStr], {
       key:"masterNSGrid",
-      msg:"Buscando huecos disponiblesâ€¦",
+      msg:"Buscando huecos disponibles…",
       disable: [$("btnNSFindSlots")],
       onSuccess:(res)=>{
         S.masterNSQuery = {dateStr, hours};
@@ -3780,8 +3773,8 @@ function groupInfoHtmlForLabel(label){
         if(!slots.length){
           showMsg($("msgStructNon"),
             afterCreate
-              ? "QuirÃ³fano creado. No quedan huecos libres para esa duraciÃ³n en ese dÃ­a (ya actualizado)."
-              : "No hay huecos libres que permitan esa duraciÃ³n en ese dÃ­a.",
+              ? "Quirófano creado. No quedan huecos libres para esa duración en ese día (ya actualizado)."
+              : "No hay huecos libres que permitan esa duración en ese día.",
             "warn"
           );
           return;
@@ -3791,8 +3784,8 @@ function groupInfoHtmlForLabel(label){
 
         showMsg($("msgStructNon"),
           afterCreate
-            ? "QuirÃ³fano creado correctamente. Huecos actualizados: selecciona otro hueco si quieres asignar uno nuevo."
-            : "Selecciona un hueco y despuÃ©s pulsa Â«Asignar hueco seleccionadoÂ».",
+            ? "Quirófano creado correctamente. Huecos actualizados: selecciona otro hueco si quieres asignar uno nuevo."
+            : "Selecciona un hueco y después pulsa «Asignar hueco seleccionado».",
           "ok"
         );
       },
@@ -3834,16 +3827,16 @@ function groupInfoHtmlForLabel(label){
       doctorEmail: email
     };
 
-    if(!confirm(`Â¿Crear quirÃ³fano NO estructural para ${email} el ${fmtDMY(dateStr)} en ${orName} a las ${String(slot.startHour).padStart(2,"0")}:00 durante ${hours} h?`)){
+    if(!confirm(`¿Crear quirófano NO estructural para ${email} el ${fmtDMY(dateStr)} en ${orName} a las ${String(slot.startHour).padStart(2,"0")}:00 durante ${hours} h?`)){
       return;
     }
 
     callGAS("masterCreateNonStructural", [S.pin, payload], {
       key:"masterCreateNonStruct",
-      msg:"Creando quirÃ³fano no estructuralâ€¦",
+      msg:"Creando quirófano no estructural…",
       disable: [$("btnNSAssignSlot"), $("btnNSFindSlots"), $("stNSDoctorSelect"), $("stNSDoctorEmail"), $("stNSLabel"), $("stNSDate"), $("stNSDur")],
       onSuccess:(res)=>{
-        showMsg($("msgStructNon"), res?.message || "QuirÃ³fano no estructural creado.", "ok");
+        showMsg($("msgStructNon"), res?.message || "Quirófano no estructural creado.", "ok");
         masterFindNonStructSlots({ refreshOnly:true, afterCreate:true, dateStr, hours });
 
         const gdDate = $("gdDate").value;
@@ -3875,7 +3868,7 @@ function groupInfoHtmlForLabel(label){
   function loadWaitlistMaster(){
     hideMsg($("msgWait"));
     const listEl = $("waitList");
-    listEl.innerHTML = `<div class="msg">Cargandoâ€¦</div>`;
+    listEl.innerHTML = `<div class="msg">Cargando…</div>`;
 
     const mode = $("wlFilter").value;
     let onlyPending = true;
@@ -3884,11 +3877,11 @@ function groupInfoHtmlForLabel(label){
 
     callGAS("listWaitlist", [S.pin, onlyPending, includePast], {
       key:"waitlist",
-      msg:"Cargando lista de esperaâ€¦",
+      msg:"Cargando lista de espera…",
       onSuccess:(res)=>{
         if(!res || !res.ok){
           listEl.innerHTML = "";
-          showMsg($("msgWait"), "Respuesta invÃ¡lida del servidor.", "bad");
+          showMsg($("msgWait"), "Respuesta inválida del servidor.", "bad");
           return;
         }
         renderWaitlist(res.items || []);
@@ -3919,11 +3912,11 @@ function groupInfoHtmlForLabel(label){
           <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap">
             <div style="min-width:280px;flex:1">
               <div style="font-weight:850">
-                ${escapeHtml(fmtDMY(it.fecha||""))} Â· ${escapeHtml(String(it.horas||""))}h Â· ${escapeHtml(it.preferencia||"")}
+                ${escapeHtml(fmtDMY(it.fecha||""))} · ${escapeHtml(String(it.horas||""))}h · ${escapeHtml(it.preferencia||"")}
               </div>
-              <div class="hint">${escapeHtml(who)} Â· ${escapeHtml(it.especialidad||"")} Â· ${escapeHtml(it.correo||"")}</div>
+              <div class="hint">${escapeHtml(who)} · ${escapeHtml(it.especialidad||"")} · ${escapeHtml(it.correo||"")}</div>
               ${it.nota ? `<div style="margin-top:6px">${escapeHtml(it.nota)}</div>` : ``}
-              <div class="hint" style="margin-top:6px">Estado: <b>${escapeHtml(estado)}</b> Â· ID: ${escapeHtml(it.waitId||"")}</div>
+              <div class="hint" style="margin-top:6px">Estado: <b>${escapeHtml(estado)}</b> · ID: ${escapeHtml(it.waitId||"")}</div>
             </div>
 
             <div style="display:flex;flex-direction:column;gap:8px;min-width:200px">
@@ -3938,11 +3931,11 @@ function groupInfoHtmlForLabel(label){
 
   function acceptWait(waitId){
     if(!waitId) return;
-    if(!confirm("Â¿Asignar quirÃ³fano automÃ¡ticamente para esta solicitud?")) return;
+    if(!confirm("¿Asignar quirófano automáticamente para esta solicitud?")) return;
 
     callGAS("acceptWaitlist", [S.pin, waitId], {
       key:"acceptWait",
-      msg:"Buscando hueco y asignandoâ€¦",
+      msg:"Buscando hueco y asignando…",
       onSuccess:(res)=>{
         showMsg($("msgWait"), res?.message || "Solicitud asignada.", "ok");
         loadWaitlistMaster();
@@ -3956,11 +3949,11 @@ function groupInfoHtmlForLabel(label){
 
   function discardWait(waitId){
     if(!waitId) return;
-    if(!confirm("Â¿Descartar esta solicitud y enviar email al solicitante?")) return;
+    if(!confirm("¿Descartar esta solicitud y enviar email al solicitante?")) return;
 
     callGAS("resolveWaitlist", [S.pin, waitId, "DESCARTADA"], {
       key:"discardWait",
-      msg:"Marcando solicitud como descartadaâ€¦",
+      msg:"Marcando solicitud como descartada…",
       onSuccess:(res)=>{
         showMsg($("msgWait"), res?.message || "Solicitud descartada.", "ok");
         loadWaitlistMaster();
@@ -3983,7 +3976,7 @@ function groupInfoHtmlForLabel(label){
 
     callGAS("sendORForecastReport", [S.pin, email, start, end], {
       key:"report",
-      msg:"Enviando reporte por correoâ€¦",
+      msg:"Enviando reporte por correo…",
       onSuccess:(res)=>{
         showMsg($("msgReport"), res?.message || "Reporte enviado.", "ok");
       },
@@ -4009,7 +4002,7 @@ function groupInfoHtmlForLabel(label){
 
     callGAS("getStructuralProgramReport", [S.pin], {
       key:"structReport",
-      msg:"Generando reporte visualâ€¦",
+      msg:"Generando reporte visual…",
       onSuccess:(res)=>{
         try{
           renderStructVisualReport(res);
@@ -4039,7 +4032,7 @@ function groupInfoHtmlForLabel(label){
     // Group by location -> day -> session
     const map = new Map(); // loc -> { L:{morning:[],afternoon:[]}, ... }
     rows.forEach(r=>{
-      const loc = String(r.orName||r.location||"").trim() || "â€”";
+      const loc = String(r.orName||r.location||"").trim() || "—";
       const day = normalizeDayKey(r.day);
       const sess = normalizeSessionKey(r.session);
       if(!map.has(loc)){
@@ -4047,17 +4040,17 @@ function groupInfoHtmlForLabel(label){
       }
       const cell = map.get(loc)[day][sess];
       cell.push({
-        label: r.label || r.team || r.group || r.equipo || "â€”",
+        label: r.label || r.team || r.group || r.equipo || "—",
         time: r.time || r.range || r.horario || formatTimeRange(r),
         responsable: r.responsable || r.admin || r.administrator || r.responsible || ""
       });
     });
 
     const dayOrder = ["L","M","X","J","V","S","D"];
-    const dayName = {L:"Lunes", M:"Martes", X:"MiÃ©rcoles", J:"Jueves", V:"Viernes", S:"SÃ¡bado", D:"Domingo"};
-    const sessName = {morning:"MaÃ±ana", afternoon:"Tarde"};
+    const dayName = {L:"Lunes", M:"Martes", X:"Miércoles", J:"Jueves", V:"Viernes", S:"Sábado", D:"Domingo"};
+    const sessName = {morning:"Mañana", afternoon:"Tarde"};
 
-    // âœ… Render en TABLA (estilo Excel) para evitar solapes de celdas (bug de sticky+grid en algunos navegadores)
+    // ✅ Render en TABLA (estilo Excel) para evitar solapes de celdas (bug de sticky+grid en algunos navegadores)
     const scroll = document.createElement("div");
     scroll.className = "structReportScroll";
 
@@ -4070,7 +4063,7 @@ function groupInfoHtmlForLabel(label){
     const thLoc = document.createElement("th");
     thLoc.className = "srLoc";
     thLoc.rowSpan = 2;
-    thLoc.textContent = "UbicaciÃ³n";
+    thLoc.textContent = "Ubicación";
     tr1.appendChild(thLoc);
 
     dayOrder.forEach(d=>{
@@ -4123,12 +4116,12 @@ function groupInfoHtmlForLabel(label){
               btn.type = "button";
               btn.className = "srCard";
               // En la tarjeta: solo el nombre del equipo
-              btn.innerHTML = `<div class="srCardTop"><span class="srLabel">${escapeHtml(it.label || "â€”")}</span></div>`;
+              btn.innerHTML = `<div class="srCardTop"><span class="srLabel">${escapeHtml(it.label || "—")}</span></div>`;
               const __c = teamColorForLabel(it.label);
               btn.style.background = __c.bg;
               btn.style.borderColor = __c.border;
               btn.style.color = __c.text || "#fff";
-              // sombra mÃ­nima para separar sin â€œpastelâ€
+              // sombra mínima para separar sin “pastel”
               btn.style.boxShadow = "inset 0 0 0 1px rgba(255,255,255,.10)";
 
               btn.onclick = ()=>{
@@ -4140,7 +4133,7 @@ function groupInfoHtmlForLabel(label){
                   sessionKey: sess,
                   label: it.label,
                   time: it.time || "",
-                  responsable: it.responsable || "â€”"
+                  responsable: it.responsable || "—"
                 });
               };
               stack.appendChild(btn);
@@ -4149,7 +4142,7 @@ function groupInfoHtmlForLabel(label){
             if(items.length>6){
               const more = document.createElement("div");
               more.className = "srMore";
-              more.textContent = `+${items.length-6} mÃ¡s`;
+              more.textContent = `+${items.length-6} más`;
               stack.appendChild(more);
             }
           }else{
@@ -4230,7 +4223,7 @@ function groupInfoHtmlForLabel(label){
           if(!Array.isArray(arr)) return;
           const sess = sessMap[String(rawSess).toUpperCase()] || String(rawSess).toLowerCase();
           arr.forEach(it=>{
-            const orName = it.orName || it.location || it.or || data.orName || data.location || "â€”";
+            const orName = it.orName || it.location || it.or || data.orName || data.location || "—";
             const label = it.label || it.team || it.group || it.equipo;
             let time = it.time || it.range || it.horario;
 
@@ -4239,7 +4232,7 @@ function groupInfoHtmlForLabel(label){
               const dur = (it.durationHours ?? it.duration ?? it.durH);
               if(sh != null && dur != null){
                 const end = Number(sh) + Number(dur);
-                time = `${fmtHour(sh)}â€“${fmtHour(end)}`;
+                time = `${fmtHour(sh)}–${fmtHour(end)}`;
               }
             }
 
@@ -4265,10 +4258,10 @@ function groupInfoHtmlForLabel(label){
       "0":"D","6":"S","5":"V","4":"J","3":"X","2":"M","1":"L",
       "lun":"L","lunes":"L","mon":"L","monday":"L",
       "mar":"M","martes":"M","tue":"M","tuesday":"M",
-      "miÃ©":"X","mie":"X","miÃ©rcoles":"X","miercoles":"X","wed":"X","wednesday":"X",
+      "mié":"X","mie":"X","miércoles":"X","miercoles":"X","wed":"X","wednesday":"X",
       "jue":"J","jueves":"J","thu":"J","thursday":"J",
       "vie":"V","viernes":"V","fri":"V","friday":"V",
-      "sÃ¡b":"S","sab":"S","sÃ¡bado":"S","sabado":"S","sat":"S","saturday":"S",
+      "sáb":"S","sab":"S","sábado":"S","sabado":"S","sat":"S","saturday":"S",
       "dom":"D","domingo":"D","sun":"D","sunday":"D",
       "l":"L","m":"M","x":"X","j":"J","v":"V","s":"S","d":"D"
     };
@@ -4315,16 +4308,16 @@ function groupInfoHtmlForLabel(label){
     bd.innerHTML = `
       <div class="srModal" role="dialog" aria-modal="true">
         <div class="srModalRow">
-          <div class="srModalTitle" id="srModalTitle">â€”</div>
-          <button type="button" class="srModalCloseX" id="srModalCloseX" aria-label="Cerrar">âœ•</button>
+          <div class="srModalTitle" id="srModalTitle">—</div>
+          <button type="button" class="srModalCloseX" id="srModalCloseX" aria-label="Cerrar">✕</button>
         </div>
         <div class="srModalBody">
-          <div class="srModalLine"><span class="muted">Equipo:</span> <span id="srModalEquipo">â€”</span></div>
-          <div class="srModalLine"><span class="muted">Turno:</span> <span id="srModalTurno">â€”</span></div>
-          <div class="srModalLine"><span class="muted">Cadencia:</span> <span id="srModalCadence">â€”</span></div>
-          <div class="srModalLine"><span class="muted">ConfiguraciÃ³n:</span> <span id="srModalCadenceCfg">â€”</span></div>
-          <div class="srModalLine"><span class="muted">Administrador:</span> <span id="srModalResp">â€”</span></div>
-          <div class="srModalLine"><span class="muted">Contacto:</span> <span id="srModalContact">â€”</span></div>
+          <div class="srModalLine"><span class="muted">Equipo:</span> <span id="srModalEquipo">—</span></div>
+          <div class="srModalLine"><span class="muted">Turno:</span> <span id="srModalTurno">—</span></div>
+          <div class="srModalLine"><span class="muted">Cadencia:</span> <span id="srModalCadence">—</span></div>
+          <div class="srModalLine"><span class="muted">Configuración:</span> <span id="srModalCadenceCfg">—</span></div>
+          <div class="srModalLine"><span class="muted">Administrador:</span> <span id="srModalResp">—</span></div>
+          <div class="srModalLine"><span class="muted">Contacto:</span> <span id="srModalContact">—</span></div>
         </div>
         <div class="srModalActions">
           <button type="button" class="btn" id="srModalCloseBtn">Cerrar</button>
@@ -4356,13 +4349,13 @@ function groupInfoHtmlForLabel(label){
   }
 
   function fmtAdminContact(admin){
-    if(!admin) return "â€”";
+    if(!admin) return "—";
     const email = admin.email || admin.correo || admin.mail || "";
     const phone = admin.telefono || admin.phone || admin.tlf || "";
-    if(email && phone) return `${email} Â· ${phone}`;
+    if(email && phone) return `${email} · ${phone}`;
     if(email) return email;
     if(phone) return phone;
-    return "â€”";
+    return "—";
   }
 
   // --- Cadencia: resolver regla estructural para un bloque del reporte ---
@@ -4372,7 +4365,7 @@ function groupInfoHtmlForLabel(label){
     const dayKey = info.dayKey || normalizeDayKey(info.day);
     const sessName = (function(v){
       const s = normalizeStr(String(v||""));
-      if(s==="m"||s==="manana"||s.includes("maÃ±ana")||s.includes("morning")) return "maÃ±ana";
+      if(s==="m"||s==="manana"||s.includes("mañana")||s.includes("morning")) return "mañana";
       if(s==="t"||s==="tarde"||s.includes("afternoon")) return "tarde";
       return s;
     })(info.session);
@@ -4383,7 +4376,7 @@ function groupInfoHtmlForLabel(label){
       if(r.sessionNameEs) return String(r.sessionNameEs).toLowerCase();
       const sh = Number(r.startHour ?? r.startHourFloat ?? r.start ?? NaN);
       if(!Number.isFinite(sh)) return "";
-      return (sh < 15) ? "maÃ±ana" : "tarde";
+      return (sh < 15) ? "mañana" : "tarde";
     };
 
     // 1) Match fuerte (loc+label+day+session)
@@ -4402,7 +4395,7 @@ function groupInfoHtmlForLabel(label){
     });
     if(hit) return hit;
 
-    // 2) Match sin sesiÃ³n (por si faltan horas o sesiÃ³n)
+    // 2) Match sin sesión (por si faltan horas o sesión)
     hit = rules.find(r=>{
       return normalizeStr(r.orName||r.location||"")===locKey &&
              normalizeStr(r.label||r.team||"")===labelKey &&
@@ -4419,39 +4412,39 @@ function groupInfoHtmlForLabel(label){
   }
 
   function describeCadence(rule){
-    if(!rule) return {name:"â€”", cfg:"â€”"};
+    if(!rule) return {name:"—", cfg:"—"};
     const mode = String(rule.cadenceMode||"").toUpperCase();
     const name = rule.cadenceNameEs || (
       mode==="MONTH_WEEKS" ? "Mensual (semanas del mes)" :
       mode==="WEEKLY" ? "Semanal" :
-      mode ? mode : "â€”"
+      mode ? mode : "—"
     );
 
-    const dayName = {L:"Lunes",M:"Martes",X:"MiÃ©rcoles",J:"Jueves",V:"Viernes",S:"SÃ¡bado",D:"Domingo"};
+    const dayName = {L:"Lunes",M:"Martes",X:"Miércoles",J:"Jueves",V:"Viernes",S:"Sábado",D:"Domingo"};
     const dow = Array.isArray(rule.weekdays) ? rule.weekdays.map(String) : [];
-    const dows = dow.length ? dow.map(d=>dayName[d]||d).join(", ") : "â€”";
+    const dows = dow.length ? dow.map(d=>dayName[d]||d).join(", ") : "—";
 
     const wom = Array.isArray(rule.weeksOfMonth) ? rule.weeksOfMonth.map(String) : [];
-    const womFmt = wom.length ? wom.map(w=>`${w}Âª`).join(", ") : "â€”";
+    const womFmt = wom.length ? wom.map(w=>`${w}ª`).join(", ") : "—";
 
     const interval = Number(rule.intervalWeeks||1);
     const intervalTxt = (mode==="WEEKLY" && interval>1) ? `Cada ${interval} semanas` : (mode==="WEEKLY" ? "Cada semana" : "");
 
     const startDate = rule.startDate ? String(rule.startDate) : "";
     const endDate = rule.endDate ? String(rule.endDate) : "";
-    const dateTxt = (startDate || endDate) ? `${startDate || "â€”"} â†’ ${endDate || "â€”"}` : "â€”";
+    const dateTxt = (startDate || endDate) ? `${startDate || "—"} → ${endDate || "—"}` : "—";
 
     const sh = rule.startHour != null ? String(rule.startHour) : "";
     const dur = rule.durationHours != null ? String(rule.durationHours) : "";
-    const timeTxt = (sh || dur) ? `${sh || "â€”"}h Â· ${dur || "â€”"}h` : "â€”";
+    const timeTxt = (sh || dur) ? `${sh || "—"}h · ${dur || "—"}h` : "—";
 
     let extra = [];
     if(intervalTxt) extra.push(intervalTxt);
     if(mode==="MONTH_WEEKS") extra.push(`Semanas del mes: ${womFmt}`);
-    extra.push(`DÃ­as: ${dows}`);
-    extra.push(`Hora/DuraciÃ³n: ${timeTxt}`);
+    extra.push(`Días: ${dows}`);
+    extra.push(`Hora/Duración: ${timeTxt}`);
 
-    return {name, cfg: extra.join(" Â· ")};
+    return {name, cfg: extra.join(" · ")};
   }
 
 
@@ -4461,26 +4454,26 @@ function openStructReportBlockModal(info){
     const show = ()=>{
       const admin = findAdminForEquipo(info.label) || null;
 
-      $("srModalEquipo").textContent = info.label || "â€”";
-      $("srModalTurno").textContent = info.session || "â€”";
+      $("srModalEquipo").textContent = info.label || "—";
+      $("srModalTurno").textContent = info.session || "—";
       const __rule = findStructRuleForBlock(info);
       const __cad = describeCadence(__rule);
-      $("srModalCadence").textContent = __cad.name || "â€”";
-      $("srModalCadenceCfg").textContent = __cad.cfg || "â€”";
+      $("srModalCadence").textContent = __cad.name || "—";
+      $("srModalCadenceCfg").textContent = __cad.cfg || "—";
 
-      $("srModalResp").textContent = (admin && (admin.nombre || admin.name)) ? (admin.nombre || admin.name) : (info.responsable || "â€”");
+      $("srModalResp").textContent = (admin && (admin.nombre || admin.name)) ? (admin.nombre || admin.name) : (info.responsable || "—");
       $("srModalContact").textContent = fmtAdminContact(admin);
 
-      $("srModalTitle").textContent = (info.label || "â€”");
+      $("srModalTitle").textContent = (info.label || "—");
       $("srModalBackdrop").classList.remove("hide");
     };
 
     const ensureStructThenShow = ()=>{
-      // Para mostrar cadencia/configuraciÃ³n necesitamos tener la programaciÃ³n estructural cargada
+      // Para mostrar cadencia/configuración necesitamos tener la programación estructural cargada
       if(!S.structRulesCache || !S.structRulesCache.length){
         callGAS("listStructuralRules", [S.pin], {
           key:"listStructForReportModal",
-          msg:"Cargando programaciÃ³n estructuralâ€¦",
+          msg:"Cargando programación estructural…",
           onSuccess:(res)=>{
             S.structRulesCache = res.rules || [];
             show();
@@ -4565,10 +4558,7 @@ function openStructReportBlockModal(info){
 
     if($("btnGoWait")) $("btnGoWait").onclick    = openWaitlist;
     if($("btnGoReport")) $("btnGoReport").onclick  = ()=>go("viewReport");
-
-    
-
-    if($("btnGoGroups")) $("btnGoGroups").onclick = ()=>{ go("viewGroups"); openGroupsView(); };$("btnCheckSlots").onclick = checkSlots;
+$("btnCheckSlots").onclick = checkSlots;
     if($("btnOpenWaitlistFromReserve")) $("btnOpenWaitlistFromReserve").onclick = openWaitlistFromReserve;
     if($("btnLoadMine")) $("btnLoadMine").onclick = loadMine;
 
@@ -4619,7 +4609,7 @@ $("structOrFilter").onchange = setStructOrFilter;
     }
   });
 
-// --- Solicitud de cambio: modal + envÃ­o directo (Apps Script) ---
+// --- Solicitud de cambio: modal + envío directo (Apps Script) ---
 let __swapTeam = "";
 let __swapContext = null;
 
@@ -4656,20 +4646,20 @@ function openSwapModal(team, context){
         google.script.run
           .withSuccessHandler((res)=>{
             if(res && res.ok){
-              status.textContent = "âœ… Solicitud enviada a " + (res.to || "");
+              status.textContent = "✅ Solicitud enviada a " + (res.to || "");
               setTimeout(()=>{ modal.style.display = "none"; }, 800);
             } else {
-              status.textContent = "âŒ No se pudo enviar.";
+              status.textContent = "❌ No se pudo enviar.";
             }
           })
           .withFailureHandler((err)=>{
-            status.textContent = "âŒ " + (err?.message || String(err||"Error"));
+            status.textContent = "❌ " + (err?.message || String(err||"Error"));
           })
           .requestSwapToTeam(payload.pin, payload.equipo, payload.comment, payload.context);
         return;
       }
 
-      // Worker (si estÃ¡ configurado)
+      // Worker (si está configurado)
       if (typeof API_WORKER_URL !== "undefined" && API_WORKER_URL){
         const r = await fetch(API_WORKER_URL, {
           method: "POST",
@@ -4678,17 +4668,17 @@ function openSwapModal(team, context){
         });
         const data = await r.json();
         if(data && data.ok){
-          status.textContent = "âœ… Solicitud enviada a " + (data.to || "");
+          status.textContent = "✅ Solicitud enviada a " + (data.to || "");
           setTimeout(()=>{ modal.style.display = "none"; }, 800);
         } else {
-          status.textContent = "âŒ " + (data?.error || "No se pudo enviar.");
+          status.textContent = "❌ " + (data?.error || "No se pudo enviar.");
         }
         return;
       }
 
-      status.textContent = "âŒ No hay canal de envÃ­o disponible (GAS/Worker).";
+      status.textContent = "❌ No hay canal de envío disponible (GAS/Worker).";
     }catch(e){
-      status.textContent = "âŒ " + (e?.message || String(e));
+      status.textContent = "❌ " + (e?.message || String(e));
     }
   }, { once:true });
 }
@@ -4705,12 +4695,12 @@ function openSwapModal(team, context){
     </div>
 
     <div class="mut" style="margin-top:2px">
-      Se enviarÃ¡ un correo al primer miembro del equipo seleccionado. Incluye tu nombre, correo y telÃ©fono.
+      Se enviará un correo al primer miembro del equipo seleccionado. Incluye tu nombre, correo y teléfono.
     </div>
 
     <div style="margin-top:10px">
       <div class="label">Comentario (opcional)</div>
-      <textarea id="swapComment" rows="5" placeholder="Ej.: Necesito cambiar por incompatibilidad de horario, preferirÃ­a por la tarde, etc."></textarea>
+      <textarea id="swapComment" rows="5" placeholder="Ej.: Necesito cambiar por incompatibilidad de horario, preferiría por la tarde, etc."></textarea>
     </div>
 
     <div id="swapStatus" class="mut" style="margin-top:10px"></div>
