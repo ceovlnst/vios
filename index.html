@@ -1,0 +1,4727 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gestión de Quirófanos – QuirófanosH9O</title>
+
+  
+  <!-- Iconos / previsualización al compartir -->
+  <meta name="description" content="Gestión de quirófanos: parrilla, lista de espera y herramientas de coordinación – QuirófanosH9O." />
+
+  <link rel="icon" type="image/png" href="https://ceovlnst.github.io/programacionh9o/og-image.png" />
+  <link rel="apple-touch-icon" href="https://ceovlnst.github.io/programacionh9o/og-image.png" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Gestión de Quirófanos – QuirófanosH9O" />
+  <meta property="og:description" content="Parrilla de quirófanos, lista de espera y coordinación." />
+  <meta property="og:image" content="https://ceovlnst.github.io/programacionh9o/og-image.png" />
+  <meta property="og:url" content="https://ceovlnst.github.io/programacionh9o/" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Gestión de Quirófanos – QuirófanosH9O" />
+  <meta name="twitter:description" content="Parrilla de quirófanos, lista de espera y coordinación." />
+  <meta name="twitter:image" content="https://ceovlnst.github.io/programacionh9o/og-image.png" />
+<style>
+    :root{
+      --bg:#f4f7fb;
+      --card:#ffffff;
+      --muted:#5b6b82;
+      --text:#0f172a;
+      --acc:#1d4ed8;
+      --line:#d7e2f0;
+
+      --bad:#b91c1c;
+      --ok:#047857;
+      --warn:#b45309;
+
+      --softAcc: rgba(29,78,216,.08);
+      --softOk: rgba(4,120,87,.08);
+      --softWarn: rgba(180,83,9,.08);
+      --softBad: rgba(185,28,28,.08);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(1000px 500px at 10% -10%, rgba(29,78,216,.10), transparent 55%),
+        radial-gradient(1000px 500px at 100% 0%, rgba(4,120,87,.08), transparent 55%),
+        var(--bg);
+      color:var(--text);
+      overflow-x:hidden;
+    }
+
+    .wrap{max-width:1280px;margin:0 auto;padding:12px}
+    @media(min-width: 980px){ .wrap{padding:16px} }
+
+    .topbar{
+      display:flex;gap:12px;align-items:center;justify-content:space-between;
+      padding:12px 14px;border:1px solid var(--line);border-radius:16px;
+      background: rgba(255,255,255,.88);
+      backdrop-filter: blur(8px);
+      position: sticky; top: 10px; z-index: 50;
+      box-shadow: 0 8px 30px rgba(15,23,42,.06);
+      flex-wrap:wrap;
+      min-width:0;
+    }
+
+    .brand{display:flex;gap:12px;align-items:center;min-width:0}
+    .logo{
+      width:38px;
+      height:38px;
+      border-radius:14px;
+      object-fit:contain;
+      background:#fff;
+      box-shadow:0 10px 25px rgba(15,23,42,.12);
+      flex:0 0 auto;
+    }
+    .brand h1{font-size:15px;margin:0;line-height:1.2}
+    .brand small{display:block;color:var(--muted);margin-top:2px}
+
+    .pill{
+      display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+      padding:8px 10px;border:1px solid var(--line);border-radius:999px;
+      background: rgba(255,255,255,.92);
+      color:var(--muted);
+      font-size:12px;
+      max-width:100%;
+      min-width:0;
+    }
+    .pill span{color:var(--text);font-weight:700}
+
+    .btn{
+      border:1px solid var(--line);
+      background: #fff;
+      color:var(--text);
+      padding:10px 12px;border-radius:12px;
+      cursor:pointer;
+      font-weight:750;
+      box-shadow: 0 8px 20px rgba(15,23,42,.06);
+    }
+    .btn:hover{border-color: rgba(29,78,216,.30)}
+    .btn.primary{background: var(--softAcc);border-color: rgba(29,78,216,.25);color: #0b2a78;}
+    .btn.good{background: var(--softOk);border-color: rgba(4,120,87,.22);color:#064e3b;}
+    .btn.bad{background: var(--softBad);border-color: rgba(185,28,28,.22);color:#7f1d1d;}
+    .btn.warn{background: var(--softWarn);border-color: rgba(180,83,9,.22);color:#7c2d12;}
+    .btn.ghost{background: transparent;border-color: transparent;box-shadow:none;}
+    .btn.small{padding:8px 10px;border-radius:10px;font-size:12px}
+    .btn:disabled, button:disabled{opacity:.55;cursor:not-allowed;filter:saturate(.7);box-shadow:none;}
+
+    .grid{display:grid;grid-template-columns: minmax(0,1fr);gap:12px;margin-top:14px;}
+    @media(min-width: 980px){ .grid{grid-template-columns: 380px minmax(0,1fr)} }
+
+    .card{
+      border:1px solid var(--line);
+      border-radius:18px;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(8px);
+      padding:14px;
+      box-shadow: 0 18px 45px rgba(15,23,42,.08);
+      min-width:0;
+    }
+    .card h2{margin:0 0 10px 0;font-size:15px}
+    .card h3{margin:0 0 10px 0;font-size:14px;color:var(--muted);font-weight:800}
+
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;min-width:0}
+    label{display:block;color:var(--muted);font-size:12px;margin:10px 0 6px}
+
+    input, select, textarea{
+      width:100%;
+      padding:10px 12px;border-radius:12px;
+      border:1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      outline:none;
+      box-shadow: 0 6px 16px rgba(15,23,42,.05);
+      min-width:0;
+    }
+    textarea{min-height:84px;resize:vertical}
+    input:focus, select:focus, textarea:focus{
+      border-color: rgba(29,78,216,.40);
+      box-shadow: 0 0 0 4px rgba(29,78,216,.10);
+    }
+
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .hr{height:1px;background: var(--line);margin:12px 0}
+
+    .msg{
+      margin-top:10px;
+      padding:10px 12px;border-radius:12px;
+      border:1px solid var(--line);
+      background: #fff;
+      color:var(--muted);
+      font-size: 13px;
+      white-space: pre-wrap;
+      box-shadow: 0 10px 24px rgba(15,23,42,.06);
+      min-width:0;
+    }
+    .msg.ok{border-color: rgba(4,120,87,.24); background: var(--softOk); color: var(--text)}
+    .msg.bad{border-color: rgba(185,28,28,.22); background: var(--softBad); color: var(--text)}
+    .msg.warn{border-color: rgba(180,83,9,.22); background: var(--softWarn); color: var(--text)}
+    .hide{display:none !important}
+
+    .slots{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .slot{
+      padding:8px 10px;border-radius:999px;border:1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      cursor:pointer;
+      font-size: 12px;
+      box-shadow: 0 10px 24px rgba(15,23,42,.06);
+    }
+    .slot:hover{border-color: rgba(29,78,216,.30)}
+    .slot.selected{
+      border-color: rgba(29,78,216,.60);
+      background: var(--softAcc);
+      font-weight:700;
+    }
+
+    .tableWrap{
+      overflow-x:auto;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#fff;
+      box-shadow: 0 14px 32px rgba(15,23,42,.06);
+      max-width:100%;
+    }
+    table{border-collapse:collapse;width:100%;min-width:0;}
+    th, td{
+      border-bottom:1px solid rgba(215,226,240,.9);
+      border-right:1px solid rgba(215,226,240,.7);
+      padding:8px 10px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    th{position:sticky;top:0;background: rgba(255,255,255,.96); z-index: 2;}
+    td:last-child, th:last-child{border-right:none}
+
+    /* COLORES CELDAS */
+    .cellFree{
+      background: var(--softOk);
+      color:#064e3b;
+      cursor:pointer;
+      font-weight:600;
+    }
+    .cellFree:hover{outline:1px solid rgba(4,120,87,.35)}
+
+    .cellNA{opacity:.35}
+
+    .cellNon,
+    .cellStruct{
+      background: var(--softBad);
+      color:#7f1d1d;
+      cursor:pointer;
+      font-weight:600;
+    }
+    .cellNon:hover,
+    .cellStruct:hover{
+      outline:1px solid rgba(185,28,28,.35);
+    }
+
+    .badge{
+      display:inline-block;padding:2px 8px;border-radius:999px;
+      border:1px solid rgba(215,226,240,.95);
+      background: #fff;
+      color:var(--muted); font-size:11px;
+      font-weight:800;
+    }
+
+    .modalBack{
+      position:fixed; inset:0; background: rgba(15,23,42,.45);
+      display:flex; align-items:center; justify-content:center;
+      padding:16px; z-index: 999;
+    }
+    .modal{
+      width:min(720px, 100%);
+      border:1px solid var(--line);
+      border-radius:18px;
+      background: rgba(255,255,255,.98);
+      padding:14px;
+      box-shadow: 0 30px 80px rgba(15,23,42,.30);
+      max-height: calc(100vh - 32px);
+      overflow: auto;
+    }
+
+    .modal h3{margin:0 0 8px 0}
+    .modal .x{float:right}
+    .hint{color:var(--muted);font-size:12px;margin-top:6px}
+
+    .kpi{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
+    .kpi .box{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px;
+      background: #fff;
+      color: var(--muted); font-size:12px;
+      box-shadow: 0 10px 24px rgba(15,23,42,.06);
+    }
+    .kpi .box b{display:block;color:var(--text);font-size:14px;margin-top:2px}
+
+    .weekPick{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+    .wchip{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;
+      border:1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      cursor:pointer;
+      font-size:12px;
+      user-select:none;
+      box-shadow: 0 10px 24px rgba(15,23,42,.06);
+    }
+    .wchip:hover{border-color: rgba(29,78,216,.30)}
+    .wchip input{width:auto; margin:0; accent-color: var(--acc )}
+    .wchip b{font-weight:850}
+
+    .mgrid{display:grid;grid-template-columns:1fr;gap:10px}
+    @media(min-width: 640px){ .mgrid{grid-template-columns:1fr 1fr} }
+    .mgrid .full{grid-column:1 / -1}
+
+    .loadingBar{
+      position: fixed;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      z-index: 2000;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,.96);
+      backdrop-filter: blur(8px);
+      padding: 10px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      box-shadow: 0 20px 60px rgba(15,23,42,.20);
+    }
+    .loadingBar .txt{color: var(--text); font-size: 13px; font-weight:800}
+    .loadingBar .sub{color: var(--muted); font-size: 12px}
+    .loadingBar .dot{
+      width:10px;height:10px;border-radius:50%;
+      background: rgba(29,78,216,.9);
+      box-shadow: 0 0 0 6px rgba(29,78,216,.14);
+      animation: pulse 1.2s infinite ease-in-out;
+    }
+    @keyframes pulse{
+      0%{transform:scale(.9); opacity:.6}
+      50%{transform:scale(1.15); opacity:1}
+      100%{transform:scale(.9); opacity:.6}
+    }
+
+    .structStack{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      min-width:0;
+    }
+    .structPanel{
+      border:1px solid var(--line);
+      border-radius:16px;
+      background: rgba(255,255,255,.96);
+      padding:12px;
+      box-shadow: 0 14px 32px rgba(15,23,42,.06);
+      min-width:0;
+    }
+    .structPanel h3{margin:0 0 10px 0;color:var(--muted);font-size:14px;font-weight:850}
+
+    .filterBar{
+      display:flex;
+      gap:10px;
+      align-items:flex-end;
+      flex-wrap:wrap;
+      margin-top:6px;
+      min-width:0;
+    }
+    .filterBar .field{
+      min-width:240px;
+      flex:1;
+    }
+
+    .summaryTable{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:8px;
+      overflow:hidden;
+      border-radius:12px;
+    }
+    .summaryTable th, .summaryTable td{
+      border-bottom:1px solid rgba(215,226,240,.9);
+      padding:8px 10px;
+      font-size:12px;
+      text-align:left;
+      white-space:nowrap;
+    }
+    .summaryTable th{color:var(--muted); font-weight:900}
+
+    .summaryKpiRow{
+      display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;
+    }
+    .summaryKpi{
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:#fff;
+      padding:8px 10px;
+      font-size:12px;
+      color:var(--muted);
+      box-shadow: 0 10px 24px rgba(15,23,42,.06);
+    }
+    .summaryKpi b{color:var(--text)}
+
+    .reportGrid{
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#fff;
+      overflow:hidden;
+      box-shadow: 0 14px 32px rgba(15,23,42,.06);
+      margin-top:10px;
+    }
+    .reportGrid table{width:100%; border-collapse:collapse; min-width:840px;}
+    .reportGrid th, .reportGrid td{
+      border-bottom:1px solid rgba(215,226,240,.9);
+      border-right:1px solid rgba(215,226,240,.7);
+      padding:10px;
+      vertical-align:top;
+      font-size:12px;
+      white-space:normal;
+    }
+    .reportGrid th{
+      position:sticky; top:0; z-index:2;
+      background: rgba(255,255,255,.98);
+      color:var(--muted);
+      font-weight:900;
+    }
+    .reportGrid td:last-child, .reportGrid th:last-child{border-right:none}
+    .rchip{
+      display:block;
+      border:1px solid rgba(215,226,240,.95);
+      border-radius:12px;
+      padding:8px 10px;
+      margin:6px 0;
+      background: rgba(29,78,216,.05);
+    }
+    .rchip.struct{background: rgba(4,120,87,.06)}
+    .rchip b{display:block;color:var(--text);font-size:12px;margin-bottom:2px}
+    .rchip small{color:var(--muted)}
+    .rhead{
+      display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;
+    }
+
+    /* ===== MEJORA: huecos NO estructurales agrupados por ubicación ===== */
+    .slotsByOr{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:10px;
+    }
+    .slotsRow{
+      border:1px solid var(--line);
+      border-radius:14px;
+      background: rgba(255,255,255,.96);
+      box-shadow: 0 10px 24px rgba(15,23,42,.06);
+      padding:10px;
+      min-width:0;
+    }
+    .slotsRowHead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:8px;
+      flex-wrap:wrap;
+    }
+    .slotsRowTitle{
+      font-weight:900;
+      color:var(--text);
+      font-size:12px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      min-width:0;
+    }
+    .slotsRowTitle .badge{flex:0 0 auto;}
+    .slotsRowChips{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      min-width:0;
+    }
+  
+    /* --- Equipos quirúrgicos (modal compacto + buscador) --- */
+    .groupsWrap{margin-top:8px}
+    .groupsTools{display:flex;gap:8px;align-items:center;margin:8px 0 10px 0}
+    .groupsTools input{
+      flex:1; padding:10px 12px; border:1px solid var(--line); border-radius:12px;
+      outline:none; font-size:13px; background:#fff;
+    }
+    .groupsTools input:focus{border-color: rgba(29,78,216,.45); box-shadow: 0 0 0 3px rgba(29,78,216,.10)}
+    .groupsCount{color:var(--muted); font-size:12px; margin:0 0 6px 0}
+    .groupsList{max-height: 70vh; overflow:auto; padding-right:6px}
+    /* --- Equipos quirúrgicos: tarjetas bonitas y compactas (accordion) --- */
+.gGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+@media (max-width: 720px){ .gGrid{grid-template-columns:1fr} }
+
+.gTeamCard{
+  border:1px solid var(--line);
+  border-radius:18px;
+  background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.80));
+  box-shadow: 0 10px 26px rgba(15,23,42,.06);
+  overflow:hidden;
+}
+.gTeamCard:hover{ box-shadow: 0 14px 34px rgba(15,23,42,.10); transform: translateY(-1px); transition: .15s ease; }
+
+.gTeamSummary{
+  list-style:none;
+  padding:12px 12px;
+  cursor:pointer;
+  user-select:none;
+}
+.gTeamSummary::-webkit-details-marker{display:none;}
+.gTeamTopRow{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+}
+.gTeamCode{
+  font-weight:850;
+  letter-spacing:.3px;
+  font-size:13px;
+  padding:6px 10px;
+  border-radius:999px;
+  background: rgba(2,132,199,.10);
+  border:1px solid rgba(2,132,199,.20);
+}
+.gTeamMeta{
+  display:flex; align-items:center; gap:8px; flex:1 1 auto; min-width:160px; flex-wrap:wrap;
+  color:var(--muted); font-size:12px;
+}
+.gTeamMeta b{ color:var(--text); font-weight:750; }
+.gTeamPill{
+  padding:4px 8px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.75);
+  font-size:12px;
+  color:var(--text);
+}
+.gTeamChevron{
+  margin-left:auto;
+  width:30px; height:30px;
+  border-radius:12px;
+  display:grid; place-items:center;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.70);
+}
+details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
+
+.gTeamBody{
+  padding:10px 12px 12px 12px;
+  border-top:1px solid rgba(148,163,184,.35);
+  background: rgba(248,250,252,.70);
+}
+.gLine{
+  display:flex; flex-wrap:wrap; align-items:center;
+  gap:6px;
+  padding:8px 10px;
+  margin:7px 0 0 0;
+  border:1px solid rgba(148,163,184,.25);
+  border-radius:14px;
+  background: rgba(255,255,255,.85);
+  font-size:12.5px;
+  line-height:1.25;
+}
+.gLine:first-child{ margin-top:0; }
+.gLine .sep{ color:rgba(100,116,139,.75); }
+.gLine a{ color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.gEmptyTeam{
+  padding:12px;
+  color:var(--muted);
+  font-size:12px;
+}
+/* --- fin equipos quirúrgicos --- */
+/* --- Modal genérico --- */
+  .modal{position:fixed;inset:0;background:rgba(15,23,42,.45);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px}
+  .modalCard{width:min(640px,100%);background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 30px rgba(2,6,23,.25);padding:14px}
+  .modalTop{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .modalTitle{font-weight:900;font-size:16px}
+  .iconBtn{border:1px solid var(--line);background:#fff;border-radius:12px;padding:6px 10px;cursor:pointer}
+  textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:12px;resize:vertical;font-family:inherit}
+  .label{font-size:12px;color:var(--muted);font-weight:800;margin-bottom:6px}
+
+
+  /* ===============================
+     Grupos quirúrgicos (UI mejorada)
+     =============================== */
+  .gToolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:12px}
+  .gSearchWrap{flex:1;position:relative}
+  .gSearch{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:#fff}
+  .gHint{font-size:12px;color:var(--muted);white-space:nowrap}
+  .gGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+  @media (max-width: 720px){ .gGrid{grid-template-columns:1fr} .gHint{display:none} }
+  .gCard{border:1px solid var(--line);border-radius:16px;background:#fff;overflow:hidden}
+  .gCardTop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:12px 12px 10px 12px;background:linear-gradient(180deg, rgba(29,78,216,.06), rgba(29,78,216,0))}
+  .gCardTitle{font-weight:900;font-size:14px;line-height:1.2}
+  .gCardSub{margin-top:4px;font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px}
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:12px;color:var(--muted)}
+  .gCardBtns{display:flex;align-items:center;gap:10px}
+  .badge{min-width:28px;height:28px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;font-weight:900;border:1px solid var(--line);background:#fff;color:var(--text)}
+  .gCardBody{padding:10px 12px 12px 12px}
+  .gMembers{display:flex;flex-direction:column;gap:8px}
+  .gRow{padding:10px 10px;border:1px solid var(--line);border-radius:14px;background:#fff;display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .gRowL{min-width:0}
+  .gRowName{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .gRowSpec{font-size:12px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .gEmpty{border:1px dashed var(--line);border-radius:16px;padding:14px;color:var(--muted);background:#fff;margin-top:12px}
+  .disclosure{cursor:pointer;user-select:none}
+  .disclosure::-webkit-details-marker{display:none}
+  details.gCard[open] .gCardTop{background:linear-gradient(180deg, rgba(4,120,87,.07), rgba(4,120,87,0))}
+
+
+  /* --- Modal a pantalla completa (para listas largas) --- */
+  .modalBack .modal.full{
+    width:min(980px, 96vw);
+    height:min(92vh, 96vh);
+    overflow:auto;
+    padding:14px;
+    border-radius:18px;
+  }
+  .modalBack .modal.full #btnModalClose{
+    position:sticky; top:0;
+    margin-left:auto;
+    z-index:2;
+  }
+
+  /* --- Equipos quirúrgicos: lista simple --- */
+  .teamTools{display:flex;gap:10px;align-items:center;margin-top:8px}
+  .teamTools input{flex:1;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:#fff}
+  .teamList{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+  .teamList{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+  .teamCard{border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden}
+  .teamHead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:linear-gradient(180deg, rgba(29,78,216,.05), rgba(29,78,216,0))}
+  .teamTitle{font-weight:900;font-size:14px;line-height:1.1}
+  .teamMeta{font-size:12px;color:var(--muted);margin-top:2px}
+  .teamBtns{display:flex;align-items:center;gap:8px}
+  .teamBody{padding:10px 12px;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  @media (max-width: 640px){ .teamBody{grid-template-columns:1fr} }
+  .memberItem{padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:#fff}
+  .memberName{font-weight:800;font-size:13px;line-height:1.15}
+  .memberSpec{font-size:12px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  
+  /* --- Equipos (modal) ultra-compacto --- */
+  .teamCard{padding:10px 10px 8px}
+  .teamHead{margin-bottom:6px}
+  .teamTitle{font-size:13px}
+  .teamMeta{font-size:11px}
+  .teamBody{display:flex;flex-direction:column;gap:4px;margin-top:6px}
+  .memberLine{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    align-items:baseline;
+    padding:3px 0;
+    border-top:1px dashed var(--line);
+  }
+  .teamBody .memberLine:first-child{border-top:none}
+  .mlName{font-weight:700;font-size:12.5px}
+  .mlRole,.mlSpec,.mlContact{font-size:12px;color:var(--muted)}
+  .mlContact a{color:inherit;text-decoration:none;border-bottom:1px dotted rgba(0,0,0,.25)}
+  .mlSep{color:var(--muted);font-size:12px}
+.toggleBtn{border:1px solid var(--line);background:#fff;border-radius:12px;padding:6px 10px;cursor:pointer;font-size:12px}
+
+
+  /* --- Columna derecha anclada (layout 1:1) --- */
+  @media(min-width: 980px){
+    .rightCol{position:sticky; top:12px; align-self:start; display:flex; flex-direction:column; gap:12px; height:calc(100vh - 24px); overflow:auto; padding-right:2px}
+  }
+  /* Equipos quirúrgicos: lista 1:1 con el menú (botones en .actions) */
+  #groupsPanelList .btn{
+    justify-content:space-between;
+    text-align:left;
+    white-space:normal;
+    line-height:1.2;
+    padding:10px 12px;
+  }
+  #groupsPanelList .btn .sub{
+    display:block;
+    font-size:12px;
+    color:var(--muted);
+    font-weight:700;
+    margin-top:4px;
+  }
+
+
+  /* (seguimos ocultando el panel lateral antiguo) */
+  #groupsSideBack, #groupsPanel{display:none !important}
+
+/* --- Modal centrado compacto (info bloque) --- */
+  #modalBack{align-items:center !important; justify-content:center !important;}
+  #modalBack .modal{width:min(560px,92vw) !important; max-height:86vh; overflow:auto; background:var(--card) !important;}
+
+
+  /* --- Modal centrado (solo cuando está visible) + cerrar claro --- */
+  #modalBack.hide{display:none !important;}
+  #modalBack:not(.hide){
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:18px;
+  }
+  #modalBack .modal{
+    width:min(560px, 92vw);
+    max-height:86vh;
+    overflow:auto;
+    margin:0;
+    background:var(--card);
+  }
+  .iconBtn{
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:12px;
+    padding:6px 10px;
+    cursor:pointer;
+    font-weight:900;
+    line-height:1;
+  }
+
+
+  /* --- Modal BLOQUE (minimalista, centrada, sin oscurecer) --- */
+  #modalBack.noDim{background:transparent !important;}
+  #modalBack.noDim.hide{display:none !important;}
+  #modalBack.noDim:not(.hide){
+    display:flex; align-items:center; justify-content:center;
+    padding:16px;
+  }
+  #modal.miniBlock{
+    width:min(420px, 92vw);
+    max-height:78vh;
+    overflow:auto;
+    border-radius:16px;
+  }
+  #modalTitle.blockTitle{
+    font-size:13px;
+    font-weight:800;
+    color:var(--muted);
+    margin:0;
+  }
+  .blkWrap{display:flex;flex-direction:column;gap:10px}
+  .blkGrid{display:grid;grid-template-columns: 120px minmax(0,1fr);gap:8px 10px}
+  .blkK{font-size:12px;color:var(--muted);font-weight:800}
+  .blkV{font-size:13px;color:var(--text);font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .blkBtnRow{display:flex;justify-content:flex-end;gap:10px;margin-top:4px}
+
+
+  /* --- Modal centrado ligero (diálogo de bloque) --- */
+  #modalBack.hide{display:none !important;}
+  #modalBack:not(.hide){
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:18px;
+    background:rgba(15,23,42,.08); /* muy suave */
+  }
+  #modalBack .modal{
+    width:min(520px, 92vw);
+    max-height:86vh;
+    overflow:auto;
+    margin:0;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    box-shadow:0 18px 40px rgba(2,6,23,.18);
+  }
+  .iconBtn{
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:12px;
+    padding:6px 10px;
+    cursor:pointer;
+    font-weight:950;
+    line-height:1;
+  }
+  .iconBtn:hover{filter:brightness(.98)}
+  .dlgGrid{display:grid;grid-template-columns:120px minmax(0,1fr);gap:8px 10px;margin-top:10px}
+  .dlgK{font-size:12px;color:var(--muted);font-weight:800}
+  .dlgV{font-size:13px;color:var(--text);font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .dlgActions{display:flex;justify-content:flex-end;gap:10px;margin-top:12px}
+
+
+  /* --- Centrado perfecto en escritorio --- */
+  #modalBack{
+    position:fixed !important;
+    inset:0 !important;
+  }
+  #modalBack:not(.hide){
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+  }
+
+
+  /* --- Evitar cortes en textos del diálogo --- */
+  .dlgV{white-space:normal !important; overflow:visible !important; text-overflow:clip !important;}
+  .dlgGrid{align-items:start;}
+
+
+  #swapModal.modal{
+    position:fixed;
+    inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:18px;
+    background:rgba(15,23,42,.08);
+    z-index:10000;
+  }
+  #swapModal .modalCard{
+    width:min(520px, 92vw);
+    max-height:86vh;
+    overflow:auto;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    box-shadow:0 18px 40px rgba(2,6,23,.18);
+    padding:14px;
+  }
+  #swapModal .modalTop{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:0;
+    border-bottom:1px solid var(--line);
+    margin-bottom:10px;
+    padding-bottom:10px;
+  }
+  #swapModal .modalTitle{font-weight:950}
+  #swapModal textarea{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:14px;
+    resize:vertical;
+  }
+  #swapModal .label{font-size:12px;color:var(--muted);font-weight:800;margin-bottom:6px}
+
+
+  /* --- FIX centrado (desktop) para evitar "descuadre" --- */
+  #modalBack{
+    position:fixed !important;
+    left:0 !important; top:0 !important; right:0 !important; bottom:0 !important;
+    width:100vw !important;
+    height:100vh !important;
+    margin:0 !important;
+  }
+  #modalBack.hide{display:none !important;}
+  #modalBack:not(.hide){
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    padding:18px !important;
+  }
+  #modalBack .modal{
+    position:relative !important;
+    left:auto !important;
+    right:auto !important;
+    transform:none !important;
+    margin:0 !important;
+  }
+
+  /* Diálogo Solicitud de cambio: centrado absoluto y consistente */
+  #swapModal.modal{
+    position:fixed !important;
+    left:0 !important; top:0 !important; right:0 !important; bottom:0 !important;
+    width:100vw !important;
+    height:100vh !important;
+    margin:0 !important;
+    display:none;
+    align-items:center !important;
+    justify-content:center !important;
+    padding:18px !important;
+  }
+  #swapModal .modalCard{
+    margin:0 !important;
+    transform:none !important;
+  }
+
+
+  /* --- Swap modal (Solicitud de cambio) igual que diálogo --- */
+  #swapModal.modal{
+    position:fixed !important;
+    inset:0 !important;
+    display:none;
+    align-items:center !important;
+    justify-content:center !important;
+    padding:18px !important;
+    background:rgba(15,23,42,.08) !important;
+    z-index:10000 !important;
+  }
+  #swapModal .modalCard{
+    width:min(520px, 92vw) !important;
+    max-height:86vh !important;
+    overflow:auto !important;
+    background:var(--card) !important;
+    border:1px solid var(--line) !important;
+    border-radius:16px !important;
+    box-shadow:0 18px 40px rgba(2,6,23,.18) !important;
+    padding:14px !important;
+    margin:0 !important;
+  }
+  #swapModal .modalTop{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:0 0 10px 0;
+    border-bottom:1px solid var(--line);
+    margin:0 0 10px 0;
+  }
+  #swapModal .modalTitle{font-weight:950}
+  #swapModal .label{font-size:12px;color:var(--muted);font-weight:800;margin-bottom:6px}
+  #swapModal textarea{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:14px;
+    resize:vertical;
+  }
+
+
+  /* --- Chapa y pintura: diálogo de bloque más simple --- */
+  #modalTitle:empty{display:none;}
+  .dlgGrid.compact{grid-template-columns:92px minmax(0,1fr); gap:6px 10px; margin-top:6px;}
+  .dlgGrid.compact .dlgK{font-size:12px;}
+  .dlgGrid.compact .dlgV{font-size:13px; font-weight:850;}
+  .dlgSection{margin-top:10px; padding-top:10px; border-top:1px solid var(--line);}
+  .dlgFooter{margin-top:14px; padding-top:12px; border-top:1px solid var(--line);}
+
+
+  /* --- Compactar diálogo de bloque --- */
+  .dlgSection{margin-top:8px; padding-top:8px;}
+  .dlgFooter{margin-top:10px; padding-top:10px;}
+  .dlgActions{gap:8px;}
+  .dlgGrid.compact{margin-bottom:6px;}
+
+
+  /* --- Ultra compacto: reducir espacios y separadores --- */
+  #modalBack .modal .modalBody{padding:14px !important;}
+  .dlgSection{margin-top:8px !important; padding-top:0 !important; border-top:none !important;}
+  .dlgFooter{margin-top:12px !important; padding-top:0 !important; border-top:none !important;}
+  .dlgGrid.compact{gap:6px 12px !important;}
+  .dlgK{line-height:1.2;}
+  .dlgV{line-height:1.25;}
+
+
+  /* --- Centrar texto en diálogo --- */
+  #modalBack .modal .modalBody { text-align: center; }
+  .dlgGrid.compact { justify-items: center; }
+  .dlgGrid.compact .dlgK { text-align: right; }
+  .dlgGrid.compact .dlgV { text-align: left; }
+  @media (max-width: 640px){
+    .dlgGrid.compact .dlgK,
+    .dlgGrid.compact .dlgV { text-align: center; }
+  }
+
+
+  /* --- Master: evitar cortes y apelotonamiento --- */
+  #modal.wide{ width:min(920px, 94vw) !important; }
+  #modalForm{ text-align:left; }
+  #modalForm label{ display:block; font-size:12px; color:var(--muted); font-weight:800; margin-bottom:6px;}
+  #modalForm input, #modalForm select{
+    width:100%;
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:10px 12px;
+    background:#fff;
+  }
+  #modalForm .actions{ display:flex; justify-content:flex-end; gap:10px; }
+  #modalForm .hint{ color:var(--muted); font-size:12px; line-height:1.25; }
+
+
+  /* --- Master: formulario más ordenado y compacto --- */
+  #modalForm{ text-align:left; }
+  #modalForm .formGrid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:10px 12px;
+    margin-top:2px;
+  }
+  #modalForm .field{ min-width:0; }
+  #modalForm .span2{ grid-column: 1 / -1; }
+  #modalForm label{
+    display:block;
+    font-size:12px;
+    color:var(--muted);
+    font-weight:800;
+    margin:0 0 6px 0;
+  }
+  #modalForm input, #modalForm select{
+    width:100%;
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:10px 12px;
+    background:#fff;
+  }
+  #modalForm .hint{
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.25;
+  }
+  #modalForm .actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:12px;
+  }
+  #modalForm .msg{ margin-top:10px; }
+
+
+  /* --- Master: modal ancho sin cortes --- */
+  #modal.wide{ width:min(920px, 94vw) !important; max-height:86vh !important; }
+  #modal.wide .modalBody{ max-height:calc(86vh - 40px) !important; overflow:auto !important; }
+
+
+  /* --- Master: modo edición inline dentro del mismo diálogo --- */
+  #blockView.hide{display:none !important;}
+  #modalForm.hide{display:none !important;}
+  #modalForm{ margin-top:10px; }
+
+
+  /* --- Master: botones siempre visibles en edición --- */
+  #modalForm .actions{
+    position: sticky;
+    bottom: 0;
+    background: var(--card);
+    padding-top: 10px;
+  }
+
+
+  /* --- Fix: botones edición visibles --- */
+  #modalActions.actions{
+    display:flex !important;
+    justify-content:flex-end !important;
+    gap:10px !important;
+    margin-top:12px !important;
+  }
+  #modalForm{ padding-bottom:6px; }
+
+
+  #modal.wide .modalBody{ padding-bottom:18px !important; }
+
+
+  /* --- Master: diálogo ultra discreto --- */
+  .masterMini{ padding:10px !important; margin-top:8px !important; }
+  .masterMini .dlgActions{ margin:0 !important; }
+  .masterMini .btn{ padding:8px 12px !important; border-radius:14px !important; }
+  #modalBack .modal{ width:min(520px, 92vw) !important; }
+
+
+  /* --- Evitar que el modal quede cortado por arriba --- */
+  #modalBack{
+    align-items:center !important;
+    justify-content:center !important;
+    padding:18px !important;
+  }
+  #modal{
+    margin:0 !important;
+    max-height:calc(100vh - 36px) !important;
+  }
+  #modal .modalBody{
+    max-height:calc(100vh - 110px) !important;
+    overflow:auto !important;
+  }
+
+
+  /* --- Modal compacto sin scroll innecesario --- */
+  #modalBack{
+    position:fixed !important;
+    inset:0 !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    padding:18px !important;
+  }
+  #modal{
+    max-height:calc(100vh - 36px) !important;
+    overflow:visible !important;
+  }
+  #modal .modalBody{
+    overflow:visible !important;
+    max-height:none !important;
+  }
+  .miniLines{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    text-align:center;
+    padding:4px 0;
+  }
+  .miniLine{
+    font-size:13px;
+    font-weight:850;
+  }
+  .miniSub{
+    font-size:12px;
+    font-weight:700;
+    color:var(--muted);
+  }
+
+
+/* === Reporte visual compacto === */
+.structReportScroll{ overflow-x:auto; padding-bottom:6px; }
+.structReportTable{ width:max-content; border-collapse:separate; border-spacing:0; }
+.structReportTable th, .structReportTable td{ border:1px solid rgba(148,163,184,.35); padding:6px; vertical-align:top; }
+.structReportTable thead th{ position:sticky; top:0; background:var(--card); z-index:2; }
+.structReportTable .srLoc{ left:0; z-index:3; position:sticky; }
+.structReportTable .srLocCell{ position:sticky; left:0; background:var(--card); z-index:1; font-weight:700; min-width:160px; }
+.structReportTable .srDay{ text-align:center; min-width:240px; }
+.structReportTable .srSess{ text-align:center; width:120px; font-size:12px; opacity:.9; }
+.srDayTop{ font-weight:800; }
+.srDayKey{ font-size:11px; opacity:.75; margin-top:2px; }
+.srCell{ min-width:120px; }
+.srCellStack{ display:flex; flex-direction:column; gap:4px; }
+.srEmpty{ font-size:12px; opacity:.6; padding:2px 0; }
+.srCard{ width:100%; border:1px solid rgba(0,0,0,.14); text-align:left; padding:6px 8px; border-radius:10px; background:#fff; color:#0f172a; cursor:pointer; }
+.srCard:hover{ filter:brightness(0.95); }
+.srCardTop{ display:flex; align-items:center; justify-content:space-between; gap:6px; }
+.srLabel{ font-weight:800; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:110px; }
+.srTime{ font-size:12px; opacity:.95; white-space:nowrap; }
+
+
+/* ===== STRUCT REPORT COMPACT STYLES ===== */
+.srWrap{ overflow-x:auto; border:1px solid #ddd; border-radius:10px; padding:8px; background:#fff; }
+.srGrid{
+  display:grid;
+  grid-template-columns: 180px repeat(14, minmax(92px, 1fr));
+  gap:6px;
+  align-items:start;
+}
+.srHead{ font-weight:700; text-align:center; background:#f3f4f6; padding:6px 4px; border-radius:8px; }
+.srLocHead{ position:sticky; left:0; z-index:3; background:#f3f4f6; }
+.srSubHead{ font-size:12px; text-align:center; background:#fafafa; padding:4px 0; border-radius:8px; }
+.srLocHead2{ position:sticky; left:0; z-index:2; background:#fafafa; }
+.srLoc{
+  position:sticky; left:0; z-index:1;
+  background:#ffffff;
+  border:1px solid #eee;
+  border-radius:10px;
+  padding:8px 10px;
+  font-weight:700;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.srCell{ min-height:44px; border:1px dashed #e5e7eb; border-radius:10px; padding:4px; }
+.srCell.srEmpty{ background:#fcfcfd; }
+.srCard{
+  width:100%;
+  border:0;
+  background:#2e7d32;
+  color:#fff;
+  border-radius:10px;
+  padding:6px 8px;
+  margin:0 0 4px 0;
+  cursor:pointer;
+  text-align:left;
+  line-height:1.1;
+}
+.srCard:hover{ filter:brightness(1.05); }
+.srCardTop{ display:flex; justify-content:space-between; gap:8px; align-items:center; }
+.srLabel{ font-weight:800; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.srTime{ font-size:11px; opacity:.95; white-space:nowrap; }
+.srMore{ font-size:11px; color:#6b7280; padding:2px 4px; }
+.srModalBackdrop{
+  position:fixed; inset:0;
+  background:rgba(0,0,0,.25);
+  display:flex;
+  align-items:center; justify-content:center;
+}
+.srModalBackdrop.hide{ display:none; }
+.srModal{
+  width:min(360px, 92vw);
+  background:#fff;
+  border-radius:14px;
+  box-shadow:0 12px 30px rgba(0,0,0,.25);
+  padding:12px 14px;
+}
+.srModalRow{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
+.srModalTitle{ font-weight:800; font-size:14px; }
+.srModalCloseX{
+  border:0; background:#f3f4f6;
+  border-radius:10px;
+  width:34px; height:34px;
+  cursor:pointer;
+}
+.srModalBody{ margin-top:8px; font-size:13px; }
+.srModalActions{ margin-top:10px; display:flex; justify-content:flex-end; }
+
+</style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <img class="logo" src="https://ceovlnst.github.io/programacionh9o/og-image.png" alt="QuirófanosH9O" />
+        <div>
+          <h1>QuirófanosH9O</h1>
+          <small id="appSubtitle">Solicitud de quirófano</small>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="pill" id="pillSession">
+          <small>Usuario</small> <span id="pillUser">—</span>
+          <small>Perfil</small> <span id="pillRole">—</span>
+        </div>
+        <button class="btn small ghost hide" id="btnLogout">Salir</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT -->
+      <div class="card">
+        <h2>Acceso</h2>
+
+        <label>PIN (contraseña)</label>
+        <input id="pinInput" type="password" inputmode="numeric" placeholder="Introduce tu PIN" />
+
+        <div class="actions">
+          <button class="btn primary" id="btnLogin">Entrar</button>
+          <button class="btn" id="btnClear">Limpiar</button>
+        </div>
+
+        <div id="msgLogin" class="msg hide"></div>
+
+        <div class="hr"></div>
+
+        <div class="actions">
+          <button class="btn" id="btnToggleSignup">Darme de alta</button>
+        </div>
+
+        <div id="signupBox" class="hide">
+          <h3 style="margin-top:10px">Alta profesional (solo usuarios vithas)</h3>
+
+          <label>Nombre</label><input id="suNombre" placeholder="Nombre" />
+          <label>Apellidos</label><input id="suApellidos" placeholder="Apellidos" />
+          <label>Servicio / Especialidad</label><select id="suEsp"></select>
+          <label>Correo</label><input id="suCorreo" placeholder="Correo electrónico" />
+          <label>Teléfono</label><input id="suTel" placeholder="Teléfono" />
+
+          <div class="actions">
+            <button class="btn good" id="btnSignup">Completar alta</button>
+          </div>
+          <div id="msgSignup" class="msg hide"></div>
+        </div>
+
+        <div class="hr"></div>
+
+        <h2>Panel</h2>
+        <div class="actions">
+          <button class="btn hide" id="btnGoReserve">Solicitar quirófano</button>
+          <button class="btn hide" id="btnGoMine">Mis solicitudes</button>
+
+          <button class="btn hide" id="btnGoGrid">Parrilla</button>
+          <button class="btn hide" id="btnGoStruct">Generar Quirófanos</button>
+          <button class="btn hide" id="btnGoWait">Lista de espera</button>
+          <button class="btn hide" id="btnGoReport">Reporte</button>
+                  <button class="btn hide" id="btnGoGroups">Equipos quirúrgicos</button>
+</div>
+
+        <div id="msgMenu" class="msg hide"></div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="rightCol">
+<div class="card">
+        <!-- USER: RESERVAR -->
+        <div id="viewReserve" class="hide">
+          <h2>Solicitud de quirófano</h2>
+          <div class="row">
+            <div style="flex:1;min-width:260px">
+              <label>Fecha</label>
+              <div class="row" style="gap:6px">
+                <input id="rvDate" type="date" style="flex:1;min-width:0" />
+                <button class="btn small" id="btnRvPrevDay" title="Día anterior">←</button>
+                <button class="btn small" id="btnRvNextDay" title="Día siguiente">→</button>
+              </div>
+            </div>
+            <div style="width:160px">
+              <label>Duración (h)</label>
+              <select id="rvHours">
+                <option>1</option><option>2</option><option>3</option><option>4</option>
+                <option>5</option><option>6</option><option>7</option><option>8</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn primary" id="btnCheckSlots">Ver disponibilidad</button>
+            <button class="btn warn hide" id="btnOpenWaitlistFromReserve">Solicitar lista de espera</button>
+          </div>
+
+          <div id="slotsBox" class="slots"></div>
+          <div id="msgReserve" class="msg hide"></div>
+        </div>
+
+        <!-- USER: MIS RESERVAS -->
+        <div id="viewMine" class="hide">
+          <h2>Mis solicitudes</h2>
+
+          <div class="row">
+            <div style="width:220px">
+              <label>Horizonte (días)</label>
+              <select id="mineDays">
+                <option value="30">30</option>
+                <option value="60">60</option>
+                <option value="90">90</option>
+                <option value="180">180</option>
+              </select>
+            </div>
+            <div class="actions" style="margin-top:26px">
+              <button class="btn primary" id="btnLoadMine">Actualizar</button>
+            </div>
+          </div>
+
+          <div id="mineBox" class="tableWrap" style="margin-top:10px"></div>
+          <div id="msgMine" class="msg hide"></div>
+        </div>
+
+        <!-- MASTER: GRID -->
+        <div id="viewGrid" class="hide">
+          <h2>Parrilla quirúrgica</h2>
+          <div class="row">
+            <div style="flex:1;min-width:260px">
+              <label>Fecha</label>
+              <div class="row" style="gap:6px">
+                <input id="gdDate" type="date" style="flex:1;min-width:0" />
+                <button class="btn small" id="btnGridPrevDay" title="Día anterior">←</button>
+                <button class="btn small" id="btnGridNextDay" title="Día siguiente">→</button>
+              </div>
+            </div>
+            <div style="width:160px; display:none">
+              <label>Duración (h) reserva</label>
+              <select id="gdHours">
+                <option>1</option><option>2</option><option>3</option><option>4</option>
+                <option>5</option><option>6</option><option>7</option><option>8</option>
+              </select>
+            </div>
+            <div class="actions" style="margin-top:26px">
+              <button class="btn primary" id="btnLoadGrid">Cargar parrilla</button>
+</div>
+          </div>
+
+          <div id="gridReserveInfo" class="msg hide" style="margin-top:8px"></div>
+          <div class="kpi" id="gridKpis"></div>
+
+          <div class="actions" style="margin-top:8px">
+            <button class="btn small" id="btnToggleAdvanced">Búsqueda avanzada</button>
+          </div>
+          <div id="advancedBox" class="hide" style="margin-top:4px">
+            <label>Quirófanos incluidos en KPIs</label>
+            <div id="orCalcChips" class="weekPick"></div>
+          </div>
+
+          <div id="gridBox" class="tableWrap" style="margin-top:10px"></div>
+          <div id="msgGrid" class="msg hide"></div>
+        </div>
+
+        <!-- MASTER: ESTRUCTURALES + NO ESTRUCTURALES -->
+        <div id="viewStruct" class="hide">
+          <h2>Generar quirófanos</h2>
+
+          <div class="structStack">
+            <!-- NO ESTRUCTURALES (ARRIBA) -->
+            <div class="structPanel">
+              <h3>Crear quirófano NO estructural (Master)</h3>
+
+              <div class="row">
+                <div style="flex:1;min-width:200px">
+                  <label>Fecha</label>
+                  <input id="stNSDate" type="date" />
+                </div>
+                <div style="width:160px">
+                  <label>Duración (h)</label>
+                  <select id="stNSDur">
+                    <option>1</option><option>2</option><option>3</option><option>4</option>
+                    <option>5</option><option>6</option><option>7</option><option>8</option>
+                    <option>9</option><option>10</option><option>11</option><option>12</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div style="flex:1;min-width:220px">
+                  <label>Usuario (lista)</label>
+                  <select id="stNSDoctorSelect">
+                    <option value="">(Cargando profesionales…)</option>
+                  </select>
+                </div>
+                <div style="flex:1;min-width:220px">
+                  <label>Usuario (email editable)</label>
+                  <input id="stNSDoctorEmail" placeholder="nombre@vithas.es" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div style="flex:1;min-width:220px">
+                  <label>Etiqueta (grupo / cirujano)</label>
+                  <input id="stNSLabel" placeholder="Ej: Traumatología Dr. X" />
+                </div>
+              </div>
+
+              <div class="actions">
+                <button class="btn primary" id="btnNSFindSlots">Buscar huecos</button>
+                <button class="btn good" id="btnNSAssignSlot">Asignar hueco seleccionado</button>
+              </div>
+
+              <div id="stNSSlotsBox" class="slots"></div>
+              <div id="msgStructNon" class="msg hide"></div>
+            </div>
+
+            <!-- EDITOR ESTRUCTURAL -->
+            <div class="structPanel">
+              <div class="actions" style="margin-top:0">
+                <button class="btn" id="btnNewStruct">Nuevo</button>
+                <button class="btn good" id="btnSaveStruct">Guardar</button>
+                <button class="btn bad" id="btnDeleteStructById">Eliminar por ID</button>
+                <button class="btn primary" id="btnReloadStruct">Actualizar listado</button>
+              </div>
+
+              <div id="msgStructEdit" class="msg hide"></div>
+
+              <div class="hr"></div>
+              <h3>Editor de programación estructural</h3>
+
+              <div class="row">
+                <div style="flex:1;min-width:240px">
+                  <label>ID (vacío = nuevo)</label>
+                  <input id="stId" placeholder="(vacío para crear)" />
+                </div>
+                <div style="flex:1;min-width:240px">
+                  <label>Equipo / Servicio (etiqueta)</label>
+                  <input id="stLabel" placeholder="Ej: Traumatología COTA" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div style="flex:1;min-width:240px">
+                  <label>Quirófano</label>
+                  <select id="stOr"></select>
+                </div>
+                <div style="width:160px">
+                  <label>Hora inicio</label>
+                  <select id="stStartHour"></select>
+                </div>
+                <div style="width:160px">
+                  <label>Duración (h)</label>
+                  <select id="stDur">
+                    <option>1</option><option>2</option><option>3</option><option>4</option>
+                    <option>5</option><option>6</option><option>7</option><option>8</option>
+                    <option>9</option><option>10</option><option>11</option><option>12</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div style="flex:1;min-width:240px">
+                  <label>Inicio</label>
+                  <input id="stStartDate" type="date" />
+                </div>
+                <div style="flex:1;min-width:240px">
+                  <label>Fin (vacío = 31/12)</label>
+                  <input id="stEndDate" type="date" />
+                </div>
+              </div>
+
+              <label>Días de la semana</label>
+              <div class="row">
+                <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" class="stDow" value="MONDAY">L</label>
+                <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" class="stDow" value="TUESDAY">M</label>
+                <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" class="stDow" value="WEDNESDAY">X</label>
+                <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" class="stDow" value="THURSDAY">J</label>
+                <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" class="stDow" value="FRIDAY">V</label>
+                <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" class="stDow" value="SATURDAY">S</label>
+                <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" class="stDow" value="SUNDAY">D</label>
+              </div>
+
+              <div class="row">
+                <div style="flex:1;min-width:240px">
+                  <label>Cadencia</label>
+                  <select id="stCadence">
+                    <option value="WEEKLY">Semanales</option>
+                    <option value="MONTH_WEEKS">Cadencia personalizada (semanas del mes)</option>
+                  </select>
+                </div>
+
+                <div style="flex:1;min-width:240px" id="boxWeekly">
+                  <label>Cada cuántas semanas</label>
+                  <select id="stIntervalWeeks">
+                    <option>1</option><option>2</option><option>3</option><option>4</option>
+                  </select>
+                </div>
+
+                <div style="flex:1;min-width:240px" id="boxMonthWeeks" class="hide">
+                  <label>Semanas del mes</label>
+                  <div class="weekPick">
+                    <label class="wchip"><input type="checkbox" class="stWom" value="1"><b>1</b>ª</label>
+                    <label class="wchip"><input type="checkbox" class="stWom" value="2"><b>2</b>ª</label>
+                    <label class="wchip"><input type="checkbox" class="stWom" value="3"><b>3</b>ª</label>
+                    <label class="wchip"><input type="checkbox" class="stWom" value="4"><b>4</b>ª</label>
+                    <label class="wchip"><input type="checkbox" class="stWom" value="5"><b>5</b>ª</label>
+                  </div>
+                  <div class="hint">Interpretación por “1º/3º lunes”, etc. según el/los weekday seleccionados.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- LISTA ESTRUCTURAL -->
+            <div class="structPanel">
+              <h3>Listado de programación estructural</h3>
+
+              <div id="structSummary" class="msg" style="margin-top:8px"></div>
+
+              <div class="hr"></div>
+
+              <div class="filterBar">
+                <div class="field">
+                  <label>Filtrar por equipo (etiqueta)</label>
+                  <select id="structTeamFilter">
+                    <option value="">(Todos)</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label>Filtrar por quirófano</label>
+                  <select id="structOrFilter">
+                    <option value="">(Todos)</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Filtrar por hora de inicio</label>
+                  <select id="structHourFilter">
+                    <option value="">(Todas)</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Filtrar por día</label>
+                  <select id="structDayFilter">
+                    <option value="">(Todos)</option>
+                    <option value="L">Lunes</option>
+                    <option value="M">Martes</option>
+                    <option value="X">Miércoles</option>
+                    <option value="J">Jueves</option>
+                    <option value="V">Viernes</option>
+                    <option value="S">Sábado</option>
+                    <option value="D">Domingo</option>
+                  </select>
+                </div>
+                <div>
+                  <button class="btn small" id="btnStructClearFilter">Quitar filtro</button>
+                </div>
+              </div>
+
+              <div id="msgStruct" class="msg hide"></div>
+              <div id="structList" class="tableWrap" style="margin-top:10px"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MASTER: WAIT (ACTUALIZADO a “función nueva”) -->
+        <div id="viewWait" class="hide">
+          <h2>Lista de espera</h2>
+
+          <div class="row">
+            <div style="width:260px">
+              <label>Mostrar</label>
+              <select id="wlFilter">
+                <option value="pending">Pendientes (sin pasadas)</option>
+                <option value="pendingAll">Pendientes (incluye pasadas)</option>
+              </select>
+            </div>
+            <div class="actions" style="margin-top:26px">
+              <button class="btn primary" id="btnLoadWait">Actualizar</button>
+            </div>
+          </div>
+
+          <div id="msgWait" class="msg hide"></div>
+          <div id="waitList" style="margin-top:10px"></div>
+        </div>
+
+        <!-- MASTER: REPORT -->
+        <div id="viewReport" class="hide">
+          <h2>Reporte</h2>
+          <div class="row">
+            <div style="flex:1;min-width:260px">
+              <label>Email destino</label>
+              <input id="rpEmail" placeholder="destino@..." />
+            </div>
+          </div>
+          <div class="row">
+            <div style="flex:1;min-width:220px">
+              <label>Inicio</label>
+              <input id="rpStart" type="date" />
+            </div>
+            <div style="flex:1;min-width:220px">
+              <label>Fin</label>
+              <input id="rpEnd" type="date" />
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn primary" id="btnSendReport">Enviar reporte (Dirección)</button>
+          </div>
+          <div class="hint">Incluye visión global y desglosa <b>Programado</b>, <b>Especiales (Híbrido)</b> y <b>Urgencias/24h</b>. Métrica: <b>horas reales</b> (no número de eventos).</div>
+          <div id="msgReport" class="msg hide"></div>
+
+          <div class="hr"></div>
+
+          <div class="rhead">
+            <h3 style="margin:0">Reporte estructural (visual)</h3>
+            <div class="actions" style="margin-top:0">
+              <button class="btn small primary" id="btnStructVisualReport">Generar / actualizar</button>
+            </div>
+          </div>
+          <div class="hint">Distribución de quirófanos estructurales por <b>día</b>, <b>quirófano</b> y <b>sesión</b> (mañana/tarde).</div>
+          <div id="structVisualReport" class="reportGrid hide"></div>
+        </div>
+
+
+        <!-- MASTER: EQUIPOS QUIRÚRGICOS -->
+        <div id="viewGroups" class="hide">
+          <div class="row" style="justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap">
+            <div>
+              <h2 style="margin:0">Equipos quirúrgicos</h2>
+              <div class="mut" id="groupsCount" style="margin-top:4px">—</div>
+            </div>
+            <div class="row" style="gap:8px;min-width:280px;flex:1;max-width:520px">
+              <input id="groupsSearch" type="search" placeholder="Buscar equipo, nombre, rol, email o teléfono…" />
+              <button class="btn small ghost" id="groupsClear" type="button">Limpiar</button>
+            </div>
+          </div>
+
+          <div id="groupsList" class="groupsCompact" style="margin-top:10px"></div>
+          <div id="groupsEmpty" class="mut" style="margin-top:10px;display:none">No hay resultados.</div>
+        </div>
+
+
+        <!-- DEFAULT -->
+        <div id="viewWelcome">
+          <h2>Bienvenido</h2>
+          <div class="msg">
+            1) Introduce tu PIN.<br/>
+            2) Si no tienes PIN, pulsa <b>“Darme de alta”</b>.<br/>
+            3) Al acceder, verás el panel según tu perfil.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="modalBack" class="modalBack hide">
+    <div class="modal" id="modal">
+      
+      <h3 id="modalTitle">Detalle</h3>
+      <div id="modalBody" class="msg"></div>
+
+      
+<div id="modalForm" class="hide" style="margin-top:10px">
+  <div class="formGrid">
+    <div class="field hide" id="mfActionWrap">
+      <label>Acción</label>
+      <select id="mfAction" disabled>
+        <option value="STRUCT_EDIT_BLOCK">Editar bloque estructural</option>
+        <option value="NON_EDIT">Editar bloque NO estructural</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Duración (h)</label>
+      <select id="mfHours">
+        <option>1</option><option>2</option><option>3</option><option>4</option>
+        <option>5</option><option>6</option><option>7</option><option>8</option>
+        <option>9</option><option>10</option><option>11</option><option>12</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Quirófano</label>
+      <select id="mfOr"></select>
+    </div>
+
+    <div class="field span2">
+      <label>Etiqueta</label>
+      <input id="mfLabel" placeholder="Ej: E COLO / COLO / MASTER" />
+    </div>
+
+    <div class="field span2 hint" id="mfHint"></div>
+  </div>
+
+  <div id="modalActions" class="actions"></div>
+  <div id="modalMsg" class="msg hide"></div>
+</div>
+
+</div>
+  </div>
+
+  <!-- Loading -->
+  <div id="loadingBar" class="loadingBar hide" aria-live="polite">
+    <div>
+      <div class="txt" id="loadingText">Procesando…</div>
+      <div class="sub" id="loadingSub">Por favor, espera</div>
+    </div>
+    <div class="dot" title="Procesando"></div>
+  </div>
+
+<script>
+  // ===== CONSTANTES FRONT =====
+  const OR_LIST = [
+    "Sótano 1","Sótano 2","Sótano 3","Sótano 4","Sótano 5","Sótano 6",
+    "Quirófano Híbrido",
+    "Centrales 1","Centrales 2","Centrales 3","Centrales 4","Centrales 5","Centrales 6","Centrales 7","Centrales 8",
+    "Maternidad 1","Maternidad 2","Maternidad 3",
+    "Urgencias",
+    "Paritorio 1","Paritorio 2"
+  ];
+
+  const SPECIALTIES = [
+    "Traumatología y Cirugía Ortopédica",
+    "Cirugía General y Digestiva",
+    "Anestesiología y Reanimación",
+    "Ginecología y Obstetricia",
+    "Urología",
+    "Oftalmología",
+    "Otorrinolaringología (ORL)",
+    "Neurocirugía",
+    "Cirugía Vascular",
+    "Cirugía Torácica",
+    "Cirugía Cardíaca",
+    "Cirugía Plástica, Estética y Reparadora",
+    "Cirugía Maxilofacial",
+    "Cirugía Pediátrica",
+    "Otros"
+  ];
+
+  function fillSpecialties(){
+    const sel = $("suEsp");
+    if(!sel) return;
+    if(sel.dataset.filled) return;
+    sel.innerHTML = '<option value="">(Selecciona)</option>' + SPECIALTIES.map(s=>`<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join("");
+    sel.dataset.filled = "1";
+  }
+
+
+  const S = {
+    pin: null,
+    role: null,           // "Master" | "Usuario"
+    doctor: null,
+    emailVisible: null,
+
+    lastSlots: [],
+    lastReserveQuery: null,
+    lastGrid: null,
+
+    structRulesCache: [],
+    structTeamFilter: "",
+    structDayFilter: "",
+    structOrFilter: "",
+    structHourFilter: "",
+    orCalcSelected: [],
+
+    modalCtx: null,
+
+    doctorList: [],
+    doctorListLoaded: false,
+
+    masterNSQuery: null,
+    masterNSSlots: [],
+    masterNSSelectedIndex: -1,
+
+    groupsCache: [],
+    groupsByEquipo: {},
+    groupsLoaded: false
+  };
+
+  const $ = (id)=>document.getElementById(id);
+
+  function showMsg(el, text, kind){
+    if(!el) return;
+    el.classList.remove("hide","ok","bad","warn");
+    el.textContent = text || "";
+    if(kind) el.classList.add(kind);
+  }
+  function hideMsg(el){
+    if(!el) return;
+    el.classList.add("hide");
+    el.textContent = "";
+    el.classList.remove("ok","bad","warn");
+  }
+
+  function setSessionPill(){
+    $("pillUser").textContent = S.emailVisible || "—";
+    $("pillRole").textContent = (S.isMaster ? "Master" : "Usuario");
+    $("btnLogout").classList.toggle("hide", !S.pin);
+
+    // Subtítulo dinámico
+    const sub = $("appSubtitle");
+    if(sub){
+      sub.textContent = S.isMaster ? "Solicitud de quirófano + coordinación" : "Solicitud de quirófano";
+    }
+
+    document.body.classList.toggle("master", !!S.isMaster);
+
+  }
+  function hideAllViews(){
+    ["viewWelcome","viewReserve","viewMine","viewGrid","viewStruct","viewWait","viewReport","viewGroups"]
+      .forEach(v => $(v).classList.add("hide"));
+  }
+  function go(viewId){
+    hideAllViews();
+    $(viewId).classList.remove("hide");
+  }
+  function isMaster(){ return S.role === "Master" || S.role === "Administrador"; }
+
+  // ===== FECHAS: SIEMPRE MOSTRAR DD/MM/AAAA EN TEXTO =====
+  function fmtDMY(dateStr){ // "YYYY-MM-DD" -> "DD/MM/YYYY"
+    if(!dateStr) return "";
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dateStr));
+    if(!m) return String(dateStr);
+    return `${m[3]}/${m[2]}/${m[1]}`;
+  }
+  function isoLocal(dateStr, hour){
+    // Devuelve ISO con offset local, p.ej. 2026-01-08T08:00:00+01:00
+    const d = new Date(`${dateStr}T${String(hour).padStart(2,"0")}:00:00`);
+    const pad = (n)=>String(Math.abs(n)).padStart(2,"0");
+    const off = -d.getTimezoneOffset(); // minutos, positivo en UTC+X
+    const sign = off>=0 ? "+" : "-";
+    const hh = pad(Math.floor(Math.abs(off)/60));
+    const mm = pad(Math.abs(off)%60);
+    const yyyy = d.getFullYear();
+    const mo = String(d.getMonth()+1).padStart(2,"0");
+    const da = String(d.getDate()).padStart(2,"0");
+    const H = String(d.getHours()).padStart(2,"0");
+    const M = String(d.getMinutes()).padStart(2,"0");
+    const S = String(d.getSeconds()).padStart(2,"0");
+    return `${yyyy}-${mo}-${da}T${H}:${M}:${S}${sign}${hh}:${mm}`;
+  }
+
+
+  // menú: quitar parrilla a usuarios generales
+  function setMenuButtons(){
+    const master = isMaster();
+    $("btnGoReserve").classList.toggle("hide", !S.pin || master);
+    $("btnGoMine").classList.toggle("hide", !S.pin || master);
+
+    $("btnGoGrid").classList.toggle("hide", !S.pin);
+
+    $("btnGoStruct").classList.toggle("hide", !S.pin || !master);
+    $("btnGoWait").classList.toggle("hide", !S.pin || !master);
+    $("btnGoReport").classList.toggle("hide", !S.pin || !master);
+    $("btnGoGroups").classList.toggle("hide", !S.pin || !master);
+  }
+
+  function todayISO(){
+    const d = new Date();
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().slice(0,10);
+  }
+  function addDaysISO(n){
+    const d = new Date();
+    d.setDate(d.getDate() + n);
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().slice(0,10);
+  }
+
+  // Helper mover fechas en inputs date
+  function shiftDate(inputId, deltaDays){
+    const input = $(inputId);
+    if(!input) return null;
+    let val = input.value;
+    if(!val){
+      val = todayISO();
+    }
+    const d = new Date(val+"T00:00:00");
+    d.setDate(d.getDate() + deltaDays);
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    const iso = d.toISOString().slice(0,10);
+    input.value = iso;
+    return iso;
+  }
+
+  // Navegación días
+  function moveGridDay(delta){
+    shiftDate("gdDate", delta);
+    loadGrid();
+  }
+  function moveReserveDay(delta){
+    shiftDate("rvDate", delta);
+    checkSlots();
+  }
+
+  // ===== Busy & google.script.run wrapper =====
+  let sessionToken = 1;
+  let busyCount = 0;
+  const inFlightKeys = new Set();
+  const disabledEls = new Set();
+
+  function setBusy(isBusy, msg){
+    const bar = $("loadingBar");
+    const txt = $("loadingText");
+    const sub = $("loadingSub");
+    if(isBusy){
+      busyCount++;
+      txt.textContent = msg || "Procesando…";
+      sub.textContent = "Por favor, espera";
+      bar.classList.remove("hide");
+    }else{
+      busyCount = Math.max(0, busyCount - 1);
+      if(busyCount === 0){
+        bar.classList.add("hide");
+        txt.textContent = "Procesando…";
+        sub.textContent = "Por favor, espera";
+      }
+    }
+  }
+
+  function disableEls(els, disabled){
+    const arr = Array.isArray(els) ? els : [els];
+    arr.filter(Boolean).forEach(el=>{
+      if(disabled){
+        el.disabled = true;
+        disabledEls.add(el);
+      }else{
+        el.disabled = false;
+        disabledEls.delete(el);
+      }
+    });
+  }
+
+  function resetAllBusyUI(){
+    busyCount = 0;
+    inFlightKeys.clear();
+    $("loadingBar").classList.add("hide");
+    for(const el of Array.from(disabledEls)){
+      try{ el.disabled = false; }catch(_){}
+    }
+    disabledEls.clear();
+  }
+
+  
+  // 🔧 URL del Worker (Cloudflare) que hace proxy al WebApp de Apps Script (para GitHub Pages)
+  // Ejemplo: "https://tu-worker.tudominio.workers.dev"
+  const API_WORKER_URL = "https://vios.ceo-vlnst.workers.dev"; // URL del Worker (Cloudflare) -> GAS
+
+function callGAS(fnName, args, opt){
+    const o = opt || {};
+    const key = o.key ? String(o.key) : "";
+    if(key && inFlightKeys.has(key)) return;
+    if(key) inFlightKeys.add(key);
+
+    const myToken = sessionToken;
+    setBusy(true, o.msg || "Procesando…");
+    disableEls(o.disable || [], true);
+
+    const finalize = ()=>{
+      if(key) inFlightKeys.delete(key);
+      disableEls(o.disable || [], false);
+      setBusy(false);
+    };
+
+    (async ()=>{
+      try{
+        if(!API_WORKER_URL){
+          throw new Error("API_WORKER_URL no configurada en el index (URL del Worker).");
+        }
+
+        const resp = await fetch(API_WORKER_URL, {
+          method: "POST",
+          headers: { "Content-Type":"text/plain;charset=utf-8" },
+          body: JSON.stringify({ fn: fnName, args: args || [] })
+        });
+
+        const txt = await resp.text();
+        let json;
+        try{ json = JSON.parse(txt); }catch(_e){ throw new Error("Respuesta no-JSON del backend: " + txt.slice(0,200)); }
+
+        if(!json || json.ok !== true){
+          throw new Error((json && json.error) ? json.error : "Error desconocido");
+        }
+
+        if(myToken !== sessionToken) { finalize(); return; }
+        try{ o.onSuccess && o.onSuccess(json.data); } finally { finalize(); }
+
+      }catch(err){
+        if(myToken !== sessionToken) { finalize(); return; }
+        console.error("API error", err);
+        try{ o.onFailure && o.onFailure(err); } finally { finalize(); }
+      }
+    })();
+  }
+
+  // ===== OR filter para KPIs parrilla =====
+  function initOrCalcDefaults(){
+    const exclude = new Set(["Sótano 6","Quirófano Híbrido","Urgencias","Paritorio 1","Paritorio 2"]);
+    S.orCalcSelected = OR_LIST.filter(name => !exclude.has(name));
+  }
+
+  function buildOrCalcChips(){
+    const box = $("orCalcChips");
+    if(!box) return;
+    box.innerHTML = "";
+    const selected = new Set(S.orCalcSelected || []);
+    OR_LIST.forEach(name=>{
+      const lbl = document.createElement("label");
+      lbl.className = "wchip";
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = selected.has(name);
+      cb.onchange = ()=>{
+        const set = new Set(S.orCalcSelected || []);
+        if(cb.checked) set.add(name); else set.delete(name);
+        S.orCalcSelected = Array.from(set);
+        renderGridKpis();
+      };
+      const b = document.createElement("b");
+      b.textContent = name;
+      lbl.appendChild(cb);
+      lbl.appendChild(b);
+      box.appendChild(lbl);
+    });
+  }
+
+  function getSelectedORsForCalc(){
+    const arr = S.orCalcSelected || [];
+    if(!arr.length) return OR_LIST.slice();
+    return arr.slice();
+  }
+
+  // ✅ NUEVO: inferir duración del bloque NO estructural desde la fila
+  function inferEventHoursInRow_(row, startIdx){
+    const id = row.cells[startIdx]?.eventId;
+    if(!id) return 1;
+    let n = 0;
+    for(let i = startIdx; i < row.cells.length; i++){
+      if(row.cells[i]?.eventId !== id) break;
+      n++;
+    }
+    return Math.max(1, n);
+  }
+
+  // ===== LOGIN / LOGOUT =====
+  function login(){
+    hideMsg($("msgLogin"));
+    const pin = ($("pinInput").value || "").trim();
+    if(!pin) return showMsg($("msgLogin"), "Introduce tu PIN.", "warn");
+
+    callGAS("getDoctorByPin", [pin], {
+      key: "login",
+      disable: [$("btnLogin"), $("btnClear"), $("pinInput")],
+      msg: "Validando acceso…",
+      onSuccess: (doc)=>{
+        S.pin = pin;
+        
+      // precarga equipos quirúrgicos (para botón de cambio en parrilla)
+      loadGroupsCache(true);
+S.doctor = doc;
+        const tipo = String(doc.tipo || doc.rol || "").trim();
+        S.isMaster = /^(master|administrador|admin)$/i.test(tipo) || tipo.toLowerCase().includes("admin");
+        S.role = S.isMaster ? "Administrador" : "Usuario";
+        S.emailVisible = (doc.correo || doc.email || doc.mail || "—");
+
+        setSessionPill();
+        setMenuButtons();
+        hideMsg($("msgLogin"));
+        hideMsg($("msgMenu"));
+
+        if(isMaster()){
+          go("viewGrid");
+          $("gdDate").value = todayISO();
+          loadGrid();
+        } else {
+          go("viewReserve");
+          $("rvDate").value = addDaysISO(1);
+          $("rvHours").value = "2";
+        }
+      },
+      onFailure: (e)=> showMsg($("msgLogin"), e?.message || String(e), "bad")
+    });
+  }
+
+  function logout(){
+    S.pin = null;
+    S.role = null;
+    S.isMaster = false;
+    S.doctor = null;
+    S.emailVisible = null;
+    S.lastSlots = [];
+    S.lastGrid = null;
+    S.structRulesCache = [];
+    S.modalCtx = null;
+    S.doctorList = [];
+    S.doctorListLoaded = false;
+    S.masterNSQuery = null;
+    S.masterNSSlots = [];
+    S.masterNSSelectedIndex = -1;
+
+    sessionToken++;
+    resetAllBusyUI();
+    setSessionPill();
+    setMenuButtons();
+    $("pinInput").value = "";
+    hideMsg($("msgLogin"));
+    hideMsg($("msgMenu"));
+    go("viewWelcome");
+  }
+
+  // ===== SIGNUP =====
+  function toggleSignup(){
+    $("signupBox").classList.toggle("hide");
+    hideMsg($("msgSignup"));
+  }
+
+  function signup(){
+    hideMsg($("msgSignup"));
+    const data = {
+      nombre:    $("suNombre").value,
+      apellidos: $("suApellidos").value,
+      especialidad: $("suEsp").value,
+      correo:    $("suCorreo").value,
+      telefono:  $("suTel").value
+    };
+    callGAS("signupDoctor", [data], {
+      key:"signup",
+      disable:[$("btnSignup")],
+      msg:"Registrando alta…",
+      onSuccess:(res)=>{
+        showMsg($("msgSignup"), res?.message || "Alta completada.", "ok");
+      },
+      onFailure:(e)=>{
+        showMsg($("msgSignup"), e?.message || String(e), "bad");
+      }
+    });
+  }
+
+  // ===== RESERVAS (USUARIO) =====
+  function checkSlots(){
+    hideMsg($("msgReserve"));
+    $("slotsBox").innerHTML = "";
+    $("btnOpenWaitlistFromReserve").classList.add("hide");
+
+    const dateStr = $("rvDate").value;
+    const hours = parseInt($("rvHours").value,10);
+
+    if(!dateStr) return showMsg($("msgReserve"), "Selecciona una fecha.", "warn");
+
+    callGAS("getDisponibilidadAuto", [S.pin, dateStr, hours], {
+      key:"slots",
+      disable:[$("btnCheckSlots")],
+      msg:"Buscando huecos disponibles…",
+      onSuccess:(res)=>{
+        S.lastSlots = res.slots || [];
+        S.lastReserveQuery = { dateStr, hours };
+
+        if(!res.slots || !res.slots.length){
+          showMsg($("msgReserve"), "No hay huecos disponibles para esa fecha y duración.", "warn");
+          $("btnOpenWaitlistFromReserve").classList.remove("hide");
+          return;
+        }
+
+        const box = $("slotsBox");
+        box.innerHTML = "";
+        res.slots.forEach(iso=>{
+          const d = new Date(iso);
+          const btn = document.createElement("button");
+          btn.className = "slot";
+          btn.textContent = `${d.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}`;
+          btn.onclick = ()=>reserveSlot(iso, hours, dateStr);
+          box.appendChild(btn);
+        });
+        showMsg($("msgReserve"), "Selecciona el hueco que prefieras.", "ok");
+      },
+      onFailure:(e)=>{
+        showMsg($("msgReserve"), e?.message || String(e), "bad");
+      }
+    });
+  }
+
+  function reserveSlot(startISO, hours, dateStr){
+    hideMsg($("msgReserve"));
+    if(!confirm("¿Confirmar la reserva en ese hueco?")) return;
+
+    callGAS("reservarAuto", [S.pin, startISO, hours], {
+      key:"reserve",
+      msg:"Creando reserva…",
+      onSuccess:(res)=>{
+        showMsg($("msgReserve"), "Reserva creada correctamente.", "ok");
+      },
+      onFailure:(e)=>{
+        showMsg($("msgReserve"), e?.message || String(e), "bad");
+      }
+    });
+  }
+
+  function openWaitlistFromReserve(){
+    hideMsg($("msgReserve"));
+    const q = S.lastReserveQuery;
+    if(!q || !q.dateStr){
+      return showMsg($("msgReserve"), "Primero busca disponibilidad para poder enviar a lista de espera.", "warn");
+    }
+    const note = prompt("Añade una nota opcional para la lista de espera (diagnóstico, prioridad, etc.):","");
+
+    callGAS("submitWaitlist", [S.pin, q.dateStr, q.hours, "ANY", note || ""], {
+      key:"waitlistFromReserve",
+      msg:"Enviando solicitud a lista de espera…",
+      onSuccess:(res)=>{
+        showMsg($("msgReserve"), res?.message || "Solicitud enviada a lista de espera.", "ok");
+      },
+      onFailure:(e)=>{
+        showMsg($("msgReserve"), e?.message || String(e), "bad");
+      }
+    });
+  }
+
+  // ===== MIS RESERVAS (USUARIO) =====
+  function loadMine(){
+    hideMsg($("msgMine"));
+    $("mineBox").innerHTML = "";
+
+    const days = $("mineDays").value || "30";
+
+    callGAS("getMyReservations", [S.pin, days], {
+      key:"mine",
+      disable:[$("btnLoadMine")],
+      msg:"Cargando tus reservas…",
+      onSuccess:(res)=>{
+        const list = res.reservations || [];
+        if(!list.length){
+          showMsg($("msgMine"), "No tienes reservas en el horizonte seleccionado.", "warn");
+          return;
+        }
+        hideMsg($("msgMine"));
+        const wrap = $("mineBox");
+        const table = document.createElement("table");
+        const thead = document.createElement("thead");
+        thead.innerHTML = "<tr><th>Fecha</th><th>Hora</th><th>Fin</th><th>Quirófano</th><th>Título</th><th></th></tr>";
+        table.appendChild(thead);
+        const tbody = document.createElement("tbody");
+        list.forEach(r=>{
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${escapeHtml(fmtDMY(r.date))}</td>
+            <td>${escapeHtml(r.start)}</td>
+            <td>${escapeHtml(r.end)}</td>
+            <td>${escapeHtml(r.orName || "")}</td>
+            <td>${escapeHtml(r.title || "")}</td>
+          `;
+          const tdBtn = document.createElement("td");
+          const b = document.createElement("button");
+          b.className = "btn small bad";
+          b.textContent = "Cancelar";
+          b.onclick = ()=>cancelMyReservation(r.eventId);
+          tdBtn.appendChild(b);
+          tr.appendChild(tdBtn);
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        wrap.appendChild(table);
+      },
+      onFailure:(e)=>{
+        showMsg($("msgMine"), e?.message || String(e), "bad");
+      }
+    });
+  }
+
+  function cancelMyReservation(eventId){
+    if(!confirm("¿Seguro que quieres cancelar esta reserva?")) return;
+    callGAS("cancelReservation", [S.pin, eventId], {
+      key:"cancelMy",
+      msg:"Cancelando reserva…",
+      onSuccess:(res)=>{
+        showMsg($("msgMine"), res?.message || "Reserva cancelada.", "ok");
+        loadMine();
+      },
+      onFailure:(e)=>{
+        showMsg($("msgMine"), e?.message || String(e), "bad");
+      }
+    });
+  }
+
+  // ===== GRID =====
+  function loadGrid(){
+    hideMsg($("msgGrid"));
+    $("gridBox").innerHTML = "";
+    $("gridKpis").innerHTML = "";
+
+    const dateStr = $("gdDate").value || todayISO();
+    $("gdDate").value = dateStr;
+
+    callGAS("getGridOccupancy", [S.pin, dateStr], {
+      key:"grid",
+      disable:[$("btnLoadGrid")],
+      msg:"Cargando parrilla…",
+      onSuccess:(res)=>{
+        S.lastGrid = res;
+        renderGrid(res);
+        renderGridKpis();
+      },
+      onFailure:(e)=>{
+        showMsg($("msgGrid"), e?.message || String(e), "bad");
+      }
+    });
+  }
+
+  function renderGrid(data){
+    const box = $("gridBox");
+    box.innerHTML = "";
+    if(!data || !data.rows || !data.rows.length){
+      showMsg($("msgGrid"), "No hay información para esa fecha.", "warn");
+      return;
+    }
+    hideMsg($("msgGrid"));
+
+    const table = document.createElement("table");
+    const thead = document.createElement("thead");
+    const trh = document.createElement("tr");
+    const thOr = document.createElement("th");
+    thOr.textContent = "Quirófano";
+    trh.appendChild(thOr);
+
+    data.hoursOrder.forEach(h=>{
+      const th = document.createElement("th");
+      th.textContent = String(h).padStart(2,"0")+":00";
+      trh.appendChild(th);
+    });
+    thead.appendChild(trh);
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    data.rows.forEach((row)=>{
+      const tr = document.createElement("tr");
+      const tdOr = document.createElement("td");
+      tdOr.textContent = row.orName;
+      tr.appendChild(tdOr);
+
+      row.cells.forEach((cell, ci)=>{
+        const td = document.createElement("td");
+        td.dataset.orName = row.orName;
+        td.dataset.hour = cell.hour;
+        td.dataset.status = cell.status;
+        td.dataset.date = data.date;
+
+        if(cell.status === "NA"){
+          td.className = "cellNA";
+          td.textContent = "";
+        } else if(cell.status === "FREE"){
+          td.className = "cellFree";
+          td.textContent = "Libre";
+        } else if(cell.status === "NON"){
+          td.className = "cellNon";
+          td.textContent = cell.displayTitle || "No estructural";
+          td.dataset.cellIndex = String(ci);
+        } else if(cell.status === "STRUCT"){
+          td.className = "cellStruct";
+          td.textContent = cell.displayTitle || "Estructural";
+        }
+
+        if(cell.status !== "NA"){
+          if(cell.eventId) td.dataset.eventId = cell.eventId;
+          if(cell.ruleId)  td.dataset.ruleId  = cell.ruleId;
+          if(cell.label)   td.dataset.label   = cell.label;
+          td.onclick = ()=>onGridCellClick(td);
+        }
+
+        tr.appendChild(td);
+      });
+
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    box.appendChild(table);
+  }
+
+  function renderGridKpis(){
+    const box = $("gridKpis");
+    box.innerHTML = "";
+    if(!S.lastGrid || !S.lastGrid.rows) return;
+
+    const selectedOrs = new Set(getSelectedORsForCalc());
+    let free = 0, non = 0, struct = 0;
+
+    S.lastGrid.rows.forEach(row=>{
+      if(!selectedOrs.has(row.orName)) return;
+      row.cells.forEach(c=>{
+        if(c.status === "FREE") free++;
+        else if(c.status === "NON") non++;
+        else if(c.status === "STRUCT") struct++;
+      });
+    });
+
+    const mkBox = (title, val, desc)=>{
+      const d = document.createElement("div");
+      d.className = "box";
+      d.innerHTML = `<span>${escapeHtml(title)}</span><b>${val}</b><div>${escapeHtml(desc)}</div>`;
+      return d;
+    };
+
+    box.appendChild(mkBox("Huecos libres", free, "Celdas libres en quirófanos seleccionados"));
+    box.appendChild(mkBox("Bloques no estructurales", non, "Reservas no estructurales"));
+    box.appendChild(mkBox("Bloques estructurales", struct, "Programación estructural ese día"));
+  }
+
+  function buildEventBlockInfo(orName, eventId){
+    const g = S.lastGrid;
+    if(!g || !g.rows) return null;
+    const row = g.rows.find(r => r.orName === orName);
+    if(!row) return null;
+    const hours = row.cells
+      .filter(c => c.eventId === eventId)
+      .map(c => c.hour);
+    if(!hours.length) return null;
+    hours.sort((a,b)=>a-b);
+    return {
+      startHour: hours[0],
+      duration: hours.length
+    };
+  }
+
+  function buildBlockInfo(orName, eventId, ruleId){
+    // Devuelve {startHour, duration} buscando por eventId o, si falta, por ruleId
+    const g = S.lastGrid;
+    if(!g || !g.rows) return null;
+    const row = g.rows.find(r => r.orName === orName);
+    if(!row) return null;
+
+    let hours = [];
+    if(eventId){
+      hours = row.cells.filter(c => c.eventId === eventId).map(c => c.hour);
+    }
+    if(!hours.length && ruleId){
+      hours = row.cells.filter(c => c.ruleId === ruleId).map(c => c.hour);
+    }
+    if(!hours.length) return null;
+    hours.sort((a,b)=>a-b);
+    return { startHour: hours[0], duration: hours.length };
+  }
+
+
+  function onGridCellClick(td){
+    const status  = td.dataset.status;
+    const orName  = td.dataset.orName;
+    const hour    = parseInt(td.dataset.hour,10);
+    const dateStr = td.dataset.date;
+    const eventId = td.dataset.eventId || "";
+    const ruleId  = td.dataset.ruleId || "";
+    const label   = td.dataset.label || "";
+    const cellIndex = parseInt(td.dataset.cellIndex || "0", 10);
+
+    const ctx = { status, orName, hour, dateStr, eventId, ruleId, label, cellIndex };
+
+    if(!isMaster()){
+      openModalInfo(ctx);
+      return;
+    }
+
+    if(status === "STRUCT"){
+      openModalStruct(ctx);
+    } else if(status === "NON"){
+      openModalNonStruct(ctx);
+    } else if(status === "FREE"){
+      openModalInfo(ctx);
+    }
+  }
+
+  // ===== MODAL =====
+  function openModalBase(title, bodyHtml){
+    setBlockModal(false);
+    $("modalTitle").textContent = title;
+    $("modalBody").innerHTML = bodyHtml;
+    $("modalForm").classList.add("hide");
+    $("modalActions").innerHTML = "";
+    hideMsg($("modalMsg"));
+    $("modalBack").classList.remove("hide");
+  }
+
+  function setBlockModal(on){
+    const mb = $("modalBack");
+    const modal = $("modal");
+    const title = $("modalTitle");
+    if(!mb || !modal || !title) return;
+
+    mb.classList.toggle("noDim", !!on);
+    modal.classList.toggle("miniBlock", !!on);
+    title.classList.toggle("blockTitle", !!on);
+  }
+
+  function teamFromLabel(label){
+    const raw = String(label||"").trim();
+    if(!raw) return "";
+    let t = raw.replace(/^E\b[\s:_-]*/i, "").trim();
+    t = t.replace(/\s+/g," ").trim();
+    return t;
+  }
+
+  function swapButtonForTeam(team, ctx){
+    if(!team) return "";
+    // construir diccionario de equipos
+    const byTeam = {};
+    (S.groupsCache||[]).forEach(g=>{
+      const tt = String(g.equipo||"").trim();
+      if(!tt) return;
+      if(!byTeam[tt]) byTeam[tt]=[];
+      byTeam[tt].push(g);
+    });
+
+    let match = byTeam[team] ? team : null;
+    if(!match){
+      const key = normalizeEquipoKey(team);
+      match = Object.keys(byTeam).find(t => normalizeEquipoKey(t) === key) || null;
+    }
+    if(!match){
+      if(!S.groupsLoaded) return `<div class="mut">Cargando equipo…</div>`;
+      return "";
+    }
+
+    const members = (byTeam[match]||[]).slice();
+    members.sort((a,b)=>{
+      const na = (a.cirujano || a.nombre || "").toString();
+      const nb = (b.cirujano || b.nombre || "").toString();
+      return na.localeCompare(nb,"es");
+    });
+
+    const first = members[0] || {};
+    const firstName = String(first.cirujano || first.nombre || "—").trim();
+
+    const emailObj = members.find(x=>String(x.correo||x.email||"").trim());
+    const hasEmail = !!String((emailObj && (emailObj.correo||emailObj.email)) || "").trim();
+
+    if(!hasEmail){
+      return `<div class="mut">Equipo <b>${escapeHtml(match)}</b> sin email en GruposQuirúrgicos.</div>`;
+    }
+
+    // guarda contexto y crea botón
+    S.selectedCellContext = ctx || null;
+    return `
+      <div class="blkGrid" style="margin-top:6px">
+        <div class="blkK">Equipo</div><div class="blkV">${escapeHtml(match)}</div>
+        <div class="blkK">Contacto</div><div class="blkV">${escapeHtml(firstName)}</div>
+      </div>
+      <div class="blkBtnRow">
+        <button type="button" class="btn good" id="btnAskSwapFromBlock" data-team="${escapeHtml(match)}">Pedir cambio</button>
+      </div>
+    `;
+  }
+
+  function openBlockModal(ctx, titleText){
+    // precarga si hace falta
+    if(!S.groupsLoaded) loadGroupsCache(true);
+
+    setBlockModal(true);
+
+    const t = titleText || "Bloque";
+    const date = ctx.dateStr ? fmtDMY(ctx.dateStr) : "";
+    const orName = ctx.orName || "";
+    const h = (ctx.startHour!=null ? String(ctx.startHour) : (ctx.hour!=null ? String(ctx.hour) : ""));
+    const dur = (ctx.hours!=null ? String(ctx.hours) : (ctx.duration!=null ? String(ctx.duration) : ""));
+    const label = ctx.label || "";
+
+    const body = `
+      <div class="blkWrap">
+        <div class="blkGrid">
+          <div class="blkK">Fecha</div><div class="blkV">${escapeHtml(date||"—")}</div>
+          <div class="blkK">Quirófano</div><div class="blkV">${escapeHtml(orName||"—")}</div>
+          ${h ? `<div class="blkK">Hora</div><div class="blkV">${escapeHtml(h)}:00</div>` : ``}
+          ${dur ? `<div class="blkK">Duración</div><div class="blkV">${escapeHtml(dur)} h</div>` : ``}
+          ${label ? `<div class="blkK">Etiqueta</div><div class="blkV">${escapeHtml(label)}</div>` : ``}
+        </div>
+        <div id="blkSwapArea">${swapButtonForTeam(teamFromLabel(label), ctx) || ""}</div>
+      </div>
+    `;
+
+    openModalBase(t, body);
+
+    // wire button if present
+    const btn = $("btnAskSwapFromBlock");
+    if(btn){
+      btn.onclick = ()=>{
+        const team = (btn.getAttribute("data-team") || "").trim();
+        openSwapModal(team, ctx || null);
+      };
+    }
+  }
+
+
+  function closeModal(){
+    S.modalCtx = null;
+    
+    $("modal").classList.remove("wide");
+    $("modalForm").classList.add("hide");
+$("modalBack").classList.add("hide");
+    hideMsg($("modalMsg"));
+  }
+
+  function openModalInfo(ctx){
+  if(!S.groupsLoaded) loadGroupsCache(true);
+
+  const title = "";
+  const startHour = (ctx.startHour!=null ? ctx.startHour : ctx.hour);
+  const startISO = ctx.startISO || (ctx.dateStr && startHour!=null ? isoLocal(ctx.dateStr, startHour) : "");
+
+  S.modalCtx = Object.assign({}, ctx, {
+    startHour,
+    startISO,
+    hours: (ctx.hours!=null ? ctx.hours : (ctx.inferredHours!=null ? ctx.inferredHours : 1))
+  });
+  S.selectedCellContext = S.modalCtx;
+
+  const isStruct = (ctx.kind === "STRUCT" || ctx.isStructural === true || String(ctx.label||"").trim().toUpperCase().startsWith("E "));
+  const h = (startHour!=null ? startHour : 0);
+  const dur = Number(S.modalCtx.hours||1);
+  const endHour = (h + dur);
+  const hh = String(h).padStart(2,"0")+":00";
+  const eh = String(endHour).padStart(2,"0")+":00";
+
+  const dmy = fmtDMY(ctx.dateStr) || "—";
+  const orName = ctx.orName || "—";
+
+  const sum = getTeamContactSummary(ctx.label);
+  const team = sum.team || (String(ctx.label||"").trim().replace(/^E\b[\s:_-]*/i,"").trim()) || "—";
+  const contact = sum.contact || "—";
+  const canAskSwap = !!(S.groupsLoaded && sum.team && (S.groupsCache||[]).some(g=>String(g.equipo||"").trim()===sum.team && String(g.correo||g.email||"").trim()));
+
+  // guardar para pedir cambio
+  S._swapTeamFromBlock = canAskSwap ? sum.team : "";
+
+  const lines = `
+    <div class="miniLines">
+      <div class="miniLine">${escapeHtml(dmy)} · ${escapeHtml(orName)} · ${escapeHtml(hh)}–${escapeHtml(eh)} <span class="miniSub">(${dur} h)</span></div>
+      <div class="miniLine">Equipo: ${escapeHtml(team)}</div>
+      <div class="miniLine">Contacto: ${escapeHtml(contact)}</div>
+    </div>
+  `;
+
+  const masterMini = isMaster() ? `
+    <div class="dlgActions" style="justify-content:center;margin-top:10px">
+      <button class="btn bad" id="mCancelOcc" type="button">${isStruct ? "Cancelar solo este bloque" : "Eliminar este bloque"}</button>
+    </div>
+    <div id="mMsg" class="mut" style="margin-top:8px;text-align:center"></div>
+  ` : ``;
+
+  const footer = `
+    <div class="dlgFooter" style="margin-top:12px">
+      <div class="dlgActions" style="justify-content:center;flex-wrap:wrap">
+        <button class="btn ghost" id="btnCloseBottom" type="button">Cerrar</button>
+        <button class="btn good" id="btnAskSwapFooter" type="button" ${S._swapTeamFromBlock ? "" : "disabled"}>Pedir cambio</button>
+      </div>
+    </div>
+  `;
+
+  openModalBase(title, lines + masterMini + footer);
+
+  if($("btnCloseBottom")) $("btnCloseBottom").onclick = ()=>closeModal();
+
+  const bswap = $("btnAskSwapFooter");
+  if(bswap){
+    bswap.onclick = ()=>{
+      const t = (S._swapTeamFromBlock||"").trim();
+      if(!t) return;
+      openSwapModal(t, S.selectedCellContext || ctx || null);
+    };
+  }
+
+  if(isMaster()){
+    if($("mCancelOcc")) $("mCancelOcc").onclick = ()=>{
+      if(isStruct) cancelStructBlock();
+      else deleteNonStructBlock();
+    };
+  }
+}
+
+  function openModalFree(ctx){
+    const body = `
+      Hueco libre\n
+      Fecha: ${fmtDMY(ctx.dateStr)}\n
+      Quirófano: ${ctx.orName}\n
+      Hora: ${String(ctx.hour).padStart(2,"0")}:00\n
+      (Solo consulta desde la parrilla)
+    `;
+    openModalBase("Hueco libre", escapeHtml(body));
+    wireAskSwapButton(ctx);
+  }
+
+  function openModalNonStruct(ctx){
+    const g = S.lastGrid;
+    const row = g?.rows?.find(r => r.orName === ctx.orName);
+    const idx = Number.isFinite(ctx.cellIndex) ? ctx.cellIndex : 0;
+    const inferredHours = row ? inferEventHoursInRow_(row, idx) : 1;
+
+    // calcular startHour real del bloque dentro de la fila (si ocupa varias celdas)
+    let startHour = ctx.hour;
+    if(row && ctx.eventId){
+      let i = idx;
+      while(i > 0 && row.cells[i-1]?.eventId === ctx.eventId) i--;
+      startHour = row.cells[i]?.hour ?? ctx.hour;
+    }
+    ctx.kind = "NONSTRUCT";
+    ctx.inferredHours = inferredHours;
+    ctx.startHour = startHour;
+    ctx.startISO = ctx.startISO || isoLocal(ctx.dateStr, startHour);
+
+    openModalInfo(ctx);
+  }
+
+  function deleteNonStructBlock(){
+    if(!S.modalCtx || !S.modalCtx.eventId) return;
+    if(!confirm("¿Seguro que quieres ELIMINAR este quirófano NO estructural?")) return;
+
+    callGAS("masterDeleteEvent", [S.pin, S.modalCtx.eventId], {
+      key:"delNonStruct",
+      msg:"Eliminando quirófano no estructural…",
+      onSuccess:(res)=>{
+        showMsg($("modalMsg"), res?.message || "Bloque eliminado.", "ok");
+        loadGrid();
+        setTimeout(()=>closeModal(), 800);
+      },
+      onFailure:(e)=>{
+        showMsg($("modalMsg"), e?.message || String(e), "bad");
+      }
+    });
+  }
+
+  function prepareEditNonStructBlock(){
+    if(!S.modalCtx) return;
+    S.modalCtx.mode = "NON_EDIT";
+
+    $("modalForm").classList.remove("hide");
+    $("mfAction").value = "NON_EDIT";
+
+    const mfOr = $("mfOr");
+    mfOr.innerHTML = "";
+    OR_LIST.forEach(o=>{
+      const opt = document.createElement("option");
+      opt.value = o;
+      opt.textContent = o;
+      mfOr.appendChild(opt);
+    });
+    mfOr.value = S.modalCtx.orName;
+
+    $("mfLabel").value = S.modalCtx.label || "MASTER";
+    $("mfHours").value = String(S.modalCtx.hours || 2);
+    $("mfHint").textContent = "Editarás SOLO este bloque NO estructural (mismo EventId).";
+  }
+
+  
+  function openModalStruct(ctx){
+    ctx.kind = "STRUCT";
+    ctx.isStructural = true;
+
+    const info = buildBlockInfo(ctx.orName, ctx.eventId || "", ctx.ruleId || "");
+    if(info){
+      ctx.startHour = info.startHour;
+      ctx.hour = info.startHour;
+      ctx.hours = info.duration;
+      ctx.startISO = ctx.startISO || (ctx.dateStr ? isoLocal(ctx.dateStr, info.startHour) : "");
+    }else{
+      // fallback mínimo
+      const h = (ctx.startHour!=null ? ctx.startHour : ctx.hour);
+      ctx.startISO = ctx.startISO || (ctx.dateStr && h!=null ? isoLocal(ctx.dateStr, h) : "");
+      ctx.hours = ctx.hours || 1;
+    }
+
+    openModalInfo(ctx);
+  }
+
+
+
+  function cancelStructBlock(){
+    if(!S.modalCtx || !S.modalCtx.eventId) return;
+    if(!confirm("¿Seguro que quieres cancelar este bloque estructural SOLO para este día?")) return;
+
+    const payload = {
+      eventId: S.modalCtx.eventId,   // id de serie (informativo)
+      startISO: S.modalCtx.startISO, // ✅ clave para identificar la ocurrencia exacta
+      hours: S.modalCtx.hours,
+      orName: S.modalCtx.orName,
+      ruleId: S.modalCtx.ruleId || ""
+    };
+
+    callGAS("masterCancelStructuralOccurrence", [S.pin, payload], {
+      key:"cancelStructBlock",
+      msg:"Cancelando bloque estructural…",
+      onSuccess:(res)=>{
+        showMsg($("modalMsg"), res?.message || "Bloque cancelado.", "ok");
+        loadGrid();
+        setTimeout(()=>closeModal(), 800);
+      },
+      onFailure:(e)=>{
+        showMsg($("modalMsg"), e?.message || String(e), "bad");
+      }
+    });
+  }
+
+  function prepareEditStructBlock(){
+    if(!S.modalCtx) return;
+    S.modalCtx.mode = "STRUCT_EDIT_BLOCK";
+    $("mfAction").value = "STRUCT_EDIT_BLOCK";
+
+    $("modalForm").classList.remove("hide");
+
+    $("modal").classList.add("wide");
+    
+    // Entrar en modo edición "inline" (oculta vista y muestra formulario)
+    const bv = $("blockView");
+    if(bv) bv.classList.add("hide");
+    const bClose = $("btnCloseBottom"); if(bClose) bClose.classList.add("hide");
+    const bSwap = $("btnAskSwapFooter"); if(bSwap) bSwap.classList.add("hide");
+const mfOr = $("mfOr");
+    mfOr.innerHTML = "";
+    OR_LIST.forEach(o=>{
+      const opt = document.createElement("option");
+      opt.value = o;
+      opt.textContent = o;
+      mfOr.appendChild(opt);
+    });
+    mfOr.value = S.modalCtx.orName;
+
+    $("mfLabel").value = S.modalCtx.label || "MASTER";
+    $("mfHours").value = String(S.modalCtx.hours || 2);
+    $("mfHint").textContent = "Editarás SOLO este bloque: se convertirá en NO estructural, sin modificar la serie original.";
+  }
+
+  function applyModalChanges(){
+    if(!S.modalCtx) return;
+
+    const label = $("mfLabel").value || "MASTER";
+    const hours = parseInt($("mfHours").value,10);
+    const orName = $("mfOr").value;
+
+    if(S.modalCtx.mode === "STRUCT_EDIT_BLOCK"){
+      const payload = {
+        eventId: S.modalCtx.eventId,
+        label,
+        startISO: S.modalCtx.startISO,
+        hours,
+        orName
+      };
+
+      callGAS("masterEditStructuralOccurrence", [S.pin, payload], {
+        key:"editStructBlock",
+        msg:"Actualizando bloque estructural…",
+        onSuccess:(res)=>{
+          showMsg($("modalMsg"), res?.message || "Bloque actualizado.", "ok");
+          loadGrid();
+          setTimeout(()=>closeModal(), 800);
+        },
+        onFailure:(e)=>{
+          showMsg($("modalMsg"), e?.message || String(e), "bad");
+        }
+      });
+      return;
+    }
+
+    if(S.modalCtx.mode === "NON_EDIT"){
+      const payload = {
+        eventId: S.modalCtx.eventId,
+        orName,
+        startISO: S.modalCtx.startISO,
+        hours,
+        label
+      };
+
+      callGAS("masterUpdateNonStructural", [S.pin, payload], {
+        key:"editNonStruct",
+        msg:"Actualizando bloque NO estructural…",
+        onSuccess:(res)=>{
+          showMsg($("modalMsg"), res?.message || "Bloque actualizado.", "ok");
+          loadGrid();
+          setTimeout(()=>closeModal(), 800);
+        },
+        onFailure:(e)=>{
+          showMsg($("modalMsg"), e?.message || String(e), "bad");
+        }
+      });
+      return;
+    }
+  }
+
+  function editWholeSeriesFromRule(){
+    if(!S.modalCtx || !S.modalCtx.ruleId){
+      showMsg($("modalMsg"), "No se ha encontrado el RuleId para esta serie.", "bad");
+      return;
+    }
+    const ruleId = S.modalCtx.ruleId;
+    go("viewStruct");
+    closeModal();
+
+    if(!S.structRulesCache || !S.structRulesCache.length){
+      callGAS("listStructuralRules", [S.pin], {
+        key:"listStructFromGrid",
+        msg:"Cargando reglas estructurales…",
+        onSuccess:(res)=>{
+          S.structRulesCache = res.rules || [];
+          renderStructFiltersAndList();
+          loadRuleIntoEditor(ruleId);
+        },
+        onFailure:(e)=>{
+          showMsg($("msgStruct"), e?.message || String(e), "bad");
+        }
+      });
+    } else {
+      renderStructFiltersAndList();
+      loadRuleIntoEditor(ruleId);
+    }
+  }
+
+  // ===== ESTRUCTURALES (MASTER) =====
+  function fillStructSelectors(){
+    const stOr = $("stOr");
+    if(stOr){
+      stOr.innerHTML = "";
+      OR_LIST.forEach(o=>{
+        const opt = document.createElement("option");
+        opt.value = o;
+        opt.textContent = o;
+        stOr.appendChild(opt);
+      });
+    }
+
+    const stStartHour = $("stStartHour");
+    if(stStartHour){
+      stStartHour.innerHTML = "";
+      for(let h=0; h<24; h++){
+        const opt = document.createElement("option");
+        opt.value = h;
+        opt.textContent = String(h).padStart(2,"0")+":00";
+        stStartHour.appendChild(opt);
+      }
+      stStartHour.value = "8";
+    }
+
+    const mfOr = $("mfOr");
+    if(mfOr){
+      mfOr.innerHTML = "";
+      OR_LIST.forEach(o=>{
+        const opt = document.createElement("option");
+        opt.value = o;
+        opt.textContent = o;
+        mfOr.appendChild(opt);
+      });
+    }
+
+    const nsDur = $("stNSDur");
+    if(nsDur){
+      nsDur.value = "4";
+    }
+  }
+
+  function syncCadenceUI(){
+    const mode = $("stCadence").value;
+    $("boxWeekly").classList.toggle("hide", mode !== "WEEKLY");
+    $("boxMonthWeeks").classList.toggle("hide", mode !== "MONTH_WEEKS");
+  }
+
+  function clearStructEditor(){
+    $("stId").value = "";
+    $("stLabel").value = "";
+    $("stOr").selectedIndex = 0;
+    $("stStartHour").value = "8";
+    $("stDur").value = "4";
+    $("stStartDate").value = todayISO();
+    $("stEndDate").value = "";
+    document.querySelectorAll(".stDow").forEach(cb=> cb.checked = false);
+    document.querySelectorAll(".stWom").forEach(cb=> cb.checked = false);
+    $("stCadence").value = "WEEKLY";
+    $("stIntervalWeeks").value = "1";
+    syncCadenceUI();
+    hideMsg($("msgStructEdit"));
+  }
+
+  function ruleToWeekdaysString(rule){
+    const map = {
+      MONDAY:"L", TUESDAY:"M", WEDNESDAY:"X", THURSDAY:"J",
+      FRIDAY:"V", SATURDAY:"S", SUNDAY:"D"
+    };
+    return (rule.weekdays || []).map(w=>map[w] || w).join(",");
+  }
+
+  
+  // ✅ Deduplicar reglas estructurales (mismo equipo/día/hora/quirófano/cadencia, distintos IDs)
+  function dedupeStructuralRules_(rawRules){
+    const map = new Map(); // key -> bestRule
+    let dupCount = 0;
+
+    function normStr_(v){ return String(v == null ? "" : v).trim().toUpperCase(); }
+    function normArr_(a){
+      if(!Array.isArray(a)) return "";
+      return a.map(normStr_).filter(Boolean).sort().join(",");
+    }
+    function normNum_(v){
+      const n = Number(v);
+      return Number.isFinite(n) ? String(n) : "";
+    }
+    function normDate_(v){
+      // Acepta Date, string ISO, "YYYY-MM-DD", etc. Devuelve "YYYY-MM-DD" si se puede.
+      if(!v) return "";
+      try{
+        if(v instanceof Date && !isNaN(v.getTime())) return v.toISOString().slice(0,10);
+        const s = String(v).trim();
+        // ya viene YYYY-MM-DD
+        if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+        const d = new Date(s);
+        if(!isNaN(d.getTime())) return d.toISOString().slice(0,10);
+      }catch(e){}
+      return String(v).trim();
+    }
+    function buildKey_(r){
+      // Campos "estables" que definen el bloque, ignorando el ID
+      const parts = [
+        normStr_(r.label),
+        normStr_(r.orName),
+        normNum_(r.startHour),
+        normNum_(r.durHours),
+        normDate_(r.startDate),
+        normDate_(r.endDate),
+        normStr_(r.cadence || r.cadenceName || r.cadenceNameEs),
+        normArr_(r.weekdays),
+        // para reglas tipo "month weeks"
+        normArr_(r.monthWeeks),
+        normArr_(r.weeksOfMonth),
+      ];
+      return parts.join("|");
+    }
+    function scoreRule_(r){
+      // preferir la que "cubre más" y/o sea más reciente
+      const end = normDate_(r.endDate);
+      const start = normDate_(r.startDate);
+      // si hay timestamps, úsalos; si no, 0
+      const upd = Number(r.updatedAt || r.updated_at || r.ts || 0) || 0;
+      const crt = Number(r.createdAt || r.created_at || 0) || 0;
+      return { end, start, upd, crt, id: String(r.id || "") };
+    }
+    function isBetter_(a,b){
+      const sa = scoreRule_(a), sb = scoreRule_(b);
+      if(sa.end !== sb.end) return sa.end > sb.end;
+      if(sa.start !== sb.start) return sa.start > sb.start;
+      if(sa.upd !== sb.upd) return sa.upd > sb.upd;
+      if(sa.crt !== sb.crt) return sa.crt > sb.crt;
+      return sa.id > sb.id;
+    }
+
+    (rawRules || []).forEach(r=>{
+      const key = buildKey_(r);
+      const prev = map.get(key);
+      if(!prev){ map.set(key, r); return; }
+      dupCount++;
+      if(isBetter_(r, prev)) map.set(key, r);
+    });
+
+    return { rules: Array.from(map.values()), dupCount };
+  }
+
+function renderStructFiltersAndList(){
+    const rawRules = S.structRulesCache || [];
+    const dd = dedupeStructuralRules_(rawRules);
+    const rules = dd.rules;
+    const dupCount = dd.dupCount;
+
+    const select = $("structTeamFilter");
+    if(select){
+      const labels = Array.from(new Set(rules.map(r=>String(r.label || "").trim()).filter(Boolean))).sort((a,b)=>a.localeCompare(b,"es"));
+      select.innerHTML = '<option value="">(Todos)</option>';
+      labels.forEach(l=>{
+        const opt = document.createElement("option");
+        opt.value = l;
+        opt.textContent = l;
+        select.appendChild(opt);
+      });
+      select.value = S.structTeamFilter || "";
+    }
+    const daySel = $("structDayFilter");
+    if(daySel){
+      daySel.value = S.structDayFilter || "";
+    }
+
+    const orSel = $("structOrFilter");
+    if(orSel){
+      const ors = Array.from(new Set(rules.map(r=>String(r.orName || r.location || "").trim()).filter(Boolean))).sort((a,b)=>a.localeCompare(b,"es"));
+      orSel.innerHTML = '<option value="">(Todos)</option>';
+      ors.forEach(o=>{
+        const opt = document.createElement("option");
+        opt.value = o;
+        opt.textContent = o;
+        orSel.appendChild(opt);
+      });
+      orSel.value = S.structOrFilter || "";
+    }
+
+    const hourSel = $("structHourFilter");
+    if(hourSel){
+      const hours = Array.from(new Set(rules.map(r=>String(r.startHour ?? "").trim()).filter(Boolean))).map(h=>Number(h)).filter(n=>Number.isFinite(n)).sort((a,b)=>a-b);
+      hourSel.innerHTML = '<option value="">(Todas)</option>';
+      hours.forEach(h=>{
+        const opt = document.createElement("option");
+        opt.value = String(h);
+        opt.textContent = String(h).padStart(2,"0")+":00";
+        hourSel.appendChild(opt);
+      });
+      hourSel.value = S.structHourFilter || "";
+    }
+
+
+    const box = $("structList");
+    const msg = $("msgStruct");
+    box.innerHTML = "";
+    hideMsg(msg);
+
+    if(!rules.length){
+      showMsg(msg, "No hay reglas estructurales definidas.", "warn");
+      $("structSummary").textContent = "0 reglas.";
+      return;
+    }
+
+    const filtered = rules.filter(r=>{
+      const okTeam = S.structTeamFilter ? (String(r.label||"").trim() === S.structTeamFilter) : true;
+      if(!okTeam) return false;
+
+      const okOr = S.structOrFilter ? (String(r.orName||r.location||"").trim() === S.structOrFilter) : true;
+      if(!okOr) return false;
+
+      const okHour = S.structHourFilter ? (String(r.startHour ?? "").trim() === String(S.structHourFilter)) : true;
+      if(!okHour) return false;
+
+      if(S.structDayFilter){
+        const dKey = String(S.structDayFilter);
+        // rule.weekdays suele venir como ["MONDAY", ...]
+        const map = {L:"MONDAY",M:"TUESDAY",X:"WEDNESDAY",J:"THURSDAY",V:"FRIDAY",S:"SATURDAY",D:"SUNDAY"};
+        const wantA = dKey;
+        const wantB = map[dKey] || dKey;
+        const arr = Array.isArray(r.weekdays) ? r.weekdays.map(String) : [];
+        const okDay = arr.includes(wantA) || arr.includes(wantB);
+        if(!okDay) return false;
+      }
+      return true;
+    });
+
+    const table = document.createElement("table");
+    const thead = document.createElement("thead");
+    thead.innerHTML = "<tr><th>ID</th><th>Equipo</th><th>Quirófano</th><th>Inicio</th><th>Fin</th><th>Hora</th><th>Duración</th><th>Cadencia</th><th>Días</th></tr>";
+    table.appendChild(thead);
+    const tbody = document.createElement("tbody");
+
+    filtered.forEach(r=>{
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${escapeHtml(r.id)}</td>
+        <td>${escapeHtml(r.label || "")}</td>
+        <td>${escapeHtml(r.orName || "")}</td>
+        <td>${escapeHtml(fmtDMY(r.startDate || ""))}</td>
+        <td>${escapeHtml(fmtDMY(r.endDate || ""))}</td>
+        <td>${String(r.startHour).padStart(2,"0")}:00</td>
+        <td>${r.durationHours} h</td>
+        <td>${escapeHtml(r.cadenceNameEs || r.cadenceMode || "")}</td>
+        <td>${escapeHtml(ruleToWeekdaysString(r))}</td>
+      `;
+      tr.style.cursor = "pointer";
+      tr.onclick = ()=>loadRuleIntoEditor(r.id);
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    box.appendChild(table);
+
+    $("structSummary").textContent = `${rawRules.length} reglas totales (${dupCount} duplicadas ocultas). Mostrando ${filtered.length}.`;
+  }
+
+  function refreshStructList(){
+    hideMsg($("msgStruct"));
+    $("structList").innerHTML = "";
+    $("structSummary").textContent = "Cargando reglas…";
+
+    callGAS("listStructuralRules", [S.pin], {
+      key:"listStruct",
+      msg:"Cargando programación estructural…",
+      onSuccess:(res)=>{
+        S.structRulesCache = res.rules || [];
+        renderStructFiltersAndList();
+      },
+      onFailure:(e)=>{
+        showMsg($("msgStruct"), e?.message || String(e), "bad");
+        $("structSummary").textContent = "Error al cargar reglas.";
+      }
+    });
+  }
+
+  function loadRuleIntoEditor(id){
+    const rule = (S.structRulesCache || []).find(r => r.id === id);
+    if(!rule){
+      showMsg($("msgStructEdit"), "No se ha encontrado esa regla.", "bad");
+      return;
+    }
+    $("stId").value = rule.id || "";
+    $("stLabel").value = rule.label || "";
+    $("stOr").value = rule.orName || OR_LIST[0];
+    $("stStartHour").value = String(rule.startHour || 8);
+    $("stDur").value = String(rule.durationHours || 4);
+    $("stStartDate").value = rule.startDate || "";
+    $("stEndDate").value = rule.endDate || "";
+
+    document.querySelectorAll(".stDow").forEach(cb=>{
+      cb.checked = (rule.weekdays || []).includes(cb.value);
+    });
+    document.querySelectorAll(".stWom").forEach(cb=>{
+      cb.checked = (rule.weeksOfMonth || []).map(String).includes(cb.value);
+    });
+
+    $("stCadence").value = rule.cadenceMode || "WEEKLY";
+    $("stIntervalWeeks").value = String(rule.intervalWeeks || 1);
+    syncCadenceUI();
+    showMsg($("msgStructEdit"), "Regla cargada en el editor. Modifica y pulsa Guardar.", "ok");
+  }
+
+  function saveStructFromEditor(){
+    hideMsg($("msgStructEdit"));
+    const weekdays = Array.from(document.querySelectorAll(".stDow:checked")).map(cb=>cb.value);
+    const weeksOfMonth = Array.from(document.querySelectorAll(".stWom:checked")).map(cb=>cb.value);
+
+    const payload = {
+      id: ($("stId").value || "").trim(),
+      orName: $("stOr").value,
+      label: $("stLabel").value,
+      startDate: $("stStartDate").value,
+      endDate: $("stEndDate").value,
+      startHour: $("stStartHour").value,
+      durationHours: $("stDur").value,
+      cadenceMode: $("stCadence").value,
+      intervalWeeks: $("stIntervalWeeks").value,
+      weekdays,
+      weeksOfMonth
+    };
+
+    callGAS("upsertStructuralRule", [S.pin, payload], {
+      key:"saveStruct",
+      msg:"Guardando programación estructural…",
+      onSuccess:(res)=>{
+        const msg = res?.message || "Guardado.";
+        if(res && res.rule && res.rule.id){
+          $("stId").value = res.rule.id;
+        }
+        showMsg($("msgStructEdit"), msg, "ok");
+        refreshStructList();
+      },
+      onFailure:(e)=>{
+        showMsg($("msgStructEdit"), e?.message || String(e), "bad");
+      }
+    });
+  }
+
+  function deleteStructById(){
+    hideMsg($("msgStructEdit"));
+    const id = ($("stId").value || "").trim();
+    if(!id) return showMsg($("msgStructEdit"), "Indica un ID para eliminar.", "warn");
+    if(!confirm("¿Seguro que quieres eliminar TODA la serie estructural asociada a ese ID?")) return;
+
+    callGAS("deleteStructuralRule", [S.pin, id], {
+      key:"delStruct",
+      msg:"Eliminando programación estructural…",
+      onSuccess:(res)=>{
+        showMsg($("msgStructEdit"), res?.message || "Estructural eliminado.", "ok");
+        clearStructEditor();
+        refreshStructList();
+      },
+      onFailure:(e)=>{
+        showMsg($("msgStructEdit"), e?.message || String(e), "bad");
+      }
+    });
+  }
+
+  function setStructTeamFilter(){
+    S.structTeamFilter = $("structTeamFilter").value || "";
+    renderStructFiltersAndList();
+  }
+
+  function setStructDayFilter(){
+    S.structDayFilter = $("structDayFilter").value || "";
+    renderStructFiltersAndList();
+  }
+
+  function setStructOrFilter(){
+    S.structOrFilter = $("structOrFilter").value || "";
+    renderStructFiltersAndList();
+  }
+
+  function setStructHourFilter(){
+    S.structHourFilter = $("structHourFilter").value || "";
+    renderStructFiltersAndList();
+  }
+
+  function clearStructFilter(){
+    S.structTeamFilter = "";
+    S.structDayFilter = "";
+    S.structOrFilter = "";
+    S.structHourFilter = "";
+    if($("structTeamFilter")) $("structTeamFilter").value = "";
+    if($("structDayFilter")) $("structDayFilter").value = "";
+    if($("structOrFilter")) $("structOrFilter").value = "";
+    if($("structHourFilter")) $("structHourFilter").value = "";
+    renderStructFiltersAndList();
+  }
+
+  
+
+// ===== GRUPOS QUIRÚRGICOS (consulta) =====
+function loadGroupsCache(force){
+  if(!S.pin) return;
+  if(S.groupsLoaded && !force) return;
+  callGAS("listSurgicalGroups", [S.pin], {
+    key:"listGroups",
+    msg:"Cargando equipos quirúrgicos…",
+    onSuccess:(res)=>{
+      const groups = (res && res.groups) ? res.groups : [];
+      S.groupsCache = groups;
+
+      // Mapa normalizado: equipo -> [miembros]
+      const map = {};
+      groups.forEach(g=>{
+        const k = normalizeEquipoKey(g.equipo);
+        if(!k) return;
+        if(!map[k]) map[k] = [];
+        map[k].push(g);
+      });
+      S.groupsByEquipo = map;
+      S.groupsLoaded = true;
+      if(typeof S.__afterGroupsLoad === 'function'){ try{ S.__afterGroupsLoad(); }catch(e){} }
+
+    },
+    onFailure:(_)=>{
+      S.groupsCache = [];
+      S.groupsByEquipo = {};
+      S.groupsLoaded = true;
+    }
+  });
+
+    // Botones (Aplicar / Cancelar)
+    $("modalActions").innerHTML = `
+      <button class="btn ghost" id="mfCancelBtn" type="button">Cancelar</button>
+      <button class="btn good" id="mfApplyBtn" type="button">Aplicar cambios</button>
+    `;
+    const hint = $("mfHint");
+    if(hint) hint.textContent = 'Se aplican cambios solo a este bloque (ocurrencia). No modifica la serie.';
+
+    if($("mfCancelBtn")) $("mfCancelBtn").onclick = ()=>{
+
+      // Salir de modo edición
+      const bv = $("blockView");
+      if(bv) bv.classList.remove("hide");
+      const bClose = $("btnCloseBottom"); if(bClose) bClose.classList.remove("hide");
+      const bSwap = $("btnAskSwapFooter"); if(bSwap) bSwap.classList.remove("hide");
+      $("modalForm").classList.add("hide");
+      $("modal").classList.remove("wide");
+      $("modalActions").innerHTML = "";
+      hideMsg($("modalMsg"));
+    };
+
+    if($("mfApplyBtn")) $("mfApplyBtn").onclick = ()=>applyModalChanges();
+
+  }
+
+  function wireAskSwapButton(ctx){
+    // Guarda contexto para el email (fecha/quirófano/hora etc.)
+    S.selectedCellContext = ctx || null;
+
+    const btn = $("btnAskSwapFromBlock");
+    if(!btn) return;
+
+    btn.onclick = ()=>{
+      const team = (btn.getAttribute("data-team") || "").trim();
+      if(!team) return;
+      openSwapModal(team, ctx || null);
+    };
+  }
+
+
+
+
+function openGroupsView(){
+  // Solo master
+  if(!S.pin || !isMaster()) return;
+
+  const render = ()=>{
+    const q = normalizeStr(($("groupsSearch")?.value || "").trim());
+    const all = Array.isArray(S.groupsCache) ? S.groupsCache.slice() : [];
+
+    // Orden: equipo, rol, nombre
+    all.sort((a,b)=>{
+      const ea = normalizeEquipoKey(a.equipo||"");
+      const eb = normalizeEquipoKey(b.equipo||"");
+      if(ea !== eb) return ea.localeCompare(eb,"es");
+      const ra = normalizeStr(a.rol||"");
+      const rb = normalizeStr(b.rol||"");
+      if(ra !== rb) return ra.localeCompare(rb,"es");
+      const na = String(a.nombre||a.cirujano||"").trim();
+      const nb = String(b.nombre||b.cirujano||"").trim();
+      return na.localeCompare(nb,"es");
+    });
+
+    // Filtrar
+    const filtered = !q ? all : all.filter(g=>{
+      const hay = [
+        g.equipo, g.nombre||g.cirujano, g.rol, g.especialidad, g.email, g.telefono
+      ].map(x=>normalizeStr(String(x||""))).join(" ");
+      return hay.includes(q);
+    });
+
+    // Agrupar por equipo
+    const by = {};
+    filtered.forEach(g=>{
+      const key = (g.equipo||"").trim();
+      if(!key) return;
+      if(!by[key]) by[key] = [];
+      by[key].push(g);
+    });
+
+    const teams = Object.keys(by).sort((a,b)=>normalizeEquipoKey(a).localeCompare(normalizeEquipoKey(b),"es"));
+    $("groupsCount").textContent = `${teams.length} equipo(s) · ${filtered.length} miembro(s)`;
+    const list = $("groupsList");
+    list.innerHTML = "";
+
+    if(teams.length === 0){
+      $("groupsEmpty").style.display = "block";
+      return;
+    }
+    $("groupsEmpty").style.display = "none";
+
+    teams.forEach(team=>{
+      const members = by[team] || [];
+      const admin = members.find(m=>{
+        const r = normalizeStr(m.rol||"");
+        return r.includes("admin") || r.includes("administrador");
+      }) || null;
+      const adminName = String((admin && (admin.nombre||admin.cirujano)) || "").trim() || "—";
+      const others = members.filter(m=> m !== admin);
+
+      const linesHtml = others.map(m=>{
+        const nombre = escapeHtml(String(m.nombre||m.cirujano||"").trim());
+        const rol = escapeHtml(String(m.rol||"").trim());
+        const esp = escapeHtml(String(m.especialidad||"").trim());
+        const mail = escapeHtml(String(m.email||"").trim());
+        const tel  = escapeHtml(String(m.telefono||"").trim());
+
+        const parts = [];
+        parts.push(`<b>${nombre || "—"}</b>`);
+        const extras = [
+          (rol && rol !== "—") ? rol : "",
+          esp ? esp : "",
+          mail ? mail : "",
+          tel ? tel : ""
+        ].filter(Boolean);
+
+        for(const x of extras){
+          parts.push(`<span class="sep">·</span>`);
+          parts.push(`<span>${x}</span>`);
+        }
+        return `<div class="gLine">${parts.join("")}</div>`;
+      }).join("");
+
+      const header = (others.length > 0) ? `
+        <details class="gTeamCard">
+          <summary class="gTeamSummary">
+            <div class="gTeamTopRow">
+              <div class="gTeamCode">${escapeHtml(team)}</div>
+              <div class="gTeamMeta">
+                <span class="gTeamPill">${members.length} miembro(s)</span>
+                <span class="gTeamPill">Admin: <b>${escapeHtml(adminName)}</b></span>
+              </div>
+              <div class="gTeamChevron">▾</div>
+            </div>
+          </summary>
+          <div class="gTeamBody">
+            ${linesHtml}
+          </div>
+        </details>
+      ` : `
+        <div class="gTeamCard">
+          <div class="gTeamSummary" style="cursor:default">
+            <div class="gTeamTopRow">
+              <div class="gTeamCode">${escapeHtml(team)}</div>
+              <div class="gTeamMeta">
+                <span class="gTeamPill">${members.length} miembro(s)</span>
+                <span class="gTeamPill">Admin: <b>${escapeHtml(adminName)}</b></span>
+              </div>
+            </div>
+          </div>
+          <div class="gEmptyTeam">Sin miembros adicionales.</div>
+        </div>
+      `;
+      list.insertAdjacentHTML("beforeend", header);
+    });
+  };
+
+  const ensure = ()=>{
+    // Wire UI
+    if($("groupsSearch")){
+      $("groupsSearch").oninput = ()=>render();
+      if($("groupsClear")) $("groupsClear").onclick = ()=>{ $("groupsSearch").value=""; render(); };
+    }
+    render();
+  };
+
+  if(!S.groupsLoaded){
+    S.__afterGroupsLoad = ensure;
+    loadGroupsCache(true);
+  }else{
+    ensure();
+  }
+}
+
+
+
+function normalizeStr(value){
+  let s = String(value||"").trim().toLowerCase();
+  if(!s) return "";
+  try{
+    s = s.normalize("NFD").replace(/[\u0300-\u036f]/g,""); // quita acentos
+  }catch(_){}
+  s = s.replace(/\s+/g," ");
+  return s;
+}
+
+function escapeHtml(input){
+  const s = String(input ?? "");
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+// --- Color estable por equipo (HSL) ---
+function teamColorForLabel(label){
+  const s = String(label||"").trim().toUpperCase();
+  let h = 0;
+  for(let i=0;i<s.length;i++){
+    h = (h*31 + s.charCodeAt(i)) >>> 0;
+  }
+  const hue = h % 360;
+  // Fondo fuerte (100% saturación) y luminosidad moderada para que no sea pastel
+  return {
+    bg: `hsl(${hue} 100% 42%)`,
+    border: `hsl(${hue} 100% 28%)`,
+    text: "#ffffff",
+    hue
+  };
+}
+
+
+function normalizeEquipoKey(value){
+  let s = String(value||"").trim();
+  if(!s) return "";
+  s = s.replace(/\s+/g, " ");
+  // En la parrilla, la Etiqueta suele venir como "E CPLI" (prefijo "E ")
+  s = s.replace(/^E\s+/i, "");
+  return s.toUpperCase();
+}
+
+  function getTeamContactSummary(label){
+    const raw = String(label||"").trim();
+    if(!raw) return { team:"", contact:"" };
+    let team = raw.replace(/^E\b[\s:_-]*/i, "").trim().replace(/\s+/g," ");
+    if(!team) return { team:"", contact:"" };
+
+    const byTeam = {};
+    (S.groupsCache||[]).forEach(g=>{
+      const t = String(g.equipo||"").trim();
+      if(!t) return;
+      (byTeam[t] ||= []).push(g);
+    });
+
+    let match = byTeam[team] ? team : null;
+    if(!match){
+      const key = normalizeEquipoKey(team);
+      match = Object.keys(byTeam).find(t => normalizeEquipoKey(t) === key) || null;
+    }
+    if(!match){
+      return { team, contact: S.groupsLoaded ? "" : "Cargando…" };
+    }
+
+    const members = (byTeam[match]||[]).slice();
+    // Prefer administrador si existe (columna Rol)
+    members.sort((a,b)=>{
+      const ra = String(a.rol||"").toLowerCase() === "administrador" ? 0 : 1;
+      const rb = String(b.rol||"").toLowerCase() === "administrador" ? 0 : 1;
+      if(ra!==rb) return ra-rb;
+      return String(a.cirujano||a.nombre||"").localeCompare(String(b.cirujano||b.nombre||""),"es");
+    });
+    const first = members[0] || {};
+    const name = String(first.cirujano || first.nombre || "").trim();
+    const spec = String(first.especialidad || "").trim();
+    const contact = (name ? name : "") + (spec ? " · "+spec : "");
+    return { team: match, contact };
+  }
+
+
+function groupInfoHtmlForLabel(label){
+  // Esperado: "E COTA" -> "COTA"
+  const raw = String(label||"").trim();
+  if(!raw) return "";
+
+  let team = raw.replace(/^E\b[\s:_-]*/i, "").trim();
+  team = team.replace(/\s+/g, " ").trim();
+  if(!team) return "";
+
+  const byTeam = {};
+  (S.groupsCache||[]).forEach(g=>{
+    const t = String(g.equipo||"").trim();
+    if(!t) return;
+    if(!byTeam[t]) byTeam[t]=[];
+    byTeam[t].push(g);
+  });
+
+  let match = byTeam[team] ? team : null;
+  if(!match){
+    const key = normalizeEquipoKey(team);
+    match = Object.keys(byTeam).find(t => normalizeEquipoKey(t) === key) || null;
+  }
+
+  if(!match){
+    if(!S.groupsLoaded) return `<div class="mut" style="margin-top:10px">Cargando equipo…</div>`;
+    return "";
+  }
+
+  const members = (byTeam[match]||[]).slice();
+  members.sort((a,b)=>String(a.cirujano||a.nombre||"").localeCompare(String(b.cirujano||b.nombre||""),"es"));
+  const first = members[0] || {};
+  const firstName = String(first.cirujano || first.nombre || "—").trim();
+  const firstSpec = String(first.especialidad || "").trim();
+
+  const emailObj = members.find(x=>String(x.correo||x.email||"").trim());
+  const hasEmail = !!String((emailObj && (emailObj.correo||emailObj.email)) || "").trim();
+
+  const btn = hasEmail
+    ? `<div class="dlgActions"><button type="button" class="btn good" id="btnAskSwapFromBlock" data-team="${escapeHtml(match)}">Pedir cambio</button></div>`
+    : `<div class="mut" style="margin-top:10px">Equipo <b>${escapeHtml(match)}</b> sin email en GruposQuirúrgicos.</div>`;
+
+  return `
+    <div class="dlgGrid">
+      <div class="dlgK">Equipo</div><div class="dlgV">${escapeHtml(match)}</div>
+      <div class="dlgK">Contacto</div><div class="dlgV">${escapeHtml(firstName)}${firstSpec ? " · "+escapeHtml(firstSpec) : ""}</div>
+    </div>
+    ${btn}
+  `;
+}
+// ===== NO ESTRUCTURALES DESDE MASTER (búsqueda de huecos) =====
+  function buildDoctorSelectForMaster(){
+    const sel = $("stNSDoctorSelect");
+    if(!sel) return;
+    sel.innerHTML = '<option value="">(Seleccionar usuario)</option>';
+    const list = S.doctorList || [];
+    list.forEach(d=>{
+      const email = d.correo || d.email || d.emailVisible || "";
+      if(!email) return;
+      const name = [d.nombre, d.apellidos].filter(Boolean).join(" ");
+      const label = name ? `${name} – ${email}` : email;
+      const opt = document.createElement("option");
+      opt.value = email;
+      opt.textContent = label;
+      sel.appendChild(opt);
+    });
+  }
+
+  function loadDoctorOptionsMaster(){
+    if(S.doctorListLoaded) return;
+    callGAS("listDoctorsForMaster", [S.pin], {
+      key:"listDoctorsMaster",
+      msg:"Cargando profesionales…",
+      onSuccess:(res)=>{
+        S.doctorList = res.doctors || res.lista || [];
+        S.doctorListLoaded = true;
+        buildDoctorSelectForMaster();
+      },
+      onFailure:(_)=>{
+        S.doctorListLoaded = true;
+      }
+    });
+  }
+
+  // Calcula bloques libres
+  function computeFreeBlocksForDateGrid(grid, hours){
+    const results = [];
+    if(!grid || !grid.rows || !hours || hours <= 0) return results;
+    const needed = hours;
+
+    grid.rows.forEach(row=>{
+      const cells = row.cells || [];
+      for(let i=0; i <= cells.length - needed; i++){
+        let ok = true;
+        for(let k=0; k<needed; k++){
+          if(cells[i+k].status !== "FREE"){
+            ok = false;
+            break;
+          }
+        }
+        if(!ok) continue;
+        const startHour = cells[i].hour;
+        results.push({
+          orName: row.orName,
+          startHour,
+          hours: needed,
+          date: grid.date
+        });
+      }
+    });
+
+    return results;
+  }
+
+  // Render agrupado por ubicación
+  function renderMasterNSSlots(){
+    const box = $("stNSSlotsBox");
+    box.innerHTML = "";
+    const slots = S.masterNSSlots || [];
+    if(!slots.length) return;
+
+    const dateStr = S.masterNSQuery?.dateStr || (slots[0] && slots[0].date) || todayISO();
+
+    const groups = new Map();
+    slots.forEach((s, idx)=>{
+      const key = s.orName || "—";
+      if(!groups.has(key)) groups.set(key, []);
+      groups.get(key).push({ s, idx });
+    });
+
+    const order = Array.from(groups.keys()).sort((a,b)=>{
+      const ia = OR_LIST.indexOf(a);
+      const ib = OR_LIST.indexOf(b);
+      if(ia !== -1 || ib !== -1){
+        if(ia === -1) return 1;
+        if(ib === -1) return -1;
+        return ia - ib;
+      }
+      return a.localeCompare(b,"es");
+    });
+
+    const wrap = document.createElement("div");
+    wrap.className = "slotsByOr";
+
+    order.forEach(orName=>{
+      const items = (groups.get(orName) || []).slice();
+      items.sort((a,b)=> (a.s.startHour||0) - (b.s.startHour||0));
+
+      const row = document.createElement("div");
+      row.className = "slotsRow";
+
+      const head = document.createElement("div");
+      head.className = "slotsRowHead";
+
+      const title = document.createElement("div");
+      title.className = "slotsRowTitle";
+      title.innerHTML = `<span class="badge">Ubicación</span> ${escapeHtml(orName)}`;
+
+      const count = document.createElement("div");
+      count.className = "badge";
+      count.textContent = `${items.length} hueco${items.length === 1 ? "" : "s"}`;
+
+      head.appendChild(title);
+      head.appendChild(count);
+
+      const chips = document.createElement("div");
+      chips.className = "slotsRowChips";
+
+      items.forEach(({s, idx})=>{
+        const d = new Date(dateStr+"T00:00:00");
+        d.setHours(s.startHour,0,0,0);
+
+        const btn = document.createElement("button");
+        btn.className = "slot" + (idx === S.masterNSSelectedIndex ? " selected" : "");
+        btn.textContent = `${d.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}`;
+        btn.title = `${escapeHtml(orName)} · ${String(s.startHour).padStart(2,"0")}:00`;
+        btn.onclick = ()=>{
+          S.masterNSSelectedIndex = idx;
+          renderMasterNSSlots();
+        };
+        chips.appendChild(btn);
+      });
+
+      row.appendChild(head);
+      row.appendChild(chips);
+      wrap.appendChild(row);
+    });
+
+    box.appendChild(wrap);
+  }
+
+  function masterFindNonStructSlots(opt){
+    const o = opt || {};
+    const refreshOnly = !!o.refreshOnly;
+    const afterCreate = !!o.afterCreate;
+
+    if(!refreshOnly){
+      hideMsg($("msgStructNon"));
+    }
+
+    $("stNSSlotsBox").innerHTML = "";
+    S.masterNSQuery = null;
+    S.masterNSSlots = [];
+    S.masterNSSelectedIndex = -1;
+
+    const dateStr = (o.dateStr || $("stNSDate").value);
+    const hours = parseInt((o.hours || $("stNSDur").value),10);
+
+    if(!dateStr) return showMsg($("msgStructNon"), "Selecciona una fecha.", "warn");
+    if(!hours || hours <= 0) return showMsg($("msgStructNon"), "Selecciona una duración válida.", "warn");
+
+    callGAS("getGridOccupancy", [S.pin, dateStr], {
+      key:"masterNSGrid",
+      msg:"Buscando huecos disponibles…",
+      disable: [$("btnNSFindSlots")],
+      onSuccess:(res)=>{
+        S.masterNSQuery = {dateStr, hours};
+        const slots = computeFreeBlocksForDateGrid(res, hours);
+        S.masterNSSlots = slots;
+
+        if(!slots.length){
+          showMsg($("msgStructNon"),
+            afterCreate
+              ? "Quirófano creado. No quedan huecos libres para esa duración en ese día (ya actualizado)."
+              : "No hay huecos libres que permitan esa duración en ese día.",
+            "warn"
+          );
+          return;
+        }
+
+        renderMasterNSSlots();
+
+        showMsg($("msgStructNon"),
+          afterCreate
+            ? "Quirófano creado correctamente. Huecos actualizados: selecciona otro hueco si quieres asignar uno nuevo."
+            : "Selecciona un hueco y después pulsa «Asignar hueco seleccionado».",
+          "ok"
+        );
+      },
+      onFailure:(e)=>{
+        showMsg($("msgStructNon"), e?.message || String(e), "bad");
+      }
+    });
+  }
+
+  function masterAssignNonStructSlot(){
+    hideMsg($("msgStructNon"));
+    const idx = S.masterNSSelectedIndex;
+    if(idx < 0 || !S.masterNSSlots.length){
+      return showMsg($("msgStructNon"), "Primero selecciona uno de los huecos disponibles.", "warn");
+    }
+
+    const slot = S.masterNSSlots[idx];
+    const dateStr = S.masterNSQuery?.dateStr || slot.date;
+    const hours = S.masterNSQuery?.hours || slot.hours;
+    const orName = slot.orName;
+
+    const email = ($("stNSDoctorEmail").value || "").trim();
+    if(!email){
+      return showMsg($("msgStructNon"), "Selecciona o escribe el email del usuario.", "warn");
+    }
+
+    const rawLabel = ($("stNSLabel").value || "").trim();
+    const label = rawLabel ? rawLabel : email;
+
+    const startISO = `${dateStr}T${String(slot.startHour).padStart(2,"0")}:00:00`;
+
+    const payload = {
+      date: dateStr,
+      startISO,
+      startHour: slot.startHour,
+      hours,
+      orName,
+      label,
+      doctorEmail: email
+    };
+
+    if(!confirm(`¿Crear quirófano NO estructural para ${email} el ${fmtDMY(dateStr)} en ${orName} a las ${String(slot.startHour).padStart(2,"0")}:00 durante ${hours} h?`)){
+      return;
+    }
+
+    callGAS("masterCreateNonStructural", [S.pin, payload], {
+      key:"masterCreateNonStruct",
+      msg:"Creando quirófano no estructural…",
+      disable: [$("btnNSAssignSlot"), $("btnNSFindSlots"), $("stNSDoctorSelect"), $("stNSDoctorEmail"), $("stNSLabel"), $("stNSDate"), $("stNSDur")],
+      onSuccess:(res)=>{
+        showMsg($("msgStructNon"), res?.message || "Quirófano no estructural creado.", "ok");
+        masterFindNonStructSlots({ refreshOnly:true, afterCreate:true, dateStr, hours });
+
+        const gdDate = $("gdDate").value;
+        if(gdDate && gdDate === dateStr){
+          loadGrid();
+        }
+      },
+      onFailure:(e)=>{
+        showMsg($("msgStructNon"), e?.message || String(e), "bad");
+      }
+    });
+  }
+
+  // ===== LISTA DE ESPERA (NUEVA) =====
+  function openWaitlist(){
+    go("viewWait");
+
+    if(!S.pin){
+      showMsg($("msgWait"), "Debes entrar primero con tu PIN.", "warn");
+      return;
+    }
+    if(!isMaster()){
+      showMsg($("msgWait"), "Solo el perfil Master puede ver y gestionar la lista de espera.", "warn");
+      return;
+    }
+    loadWaitlistMaster();
+  }
+
+  function loadWaitlistMaster(){
+    hideMsg($("msgWait"));
+    const listEl = $("waitList");
+    listEl.innerHTML = `<div class="msg">Cargando…</div>`;
+
+    const mode = $("wlFilter").value;
+    let onlyPending = true;
+    let includePast = false;
+    if(mode === "pendingAll"){ onlyPending = true; includePast = true; }
+
+    callGAS("listWaitlist", [S.pin, onlyPending, includePast], {
+      key:"waitlist",
+      msg:"Cargando lista de espera…",
+      onSuccess:(res)=>{
+        if(!res || !res.ok){
+          listEl.innerHTML = "";
+          showMsg($("msgWait"), "Respuesta inválida del servidor.", "bad");
+          return;
+        }
+        renderWaitlist(res.items || []);
+      },
+      onFailure:(e)=>{
+        listEl.innerHTML = "";
+        showMsg($("msgWait"), e?.message || String(e), "bad");
+      }
+    });
+  }
+
+  function renderWaitlist(items){
+    const listEl = $("waitList");
+    listEl.innerHTML = "";
+
+    if(!items.length){
+      showMsg($("msgWait"), "No hay solicitudes con ese filtro.", "warn");
+      return;
+    }
+    hideMsg($("msgWait"));
+
+    listEl.innerHTML = items.map(it=>{
+      const who = `${it.nombre||""} ${it.apellidos||""}`.trim();
+      const estado = it.estado || "";
+      const canAct = (estado === "PENDIENTE");
+      return `
+        <div class="card" style="margin:10px 0">
+          <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap">
+            <div style="min-width:280px;flex:1">
+              <div style="font-weight:850">
+                ${escapeHtml(fmtDMY(it.fecha||""))} · ${escapeHtml(String(it.horas||""))}h · ${escapeHtml(it.preferencia||"")}
+              </div>
+              <div class="hint">${escapeHtml(who)} · ${escapeHtml(it.especialidad||"")} · ${escapeHtml(it.correo||"")}</div>
+              ${it.nota ? `<div style="margin-top:6px">${escapeHtml(it.nota)}</div>` : ``}
+              <div class="hint" style="margin-top:6px">Estado: <b>${escapeHtml(estado)}</b> · ID: ${escapeHtml(it.waitId||"")}</div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:8px;min-width:200px">
+              ${canAct ? `<button class="btn good" onclick="acceptWait('${escapeHtml(it.waitId||"")}')">Aceptar y asignar</button>` : ``}
+              ${canAct ? `<button class="btn bad" onclick="discardWait('${escapeHtml(it.waitId||"")}')">Descartar</button>` : ``}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function acceptWait(waitId){
+    if(!waitId) return;
+    if(!confirm("¿Asignar quirófano automáticamente para esta solicitud?")) return;
+
+    callGAS("acceptWaitlist", [S.pin, waitId], {
+      key:"acceptWait",
+      msg:"Buscando hueco y asignando…",
+      onSuccess:(res)=>{
+        showMsg($("msgWait"), res?.message || "Solicitud asignada.", "ok");
+        loadWaitlistMaster();
+        loadGrid();
+      },
+      onFailure:(e)=>{
+        showMsg($("msgWait"), e?.message || String(e), "bad");
+      }
+    });
+  }
+
+  function discardWait(waitId){
+    if(!waitId) return;
+    if(!confirm("¿Descartar esta solicitud y enviar email al solicitante?")) return;
+
+    callGAS("resolveWaitlist", [S.pin, waitId, "DESCARTADA"], {
+      key:"discardWait",
+      msg:"Marcando solicitud como descartada…",
+      onSuccess:(res)=>{
+        showMsg($("msgWait"), res?.message || "Solicitud descartada.", "ok");
+        loadWaitlistMaster();
+      },
+      onFailure:(e)=>{
+        showMsg($("msgWait"), e?.message || String(e), "bad");
+      }
+    });
+  }
+
+  // ===== REPORTES =====
+  function sendReport(){
+    hideMsg($("msgReport"));
+    const email = $("rpEmail").value || "";
+    const start = $("rpStart").value || "";
+    const end   = $("rpEnd").value || "";
+    if(!email || !start || !end){
+      return showMsg($("msgReport"), "Indica email, inicio y fin.", "warn");
+    }
+
+    callGAS("sendORForecastReport", [S.pin, email, start, end], {
+      key:"report",
+      msg:"Enviando reporte por correo…",
+      onSuccess:(res)=>{
+        showMsg($("msgReport"), res?.message || "Reporte enviado.", "ok");
+      },
+      onFailure:(e)=>{
+        showMsg($("msgReport"), e?.message || String(e), "bad");
+      }
+    });
+  }
+
+  
+  // ===== STRUCT VISUAL REPORT (COMPACT) =====
+  // Expects GAS: getStructuralProgramReport(pin) -> can return any of:
+  //  A) { locations:[{ orName, byDaySession:{ L:{morning:[...], afternoon:[...]}, ... } , responsablesByTeam? }] }
+  //  B) { rows:[{ orName, day, session, label, start, end, time, responsable }] }
+  //  C) { blocks:[...] }  (alias)
+  // Renderer is defensive and will try to adapt.
+
+  function generateStructVisualReport(){
+    hideMsg($("msgReport"));
+    const box = $("structVisualReport");
+    box.classList.remove("hide");
+    box.innerHTML = "";
+
+    callGAS("getStructuralProgramReport", [S.pin], {
+      key:"structReport",
+      msg:"Generando reporte visual…",
+      onSuccess:(res)=>{
+        try{
+          renderStructVisualReport(res);
+        }catch(err){
+          console.error(err);
+          showMsg($("msgReport"), "Error renderizando el reporte: " + (err?.message||String(err)), "bad");
+        }
+      },
+      onFailure:(e)=>{
+        console.error(e);
+        showMsg($("msgReport"), e?.message || String(e), "bad");
+      }
+    });
+  }
+
+  function renderStructVisualReport(data){
+    const box = $("structVisualReport");
+    box.classList.remove("hide");
+    box.innerHTML = "";
+
+    const rows = normalizeStructReportRows(data);
+    if(!rows.length){
+      showMsg($("msgReport"), "No hay bloques estructurales para mostrar en este rango/criterio.", "warn");
+      return;
+    }
+
+    // Group by location -> day -> session
+    const map = new Map(); // loc -> { L:{morning:[],afternoon:[]}, ... }
+    rows.forEach(r=>{
+      const loc = String(r.orName||r.location||"").trim() || "—";
+      const day = normalizeDayKey(r.day);
+      const sess = normalizeSessionKey(r.session);
+      if(!map.has(loc)){
+        map.set(loc, {L:{morning:[],afternoon:[]},M:{morning:[],afternoon:[]},X:{morning:[],afternoon:[]},J:{morning:[],afternoon:[]},V:{morning:[],afternoon:[]},S:{morning:[],afternoon:[]},D:{morning:[],afternoon:[]}});
+      }
+      const cell = map.get(loc)[day][sess];
+      cell.push({
+        label: r.label || r.team || r.group || r.equipo || "—",
+        time: r.time || r.range || r.horario || formatTimeRange(r),
+        responsable: r.responsable || r.admin || r.administrator || r.responsible || ""
+      });
+    });
+
+    const dayOrder = ["L","M","X","J","V","S","D"];
+    const dayName = {L:"Lunes", M:"Martes", X:"Miércoles", J:"Jueves", V:"Viernes", S:"Sábado", D:"Domingo"};
+    const sessName = {morning:"Mañana", afternoon:"Tarde"};
+
+    // ✅ Render en TABLA (estilo Excel) para evitar solapes de celdas (bug de sticky+grid en algunos navegadores)
+    const scroll = document.createElement("div");
+    scroll.className = "structReportScroll";
+
+    const table = document.createElement("table");
+    table.className = "structReportTable";
+
+    const thead = document.createElement("thead");
+    const tr1 = document.createElement("tr");
+
+    const thLoc = document.createElement("th");
+    thLoc.className = "srLoc";
+    thLoc.rowSpan = 2;
+    thLoc.textContent = "Ubicación";
+    tr1.appendChild(thLoc);
+
+    dayOrder.forEach(d=>{
+      const th = document.createElement("th");
+      th.className = "srDay";
+      th.colSpan = 2;
+      th.innerHTML = `<div class="srDayTop">${escapeHtml(dayName[d])}</div><div class="srDayKey">${d}</div>`;
+      tr1.appendChild(th);
+    });
+
+    const tr2 = document.createElement("tr");
+    dayOrder.forEach(_d=>{
+      const thM = document.createElement("th");
+      thM.className = "srSess";
+      thM.textContent = "M";
+      tr2.appendChild(thM);
+
+      const thT = document.createElement("th");
+      thT.className = "srSess";
+      thT.textContent = "T";
+      tr2.appendChild(thT);
+    });
+
+    thead.appendChild(tr1);
+    thead.appendChild(tr2);
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+
+    [...map.keys()].sort((a,b)=>a.localeCompare(b,"es")).forEach(loc=>{
+      const tr = document.createElement("tr");
+
+      const tdLoc = document.createElement("td");
+      tdLoc.className = "srLocCell";
+      tdLoc.textContent = loc;
+      tr.appendChild(tdLoc);
+
+      dayOrder.forEach(d=>{
+        ["morning","afternoon"].forEach(sess=>{
+          const td = document.createElement("td");
+          td.className = "srCell";
+
+          const stack = document.createElement("div");
+          stack.className = "srCellStack";
+
+          const items = map.get(loc)[d][sess];
+          if(items && items.length){
+            items.slice(0,6).forEach(it=>{
+              const btn = document.createElement("button");
+              btn.type = "button";
+              btn.className = "srCard";
+              // En la tarjeta: solo el nombre del equipo
+              btn.innerHTML = `<div class="srCardTop"><span class="srLabel">${escapeHtml(it.label || "—")}</span></div>`;
+              const __c = teamColorForLabel(it.label);
+              btn.style.background = __c.bg;
+              btn.style.borderColor = __c.border;
+              btn.style.color = __c.text || "#fff";
+              // sombra mínima para separar sin “pastel”
+              btn.style.boxShadow = "inset 0 0 0 1px rgba(255,255,255,.10)";
+
+              btn.onclick = ()=>{
+                openStructReportBlockModal({
+                  location: loc,
+                  day: dayName[d],
+                  dayKey: d,
+                  session: sessName[sess],
+                  sessionKey: sess,
+                  label: it.label,
+                  time: it.time || "",
+                  responsable: it.responsable || "—"
+                });
+              };
+              stack.appendChild(btn);
+            });
+
+            if(items.length>6){
+              const more = document.createElement("div");
+              more.className = "srMore";
+              more.textContent = `+${items.length-6} más`;
+              stack.appendChild(more);
+            }
+          }else{
+            const empty = document.createElement("div");
+            empty.className = "srEmpty";
+            empty.textContent = "";
+            stack.appendChild(empty);
+          }
+
+          td.appendChild(stack);
+          tr.appendChild(td);
+        });
+      });
+
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    scroll.appendChild(table);
+    box.appendChild(scroll);
+
+    // Ensure modal exists once
+    ensureStructReportModal();
+  }
+
+
+  function normalizeStructReportRows(data){
+    if(!data) return [];
+    if(Array.isArray(data.rows)) return data.rows;
+    if(Array.isArray(data.blocks)) return data.blocks;
+    if(Array.isArray(data.items)) return data.items;
+
+    // locations format
+    if(Array.isArray(data.locations)){
+      const out = [];
+      data.locations.forEach(loc=>{
+        const orName = loc.orName || loc.location || loc.name;
+        const bds = loc.byDaySession || loc.byDay || loc.grid;
+        if(!bds) return;
+        Object.keys(bds).forEach(dayKey=>{
+          const dayObj = bds[dayKey] || {};
+          ["morning","afternoon"].forEach(sess=>{
+            const arr = dayObj[sess] || dayObj[sess==="morning"?"M":"T"] || [];
+            if(!Array.isArray(arr)) return;
+            arr.forEach(it=>{
+              out.push({
+                orName,
+                day: dayKey,
+                session: sess,
+                label: it.label || it.team || it.group || it.equipo,
+                time: it.time || it.range || it.horario,
+                responsable: it.responsable || it.admin || it.administrator || it.responsible
+              });
+            });
+          });
+        });
+      });
+      return out;
+    }
+
+    // byDaySession without locations (single or global)
+    // Supports GAS format: byDaySession[day] = { AM:[], PM:[], MIXED:[] } and each item may include orName, label, startHour, durationHours
+    if(data.byDaySession){
+      const out=[];
+      const bds=data.byDaySession || {};
+      const pad2 = (n)=> String(n).padStart(2,"0");
+      const fmtHour = (hFloat)=>{
+        const h = Math.floor(Number(hFloat)||0);
+        const m = Math.round(((Number(hFloat)||0) - h)*60);
+        return `${pad2(h)}:${pad2(m)}`;
+      };
+      const sessMap = { "AM":"morning", "PM":"afternoon", "MIXED":"mixed", "M":"morning", "T":"afternoon" };
+
+      Object.keys(bds).forEach(dayKey=>{
+        const dayObj=bds[dayKey]||{};
+        Object.keys(dayObj).forEach(rawSess=>{
+          const arr = dayObj[rawSess];
+          if(!Array.isArray(arr)) return;
+          const sess = sessMap[String(rawSess).toUpperCase()] || String(rawSess).toLowerCase();
+          arr.forEach(it=>{
+            const orName = it.orName || it.location || it.or || data.orName || data.location || "—";
+            const label = it.label || it.team || it.group || it.equipo;
+            let time = it.time || it.range || it.horario;
+
+            if(!time){
+              const sh = (it.startHour ?? it.start ?? it.startH);
+              const dur = (it.durationHours ?? it.duration ?? it.durH);
+              if(sh != null && dur != null){
+                const end = Number(sh) + Number(dur);
+                time = `${fmtHour(sh)}–${fmtHour(end)}`;
+              }
+            }
+
+            out.push({
+              orName,
+              day: dayKey,
+              session: sess,
+              label,
+              time,
+              responsable: it.responsable || it.admin || it.administrator || it.responsible || it.owner
+            });
+          });
+        });
+      });
+      return out;
+    }return [];
+  }
+
+  function normalizeDayKey(day){
+    const d = String(day ?? "").trim();
+    // allow 0-6, Mon.., L/M/X/J/V/S/D
+    const map = {
+      "0":"D","6":"S","5":"V","4":"J","3":"X","2":"M","1":"L",
+      "lun":"L","lunes":"L","mon":"L","monday":"L",
+      "mar":"M","martes":"M","tue":"M","tuesday":"M",
+      "mié":"X","mie":"X","miércoles":"X","miercoles":"X","wed":"X","wednesday":"X",
+      "jue":"J","jueves":"J","thu":"J","thursday":"J",
+      "vie":"V","viernes":"V","fri":"V","friday":"V",
+      "sáb":"S","sab":"S","sábado":"S","sabado":"S","sat":"S","saturday":"S",
+      "dom":"D","domingo":"D","sun":"D","sunday":"D",
+      "l":"L","m":"M","x":"X","j":"J","v":"V","s":"S","d":"D"
+    };
+    const k = normalizeStr(d).replace(/\./g,"");
+    return map[k] || (["L","M","X","J","V","S","D"].includes(d)?d:"L");
+  }
+
+  function normalizeSessionKey(sess){
+    const s = normalizeStr(String(sess ?? ""));
+    if(s.includes("tarde") || s==="t" || s==="pm" || s.includes("afternoon")) return "afternoon";
+    return "morning";
+  }
+
+  function formatTimeRange(r){
+    // Try to build from start/end or startH/endH
+    const a = r.start || r.startISO || r.startTime || r.timeStart;
+    const b = r.end || r.endISO || r.endTime || r.timeEnd;
+    if(a && b){
+      const sa = String(a).slice(11,16);
+      const sb = String(b).slice(11,16);
+      if(sa && sb && sa.includes(":") && sb.includes(":")) return `${sa}-${sb}`;
+    }
+    if(r.startH!=null && r.endH!=null){
+      const sh = String(r.startH).padStart(2,"0")+":00";
+      const eh = String(r.endH).padStart(2,"0")+":00";
+      return `${sh}-${eh}`;
+    }
+    return "";
+  }
+
+  function makeCell(cls, txt){
+    const d = document.createElement("div");
+    d.className = cls;
+    d.textContent = txt;
+    return d;
+  }
+
+  // --- Mini modal for block info ---
+  function ensureStructReportModal(){
+    if($("srModalBackdrop")) return;
+    const bd = document.createElement("div");
+    bd.id = "srModalBackdrop";
+    bd.className = "srModalBackdrop hide";
+    bd.innerHTML = `
+      <div class="srModal" role="dialog" aria-modal="true">
+        <div class="srModalRow">
+          <div class="srModalTitle" id="srModalTitle">—</div>
+          <button type="button" class="srModalCloseX" id="srModalCloseX" aria-label="Cerrar">✕</button>
+        </div>
+        <div class="srModalBody">
+          <div class="srModalLine"><span class="muted">Equipo:</span> <span id="srModalEquipo">—</span></div>
+          <div class="srModalLine"><span class="muted">Turno:</span> <span id="srModalTurno">—</span></div>
+          <div class="srModalLine"><span class="muted">Cadencia:</span> <span id="srModalCadence">—</span></div>
+          <div class="srModalLine"><span class="muted">Configuración:</span> <span id="srModalCadenceCfg">—</span></div>
+          <div class="srModalLine"><span class="muted">Administrador:</span> <span id="srModalResp">—</span></div>
+          <div class="srModalLine"><span class="muted">Contacto:</span> <span id="srModalContact">—</span></div>
+        </div>
+        <div class="srModalActions">
+          <button type="button" class="btn" id="srModalCloseBtn">Cerrar</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(bd);
+
+    const close = ()=>{ bd.classList.add("hide"); };
+
+    bd.addEventListener("click",(e)=>{
+      if(e.target===bd) close();
+    });
+    if($("srModalCloseX")) $("srModalCloseX").onclick = close;
+    if($("srModalCloseBtn")) $("srModalCloseBtn").onclick = close;
+    document.addEventListener("keydown",(e)=>{
+      if(e.key==="Escape" && !bd.classList.contains("hide")) close();
+    });
+  }
+
+  
+  function findAdminForEquipo(label){
+    const key = normalizeEquipoKey(label);
+    const members = (key && S.groupsByEquipo && S.groupsByEquipo[key]) ? S.groupsByEquipo[key] : null;
+    if(!members || !members.length) return null;
+    // Prefer rol Administrador
+    const admin = members.find(m=> String(m.rol||"").toLowerCase()==="administrador") || members[0];
+    return admin || null;
+  }
+
+  function fmtAdminContact(admin){
+    if(!admin) return "—";
+    const email = admin.email || admin.correo || admin.mail || "";
+    const phone = admin.telefono || admin.phone || admin.tlf || "";
+    if(email && phone) return `${email} · ${phone}`;
+    if(email) return email;
+    if(phone) return phone;
+    return "—";
+  }
+
+  // --- Cadencia: resolver regla estructural para un bloque del reporte ---
+  function findStructRuleForBlock(info){
+    const locKey = normalizeStr(info.location||"");
+    const labelKey = normalizeStr(info.label||"");
+    const dayKey = info.dayKey || normalizeDayKey(info.day);
+    const sessName = (function(v){
+      const s = normalizeStr(String(v||""));
+      if(s==="m"||s==="manana"||s.includes("mañana")||s.includes("morning")) return "mañana";
+      if(s==="t"||s==="tarde"||s.includes("afternoon")) return "tarde";
+      return s;
+    })(info.session);
+    const rules = Array.isArray(S.structRulesCache) ? S.structRulesCache : [];
+    if(!rules.length) return null;
+
+    const inferSess = (r)=>{
+      if(r.sessionNameEs) return String(r.sessionNameEs).toLowerCase();
+      const sh = Number(r.startHour ?? r.startHourFloat ?? r.start ?? NaN);
+      if(!Number.isFinite(sh)) return "";
+      return (sh < 15) ? "mañana" : "tarde";
+    };
+
+    // 1) Match fuerte (loc+label+day+session)
+    let hit = rules.find(r=>{
+      return normalizeStr(r.orName||r.location||"")===locKey &&
+             normalizeStr(r.label||r.team||"")===labelKey &&
+             (()=>{
+             const arr = Array.isArray(r.weekdays) ? r.weekdays.map(String) : [];
+             if(!arr.length) return true;
+             const map = {L:"MONDAY",M:"TUESDAY",X:"WEDNESDAY",J:"THURSDAY",V:"FRIDAY",S:"SATURDAY",D:"SUNDAY"};
+             const wantA = String(dayKey);
+             const wantB = map[wantA] || wantA;
+             return arr.includes(wantA) || arr.includes(wantB);
+           })() &&
+             inferSess(r)===sessName;
+    });
+    if(hit) return hit;
+
+    // 2) Match sin sesión (por si faltan horas o sesión)
+    hit = rules.find(r=>{
+      return normalizeStr(r.orName||r.location||"")===locKey &&
+             normalizeStr(r.label||r.team||"")===labelKey &&
+             (()=>{
+             const arr = Array.isArray(r.weekdays) ? r.weekdays.map(String) : [];
+             if(!arr.length) return true;
+             const map = {L:"MONDAY",M:"TUESDAY",X:"WEDNESDAY",J:"THURSDAY",V:"FRIDAY",S:"SATURDAY",D:"SUNDAY"};
+             const wantA = String(dayKey);
+             const wantB = map[wantA] || wantA;
+             return arr.includes(wantA) || arr.includes(wantB);
+           })();
+    });
+    return hit || null;
+  }
+
+  function describeCadence(rule){
+    if(!rule) return {name:"—", cfg:"—"};
+    const mode = String(rule.cadenceMode||"").toUpperCase();
+    const name = rule.cadenceNameEs || (
+      mode==="MONTH_WEEKS" ? "Mensual (semanas del mes)" :
+      mode==="WEEKLY" ? "Semanal" :
+      mode ? mode : "—"
+    );
+
+    const dayName = {L:"Lunes",M:"Martes",X:"Miércoles",J:"Jueves",V:"Viernes",S:"Sábado",D:"Domingo"};
+    const dow = Array.isArray(rule.weekdays) ? rule.weekdays.map(String) : [];
+    const dows = dow.length ? dow.map(d=>dayName[d]||d).join(", ") : "—";
+
+    const wom = Array.isArray(rule.weeksOfMonth) ? rule.weeksOfMonth.map(String) : [];
+    const womFmt = wom.length ? wom.map(w=>`${w}ª`).join(", ") : "—";
+
+    const interval = Number(rule.intervalWeeks||1);
+    const intervalTxt = (mode==="WEEKLY" && interval>1) ? `Cada ${interval} semanas` : (mode==="WEEKLY" ? "Cada semana" : "");
+
+    const startDate = rule.startDate ? String(rule.startDate) : "";
+    const endDate = rule.endDate ? String(rule.endDate) : "";
+    const dateTxt = (startDate || endDate) ? `${startDate || "—"} → ${endDate || "—"}` : "—";
+
+    const sh = rule.startHour != null ? String(rule.startHour) : "";
+    const dur = rule.durationHours != null ? String(rule.durationHours) : "";
+    const timeTxt = (sh || dur) ? `${sh || "—"}h · ${dur || "—"}h` : "—";
+
+    let extra = [];
+    if(intervalTxt) extra.push(intervalTxt);
+    if(mode==="MONTH_WEEKS") extra.push(`Semanas del mes: ${womFmt}`);
+    extra.push(`Días: ${dows}`);
+    extra.push(`Hora/Duración: ${timeTxt}`);
+
+    return {name, cfg: extra.join(" · ")};
+  }
+
+
+function openStructReportBlockModal(info){
+    ensureStructReportModal();
+
+    const show = ()=>{
+      const admin = findAdminForEquipo(info.label) || null;
+
+      $("srModalEquipo").textContent = info.label || "—";
+      $("srModalTurno").textContent = info.session || "—";
+      const __rule = findStructRuleForBlock(info);
+      const __cad = describeCadence(__rule);
+      $("srModalCadence").textContent = __cad.name || "—";
+      $("srModalCadenceCfg").textContent = __cad.cfg || "—";
+
+      $("srModalResp").textContent = (admin && (admin.nombre || admin.name)) ? (admin.nombre || admin.name) : (info.responsable || "—");
+      $("srModalContact").textContent = fmtAdminContact(admin);
+
+      $("srModalTitle").textContent = (info.label || "—");
+      $("srModalBackdrop").classList.remove("hide");
+    };
+
+    const ensureStructThenShow = ()=>{
+      // Para mostrar cadencia/configuración necesitamos tener la programación estructural cargada
+      if(!S.structRulesCache || !S.structRulesCache.length){
+        callGAS("listStructuralRules", [S.pin], {
+          key:"listStructForReportModal",
+          msg:"Cargando programación estructural…",
+          onSuccess:(res)=>{
+            S.structRulesCache = res.rules || [];
+            show();
+          },
+          onFailure:(_)=>{
+            // Si falla, igualmente mostramos el modal (pero sin cadencia)
+            show();
+          }
+        });
+        return;
+      }
+      show();
+    };
+
+    // Ensure group cache is loaded so we can resolve admin/contact
+    if(!S.groupsLoaded){
+      S.__afterGroupsLoad = ()=>{ S.__afterGroupsLoad = null; ensureStructThenShow(); };
+      loadGroupsCache(false);
+      return;
+    }
+
+    ensureStructThenShow();
+  }
+
+
+
+// ===== INIT =====
+  function initDatesAndDefaults(){
+    const t = todayISO();
+    if($("rvDate")) $("rvDate").value = addDaysISO(1);
+    if($("gdDate")) $("gdDate").value = t;
+    if($("stNSDate")) $("stNSDate").value = addDaysISO(1);
+    if($("rpStart")) $("rpStart").value = t;
+    if($("rpEnd")){
+      const d = new Date();
+      d.setDate(d.getDate()+30);
+      d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+      $("rpEnd").value = d.toISOString().slice(0,10);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", ()=>{
+    // Captura errores para que no parezca que "no hace nada"
+    window.addEventListener("error", (ev)=>{
+      try{
+        const msg = (ev && ev.message) ? ("Error JS: " + ev.message) : "Error JS.";
+        showMsg($("msgLogin"), msg, "bad");
+      }catch(e){}
+    });
+    window.addEventListener("unhandledrejection", (ev)=>{
+      try{
+        const reason = ev && ev.reason ? (ev.reason.message || String(ev.reason)) : "Promise rechazada.";
+        showMsg($("msgLogin"), "Error JS: " + reason, "bad");
+      }catch(e){}
+    });
+
+    try{
+    initOrCalcDefaults();
+    buildOrCalcChips();
+    fillStructSelectors();
+    fillSpecialties();
+    syncCadenceUI();
+    initDatesAndDefaults();
+    setSessionPill();
+    setMenuButtons();
+
+    if($("btnLogin")) $("btnLogin").onclick = login;
+    if($("btnClear")) $("btnClear").onclick = ()=>{$("pinInput").value = ""; hideMsg($("msgLogin"));};
+    if($("btnLogout")) $("btnLogout").onclick = logout;
+
+    if($("btnToggleSignup")) $("btnToggleSignup").onclick = toggleSignup;
+    if($("btnSignup")) $("btnSignup").onclick = signup;
+
+    if($("btnGoReserve")) $("btnGoReserve").onclick = ()=>go("viewReserve");
+    if($("btnGoMine")) $("btnGoMine").onclick    = ()=>go("viewMine");
+    if($("btnGoGrid")) $("btnGoGrid").onclick    = ()=>{ go("viewGrid"); loadGrid(); };
+    if($("btnGoStruct")) $("btnGoStruct").onclick  = ()=>{
+      go("viewStruct");
+      refreshStructList();
+      loadDoctorOptionsMaster();
+    };
+
+    if($("btnGoWait")) $("btnGoWait").onclick    = openWaitlist;
+    if($("btnGoReport")) $("btnGoReport").onclick  = ()=>go("viewReport");
+
+    
+
+    if($("btnGoGroups")) $("btnGoGroups").onclick = ()=>{ go("viewGroups"); openGroupsView(); };$("btnCheckSlots").onclick = checkSlots;
+    if($("btnOpenWaitlistFromReserve")) $("btnOpenWaitlistFromReserve").onclick = openWaitlistFromReserve;
+    if($("btnLoadMine")) $("btnLoadMine").onclick = loadMine;
+
+    if($("btnLoadGrid")) $("btnLoadGrid").onclick = loadGrid;
+if($("btnToggleAdvanced")) $("btnToggleAdvanced").onclick = ()=>{
+      $("advancedBox").classList.toggle("hide");
+    };
+
+    if($("btnGridPrevDay")) $("btnGridPrevDay").onclick = ()=>moveGridDay(-1);
+    if($("btnGridNextDay")) $("btnGridNextDay").onclick = ()=>moveGridDay(1);
+    if($("btnRvPrevDay"))   $("btnRvPrevDay").onclick   = ()=>moveReserveDay(-1);
+    if($("btnRvNextDay"))   $("btnRvNextDay").onclick   = ()=>moveReserveDay(1);
+
+    if($("btnNewStruct")) $("btnNewStruct").onclick = clearStructEditor;
+    if($("btnSaveStruct")) $("btnSaveStruct").onclick = saveStructFromEditor;
+    if($("btnDeleteStructById")) $("btnDeleteStructById").onclick = deleteStructById;
+    if($("btnReloadStruct")) $("btnReloadStruct").onclick = refreshStructList;
+    if($("btnStructClearFilter")) $("btnStructClearFilter").onclick = clearStructFilter;
+    $("structTeamFilter").onchange = setStructTeamFilter;
+    if($("structDayFilter")) $("structDayFilter").onchange = setStructDayFilter;
+$("structOrFilter").onchange = setStructOrFilter;
+    $("structHourFilter").onchange = setStructHourFilter;
+        $("stCadence").onchange = syncCadenceUI;
+
+    // NO estructurales master
+    if($("btnNSFindSlots")) $("btnNSFindSlots").onclick = ()=>masterFindNonStructSlots();
+    if($("btnNSAssignSlot")) $("btnNSAssignSlot").onclick = masterAssignNonStructSlot;
+
+    const selDoctor = $("stNSDoctorSelect");
+    if(selDoctor){
+      selDoctor.onchange = ()=>{
+        const email = selDoctor.value || "";
+        $("stNSDoctorEmail").value = email;
+      };
+    }
+
+    if($("btnLoadWait")) $("btnLoadWait").onclick = loadWaitlistMaster;
+    $("wlFilter").onchange = ()=>{ if(!$("#viewWait").classList.contains("hide")) loadWaitlistMaster(); };
+
+    if($("btnSendReport")) $("btnSendReport").onclick = sendReport;
+    if($("btnStructVisualReport")) $("btnStructVisualReport").onclick = generateStructVisualReport;
+
+    if($("btnModalClose")) $("btnModalClose").onclick = closeModal;
+    if($("btnModalApply")) $("btnModalApply").onclick = applyModalChanges;
+    }catch(e){
+      try{ showMsg($("msgLogin"), "Error JS: " + (e && e.message ? e.message : String(e)), "bad"); }catch(_){}
+      throw e;
+    }
+  });
+
+// --- Solicitud de cambio: modal + envío directo (Apps Script) ---
+let __swapTeam = "";
+let __swapContext = null;
+
+function openSwapModal(team, context){
+  __swapTeam = String(team||"").trim();
+  __swapContext = (context && typeof context === "object") ? context : null;
+
+  const modal = document.getElementById("swapModal");
+  const comment = document.getElementById("swapComment");
+  const status = document.getElementById("swapStatus");
+  if(!modal || !comment || !status) return;
+
+  comment.value = "";
+  status.textContent = "";
+  modal.style.display = "flex";
+  comment.focus();
+
+  const close = ()=>{ modal.style.display = "none"; };
+  document.getElementById("swapCloseBtn")?.addEventListener("click", close, { once:true });
+  document.getElementById("swapCancelBtn")?.addEventListener("click", close, { once:true });
+
+  document.getElementById("swapSendBtn")?.addEventListener("click", async ()=>{
+    try{
+      status.textContent = "Enviando...";
+      const payload = {
+        pin: S.pin,
+        equipo: __swapTeam,
+        comment: comment.value || "",
+        context: __swapContext || {}
+      };
+
+      // GAS
+      if (typeof google !== "undefined" && google.script && google.script.run){
+        google.script.run
+          .withSuccessHandler((res)=>{
+            if(res && res.ok){
+              status.textContent = "✅ Solicitud enviada a " + (res.to || "");
+              setTimeout(()=>{ modal.style.display = "none"; }, 800);
+            } else {
+              status.textContent = "❌ No se pudo enviar.";
+            }
+          })
+          .withFailureHandler((err)=>{
+            status.textContent = "❌ " + (err?.message || String(err||"Error"));
+          })
+          .requestSwapToTeam(payload.pin, payload.equipo, payload.comment, payload.context);
+        return;
+      }
+
+      // Worker (si está configurado)
+      if (typeof API_WORKER_URL !== "undefined" && API_WORKER_URL){
+        const r = await fetch(API_WORKER_URL, {
+          method: "POST",
+          headers: { "Content-Type":"application/json" },
+          body: JSON.stringify({ fn:"requestSwapToTeam", args:[payload.pin, payload.equipo, payload.comment, payload.context] })
+        });
+        const data = await r.json();
+        if(data && data.ok){
+          status.textContent = "✅ Solicitud enviada a " + (data.to || "");
+          setTimeout(()=>{ modal.style.display = "none"; }, 800);
+        } else {
+          status.textContent = "❌ " + (data?.error || "No se pudo enviar.");
+        }
+        return;
+      }
+
+      status.textContent = "❌ No hay canal de envío disponible (GAS/Worker).";
+    }catch(e){
+      status.textContent = "❌ " + (e?.message || String(e));
+    }
+  }, { once:true });
+}
+
+</script>
+
+<!-- Modal: Solicitud de cambio -->
+
+<div id="swapModal" class="modal" style="display:none">
+  <div class="modalCard">
+    <div class="modalTop">
+      <div class="modalTitle">Solicitud de cambio</div>
+      
+    </div>
+
+    <div class="mut" style="margin-top:2px">
+      Se enviará un correo al primer miembro del equipo seleccionado. Incluye tu nombre, correo y teléfono.
+    </div>
+
+    <div style="margin-top:10px">
+      <div class="label">Comentario (opcional)</div>
+      <textarea id="swapComment" rows="5" placeholder="Ej.: Necesito cambiar por incompatibilidad de horario, preferiría por la tarde, etc."></textarea>
+    </div>
+
+    <div id="swapStatus" class="mut" style="margin-top:10px"></div>
+
+    <div class="dlgActions" style="margin-top:12px">
+      <button class="btn ghost" id="swapCancelBtn" type="button">Cancelar</button>
+      <button class="btn good" id="swapSendBtn" type="button">Enviar solicitud</button>
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>
