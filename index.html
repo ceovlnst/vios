@@ -1198,10 +1198,10 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
         <div class="row" style="gap:10px;flex-wrap:wrap;align-items:flex-end">
           <div style="flex:1;min-width:240px">
             <label>Email</label>
-            <input id="recoverEmail" type="email" placeholder="tuemail@dominio.com" />
+            <input id="recoverEmail" type="email" placeholder="Correo Electrónico" />
           </div>
           <div class="actions" style="margin-top:26px">
-            <button class="btn" id="btnRecoverPin">Enviar PIN</button>
+            <button class="btn" id="btnRecoverPin">Consultar PIN</button>
           </div>
         </div>
         <div id="msgRecover" class="msg hide"></div>
@@ -1231,7 +1231,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
         <h2>Panel</h2>
         <div class="actions">
-          <button class="btn hide" id="btnGoReserve">Solicitar quirófano</button>
+          <button class="btn hide" id="btnGoReserve">Nueva Actividad</button>
           <button class="btn hide" id="btnGoMine">Mis solicitudes</button>
 
           <button class="btn hide" id="btnGoTime">Control horario</button>
@@ -1390,7 +1390,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
         <!-- MASTER: GRID -->
         <div id="viewGrid" class="hide">
-          <h2>Parrilla quirúrgica</h2>
+          <h2>Actividad VIOS</h2>
           <div class="row">
             <div style="flex:1;min-width:260px">
               <label>Fecha</label>
@@ -1861,7 +1861,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
     // Subtítulo dinámico
     const sub = $("appSubtitle");
     if(sub){
-      sub.textContent = S.isMaster ? "Gestión de Actividad VIOS" : "Solicitud de quirófano";
+      sub.textContent = S.isMaster ? "Gestión de Actividad VIOS" : "Gestión de Actividad VIOS";
     }
 
     document.body.classList.toggle("master", !!S.isMaster);
