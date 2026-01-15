@@ -1198,10 +1198,10 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
         <div class="row" style="gap:10px;flex-wrap:wrap;align-items:flex-end">
           <div style="flex:1;min-width:240px">
             <label>Email</label>
-            <input id="recoverEmail" type="email" placeholder="Correo Electrónico" />
+            <input id="recoverEmail" type="email" placeholder="tuemail@dominio.com" />
           </div>
           <div class="actions" style="margin-top:26px">
-            <button class="btn" id="btnRecoverPin">Consultar PIN</button>
+            <button class="btn" id="btnRecoverPin">Enviar PIN</button>
           </div>
         </div>
         <div id="msgRecover" class="msg hide"></div>
@@ -1231,11 +1231,12 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
         <h2>Panel</h2>
         <div class="actions">
-          <button class="btn hide" id="btnGoReserve">Nueva Actividad</button>
+          <button class="btn hide" id="btnGoReserve">Solicitar quirófano</button>
           <button class="btn hide" id="btnGoMine">Mis solicitudes</button>
 
           <button class="btn hide" id="btnGoTime">Control horario</button>
-          <button class="btn hide" id="btnGoGrid">Calendario</button>
+                    <button class="btn hide" id="btnGoPin">Cambiar PIN</button>
+<button class="btn hide" id="btnGoGrid">Calendario</button>
           <button class="btn hide" id="btnGoStruct">Gestor de Actividad</button>
           <button class="btn hide" id="btnGoWait">Lista de espera</button>
           <button class="btn hide" id="btnGoReport">Reporte</button>
@@ -1290,25 +1291,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
           <div class="hint">Nota: si olvidas la salida, la sesión quedará como <b>ABIERTA</b> hasta que registres la siguiente salida.</div>
           <div id="timeReportBox" style="margin-top:10px"></div>
 
-          <div class="hr"></div>
-
-          <h3 style="margin:0 0 8px 0">Cambiar mi PIN</h3>
-          <div class="row" style="align-items:flex-end;gap:12px;flex-wrap:wrap">
-            <div style="flex:1;min-width:200px">
-              <label>Nuevo PIN</label>
-              <input id="newPin" type="password" inputmode="numeric" placeholder="4-10 dígitos" />
-            </div>
-            <div style="flex:1;min-width:200px">
-              <label>Repetir nuevo PIN</label>
-              <input id="newPin2" type="password" inputmode="numeric" placeholder="Repite el PIN" />
-            </div>
-            <div class="actions" style="margin-top:26px">
-              <button class="btn" id="btnChangePin">Actualizar PIN</button>
-            </div>
-          </div>
-          <div id="msgChangePin" class="msg hide"></div>
-
-          <div id="masterTimeSection" class="hide">
+                    <div id="masterTimeSection" class="hide">
             <div class="hr"></div>
             <h3 style="margin:0 0 8px 0">Reporte mensual (todos - Master)</h3>
             <div class="row" style="align-items:flex-end;gap:12px;flex-wrap:wrap">
@@ -1336,7 +1319,32 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
         <!-- USER: RESERVAR -->
 
-        <div id="viewReserve" class="hide">
+        
+        <!-- CAMBIO DE PIN (Usuario) -->
+        <div id="viewPin" class="hide">
+          <h2>Mi cuenta</h2>
+          <div class="msg" style="margin-bottom:10px">
+            Cambia tu PIN de acceso. Te recomendamos un PIN de 6-10 dígitos.
+          </div>
+
+          <h3 style="margin:0 0 8px 0">Cambiar mi PIN</h3>
+          <div class="row" style="align-items:flex-end;gap:12px;flex-wrap:wrap">
+            <div style="flex:1;min-width:200px">
+              <label>Nuevo PIN</label>
+              <input id="newPin" type="password" inputmode="numeric" placeholder="4-10 dígitos" />
+            </div>
+            <div style="flex:1;min-width:200px">
+              <label>Repetir nuevo PIN</label>
+              <input id="newPin2" type="password" inputmode="numeric" placeholder="Repite el PIN" />
+            </div>
+            <div class="actions" style="margin-top:26px">
+              <button class="btn" id="btnChangePin">Actualizar PIN</button>
+            </div>
+          </div>
+          <div id="msgChangePin" class="msg hide"></div>
+        </div>
+
+<div id="viewReserve" class="hide">
           <h2>Gestor de Actividad</h2>
           <div class="row">
             <div style="flex:1;min-width:260px">
@@ -1390,7 +1398,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
         <!-- MASTER: GRID -->
         <div id="viewGrid" class="hide">
-          <h2>Actividad VIOS</h2>
+          <h2>Parrilla quirúrgica</h2>
           <div class="row">
             <div style="flex:1;min-width:260px">
               <label>Fecha</label>
@@ -1777,7 +1785,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 <script>
   // ===== CONSTANTES FRONT =====
   const OR_LIST = [
-  "Consulta 9", "Consulta 10", "Consulta 11", "Consulta 12", "Consulta 13", "Consulta 14", "Quirófano 1", "Quirófano 2"
+  "Consulta 5", "Consulta 6", "Consulta 7", "Consulta 8", "Consulta 9", "Consulta 19", "Consulta 13", "Consulta 14", "Quirófano 1", "Quirófano 2", "Guardia 24h (Miembro Superior)", "Guardia 24h (Miembro Inferior)"
 ];
 
   const SPECIALTIES = [
@@ -1861,7 +1869,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
     // Subtítulo dinámico
     const sub = $("appSubtitle");
     if(sub){
-      sub.textContent = S.isMaster ? "Gestión de Actividad VIOS" : "Gestión de Actividad VIOS";
+      sub.textContent = S.isMaster ? "Gestión de Actividad VIOS" : "Solicitud de quirófano";
     }
 
     document.body.classList.toggle("master", !!S.isMaster);
@@ -1909,7 +1917,8 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
     $("btnGoMine").classList.toggle("hide", !S.pin || master);
     $("btnGoTime").classList.toggle("hide", !S.pin || master);
 
-    $("btnGoGrid").classList.toggle("hide", !S.pin);
+        $("btnGoPin").classList.toggle("hide", !S.pin || master);
+$("btnGoGrid").classList.toggle("hide", !S.pin);
 
     $("btnGoStruct").classList.toggle("hide", !S.pin || !master);
     $("btnGoWait").classList.toggle("hide", !S.pin || !master);
@@ -5079,6 +5088,7 @@ function openStructReportBlockModal(info){
     if($("btnGoReserve")) $("btnGoReserve").onclick = ()=>go("viewReserve");
     if($("btnGoMine")) $("btnGoMine").onclick    = ()=>go("viewMine");
     if($("btnGoTime")) $("btnGoTime").onclick    = ()=>{ go("viewTime"); initTimeView(); };
+    if($("btnGoPin")) $("btnGoPin").onclick     = ()=>go("viewPin");
     if($("btnGoGrid")) $("btnGoGrid").onclick    = ()=>{ go("viewGrid"); loadGrid(); };
     if($("btnGoStruct")) $("btnGoStruct").onclick  = ()=>{
       go("viewStruct");
