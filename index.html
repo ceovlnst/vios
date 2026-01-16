@@ -1785,10 +1785,32 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 <script>
   // ===== CONSTANTES FRONT =====
   const OR_LIST = [
-  "Consulta 5", "Consulta 6", "Consulta 7", "Consulta 8", "Consulta 9", "Consulta 19", "Consulta 13", "Consulta 14", "Quirófano 1", "Quirófano 2", "Guardia 24h (Miembro Superior)", "Guardia 24h (Miembro Inferior)"
+  // H9O – Consultas
+  "Consulta 5", "Consulta 6", "Consulta 7", "Consulta 8",
+  "Consulta 9", "Consulta 10", "Consulta 13", "Consulta 14",
+  // H9O – Quirófanos
+  "Quirófano 1", "Quirófano 2",
+  // H9O – Urgencias 24h
+  "Urgencias Miembro Superior", "Urgencias Miembro Inferior",
+  // HT – Consultas
+  "HT Consulta 1", "HT Consulta 2", "HT Consulta 3",
+  // HT – Quirófanos
+  "HT Quirófano 1", "HT Quirófano 2"
 ];
 
-  const SPECIALTIES = [
+  
+  function getHospitalFromOr(orName){
+    if(String(orName||"").startsWith("HT ")) return "HT";
+    return "H9O";
+  }
+  function formatOrDisplayName(orName){
+    const name = String(orName||"");
+    if(name.startsWith("HT ")) return name; // ya viene con HT
+    const hosp = getHospitalFromOr(name);
+    if(hosp === "H9O") return hosp + " " + name;
+    return name;
+  }
+const SPECIALTIES = [
     "Traumatología y Cirugía Ortopédica",
     "Cirugía General y Digestiva",
     "Anestesiología y Reanimación",
