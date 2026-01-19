@@ -3861,14 +3861,49 @@ function buildDoctorSelectForUrgencias(selectEl, currentName){
   }
 }
 
+
 function fillStructSurgeonSelect(currentName){
-  const name = currentName || "";
+  const cur = (currentName || "").trim();
   ensureDoctorListForUrgencias(()=>{
     const sel = $("stLabel");
     if(!sel) return;
-    buildDoctorSelectForUrgencias(sel, name);
+
+    sel.innerHTML = "";
+    const baseOpt = document.createElement("option");
+    baseOpt.value = "";
+    baseOpt.textContent = "(Seleccionar cirujano)";
+    sel.appendChild(baseOpt);
+
+    const list = Array.isArray(S.doctorList) ? S.doctorList : [];
+    let found = false;
+
+    list.forEach(d=>{
+      const email = d.correo || d.email || d.emailVisible || "";
+      if(!email) return;
+      const name = [d.nombre, d.apellidos].filter(Boolean).join(" ").trim();
+      const namePart = name || email;
+      if(!namePart) return;
+
+      const opt = document.createElement("option");
+      opt.value = namePart;
+      opt.textContent = namePart; // solo nombre y apellidos, igual base que en No estructural
+      if(cur && namePart === cur){
+        opt.selected = true;
+        found = true;
+      }
+      sel.appendChild(opt);
+    });
+
+    if(cur && !found){
+      const optCur = document.createElement("option");
+      optCur.value = cur;
+      optCur.textContent = cur + " (actual)";
+      optCur.selected = true;
+      sel.insertBefore(optCur, sel.children[1] || null);
+    }
   });
 }
+
 
 
 function updateUrgEditSummary(){
@@ -6261,6 +6296,7 @@ function openStructReportBlockModal(info){
       go("viewStruct");
       refreshStructList();
       loadDoctorOptionsMaster();
+      fillStructSurgeonSelect("");
     };
 
     if($("btnGoWait")) $("btnGoWait").onclick    = openWaitlist;
