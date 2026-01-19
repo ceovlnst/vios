@@ -1243,6 +1243,82 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
     display:none;
   }
 
+
+  /* === Urgencias: semana y responsable === */
+  .gridCardSub{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin:6px 0 8px;
+    padding:6px 8px;
+    border-radius:12px;
+    border:1px dashed rgba(148,163,184,.8);
+    background:rgba(255,255,255,.65);
+  }
+  .gridCardSub .left{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    min-width:0;
+  }
+  .gridCardSub .wk{
+    font-size:12px;
+    font-weight:800;
+    color:var(--text);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .gridCardSub .who{
+    font-size:12px;
+    color:var(--muted);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .gridCardSub .who b{ color:var(--text); }
+  .gridCardSub .right{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    white-space:nowrap;
+  }
+  .gridMiniBtn{
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.85);
+    border-radius:10px;
+    padding:4px 8px;
+    font-size:11px;
+    cursor:pointer;
+  }
+  .urgDetails{
+    margin:0 0 10px;
+    border-radius:12px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.75);
+    padding:8px;
+  }
+  .urgDetails.hide{ display:none; }
+  .urgDetails table{ width:100%; border-collapse:collapse; }
+  .urgDetails th,.urgDetails td{ padding:4px 6px; font-size:12px; vertical-align:top; }
+  .urgDetails th{ color:var(--muted); text-align:left; }
+
+
+  .urgWeeklySummary table{
+    width:100%;
+    border-collapse:collapse;
+  }
+  .urgWeeklySummary th,
+  .urgWeeklySummary td{
+    padding:4px 6px;
+    font-size:12px;
+  }
+  .urgWeeklySummary th{
+    text-align:left;
+    color:var(--muted);
+  }
+
 </style>
 </head>
 
@@ -1781,6 +1857,21 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
           </div>
           <div class="hint">Distribución de quirófanos estructurales por <b>día</b>, <b>quirófano</b> y <b>sesión</b> (mañana/tarde).</div>
           <div id="structVisualReport" class="reportGrid hide"></div>
+          <div class="hr" style="margin-top:26px"></div>
+
+          <div class="rhead">
+            <h3 style="margin:0">Guardias de Urgencias (semanal)</h3>
+            <div class="actions" style="margin-top:0;gap:8px">
+              <div>
+                <label>Semana (inicio)</label>
+                <input id="urgWeekStart" type="date" />
+              </div>
+              <button class="btn small primary" id="btnUrgWeek" type="button">Ver guardias</button>
+            </div>
+          </div>
+          <div class="hint">Muestra las guardias del calendario específico de <b>Urgencias</b> para la semana seleccionada (24h).</div>
+          <div id="urgWeekBox" class="reportGrid" style="margin-top:8px"></div>
+
         </div>
 
 
@@ -2246,6 +2337,101 @@ function callGAS(fnName, args, opt){
       n++;
     }
     return Math.max(1, n);
+  }
+
+  function renderUrgenciasWeek(res){
+    const box = $("urgWeekBox");
+    if(!box) return;
+    box.innerHTML = "";
+    if(!res || !res.ok){
+      box.textContent = "No se pudo cargar la información de guardias.";
+      return;
+    }
+    const days = Array.isArray(res.days) ? res.days.slice().sort((a,b)=> (a.date||'').localeCompare(b.date||'')) : [];
+    if(!days.length){
+      box.textContent = "No hay guardias registradas en esa semana.";
+      return;
+    }
+
+    const tbl = document.createElement("table");
+    tbl.className = "simpleTable";
+    const thead = document.createElement("thead");
+    const trh = document.createElement("tr");
+    ['Fecha','Día','Guardias'].forEach(t=>{
+      const th = document.createElement("th");
+      th.textContent = t;
+      trh.appendChild(th);
+    });
+    thead.appendChild(trh);
+    tbl.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    days.forEach(d=>{
+      const tr = document.createElement("tr");
+      const tdDate = document.createElement("td");
+      tdDate.textContent = fmtDMY(d.date);
+      const tdDow = document.createElement("td");
+      tdDow.textContent = d.weekday || '';
+      const tdItems = document.createElement("td");
+
+      const items = Array.isArray(d.items) ? d.items : [];
+      if(!items.length){
+        tdItems.textContent = "—";
+      } else {
+        const ul = document.createElement("ul");
+        ul.style.margin = '0';
+        ul.style.paddingLeft = '18px';
+        items.forEach(it=>{
+          const li = document.createElement("li");
+          const timeRange = (it.start && it.end)
+            ? (fmtHourStr(it.start) + "–" + fmtHourStr(it.end))
+            : "Guardia";
+          li.textContent = timeRange + " · " + (it.title || "Guardia");
+          ul.appendChild(li);
+        });
+        tdItems.appendChild(ul);
+      }
+
+      tr.appendChild(tdDate);
+      tr.appendChild(tdDow);
+      tr.appendChild(tdItems);
+      tbody.appendChild(tr);
+    });
+
+    tbl.appendChild(tbody);
+    box.appendChild(tbl);
+  }
+
+  function fmtHourStr(iso){
+    // iso: YYYY-MM-DDTHH:mm:ss
+    if(!iso || typeof iso !== 'string' || iso.length < 16) return '';
+    const h = iso.slice(11,16);
+    return h;
+  }
+
+  function loadUrgenciasWeek(){
+    hideMsg($("msgReport"));
+    const inp = $("urgWeekStart");
+    if(!inp) return;
+    let dateStr = inp.value || "";
+    if(!dateStr){
+      // por defecto, hoy
+      dateStr = todayISO();
+      inp.value = dateStr;
+    }
+
+    callGAS("getUrgenciasWeek", [S.pin, dateStr], {
+      key: "urgWeek",
+      msg: "Cargando guardias de urgencias…",
+      disable: [$("btnUrgWeek")],
+      onSuccess: (res)=>{
+        renderUrgenciasWeek(res);
+      },
+      onFailure: (e)=>{
+        $("urgWeekBox").innerHTML = "";
+        showMsg($("msgReport"), e?.message || String(e), "bad");
+      }
+    });
   }
 
   // ===== LOGIN / LOGOUT =====
@@ -2912,6 +3098,52 @@ function downloadAllTimeCSV(){
     return;
   }
 
+
+  function weekStartMondayISO(dateStr){
+    // dateStr: YYYY-MM-DD
+    const d = new Date(String(dateStr||"").slice(0,10) + "T00:00:00");
+    if(isNaN(d.getTime())) return dateStr;
+    const dow = (d.getDay() + 6) % 7; // Lunes=0
+    d.setDate(d.getDate() - dow);
+    return d.toISOString().slice(0,10);
+  }
+
+  function weekRangeLabelFromStart(weekStartIso){
+    const d0 = new Date(String(weekStartIso||"").slice(0,10) + "T00:00:00");
+    const d1 = new Date(d0);
+    d1.setDate(d1.getDate() + 6);
+    return `Semana ${fmtDMY(d0)}–${fmtDMY(d1)}`;
+  }
+
+  function pickPrimaryGuardTitle_(urgRes){
+    // Elegimos el evento "más largo" de la semana como guardia principal
+    if(!urgRes || !Array.isArray(urgRes.days)) return "";
+    let best = { title:"", ms: -1 };
+    urgRes.days.forEach(d=>{
+      (d.items||[]).forEach(it=>{
+        const s = it.start ? new Date(it.start) : null;
+        const e = it.end ? new Date(it.end) : null;
+        const ms = (s && e && !isNaN(s) && !isNaN(e)) ? (e - s) : 0;
+        const t = String(it.title||"").trim();
+        if(t && ms >= best.ms){
+          best = { title:t, ms:ms };
+        }
+      });
+    });
+    return best.title || "";
+  }
+
+  function cleanGuardName_(title){
+    let t = String(title||"").trim();
+    if(!t) return "";
+    // Limpieza suave (no agresiva) para títulos tipo "GUARDIA – Dr. X" / "Urgencias Traumatología: Dr. X"
+    t = t.replace(/^(guardia|urgencias)\s*[:\-–—]?\s*/i, "");
+    t = t.replace(/\b(24h|24\s*h)\b/ig, "");
+    t = t.replace(/\s{2,}/g, " ").trim();
+    return t;
+  }
+
+
 // ===== GRID =====
   function loadGrid(){
     hideMsg($("msgGrid"));
@@ -2927,9 +3159,17 @@ function downloadAllTimeCSV(){
       msg:"Cargando parrilla…",
       onSuccess:(res)=>{
         S.lastGrid = res;
-        renderGrid(res);
-        renderGridKpis();
-      },
+        // Cargar también guardias de urgencias para la semana del día seleccionado
+        const wkStart = weekStartMondayISO(dateStr);
+        S.urgWeekStart = wkStart;
+        callGAS("getUrgenciasWeek", [S.pin, wkStart], {
+          key:"urgWeekInGrid",
+          msg:null,
+          onSuccess:(u)=>{ S.urgWeek = u; renderGrid(res); renderGridKpis(); },
+          onFailure:(_e)=>{ S.urgWeek = null; renderGrid(res); renderGridKpis(); }
+        });
+        return;
+        },
       onFailure:(e)=>{
         showMsg($("msgGrid"), e?.message || String(e), "bad");
       }
@@ -2966,11 +3206,22 @@ function downloadAllTimeCSV(){
     const wrapper = document.createElement("div");
     wrapper.className = "gridCards";
 
-    const buildSection = (title, rows, catKey)=>{
-      if(!rows.length) return null;
+    const hoursAll = Array.isArray(data.hoursOrder) ? data.hoursOrder : [];
+    const visibleHours = hoursAll.filter(h => {
+      const n = typeof h === "number" ? h : parseInt(h,10);
+      return !isNaN(n) && n >= 8 && n < 22;
+    });
+    const hourIndex = {};
+    hoursAll.forEach((h,i)=>{ hourIndex[String(h)] = i; });
 
-      // KPIs por tarjeta
-      let free = 0, non = 0, struct = 0;
+    
+  const buildSection = (title, rows, catKey)=>{
+    // Para H9O y HT: si no hay filas, no mostramos tarjeta
+    if(catKey !== "URG" && (!rows || !rows.length)) return null;
+
+    // KPIs (solo para H9O / HT, no tienen mucho sentido para la vista agregada de urgencias)
+    let free = 0, non = 0, struct = 0;
+    if(catKey !== "URG"){
       rows.forEach(r=>{
         (r.cells || []).forEach(c=>{
           if(c.status === "FREE") free++;
@@ -2978,21 +3229,23 @@ function downloadAllTimeCSV(){
           else if(c.status === "STRUCT") struct++;
         });
       });
+    }
 
-      const card = document.createElement("div");
-      card.className = "gridCard";
-      if(catKey === "H9O") card.classList.add("gridCard-h9o");
-      else if(catKey === "HT") card.classList.add("gridCard-ht");
-      else if(catKey === "URG") card.classList.add("gridCard-urg");
+    const card = document.createElement("div");
+    card.className = "gridCard";
+    if(catKey === "H9O") card.classList.add("gridCard-h9o");
+    else if(catKey === "HT") card.classList.add("gridCard-ht");
+    else if(catKey === "URG") card.classList.add("gridCard-urg");
 
-      const header = document.createElement("div");
-      header.className = "gridCardHeader";
+    const header = document.createElement("div");
+    header.className = "gridCardHeader";
 
-      const h3 = document.createElement("h3");
-      h3.textContent = title;
+    const h3 = document.createElement("h3");
+    h3.textContent = title;
 
-      const kpis = document.createElement("div");
-      kpis.className = "gridCardKpis";
+    const kpis = document.createElement("div");
+    kpis.className = "gridCardKpis";
+    if(catKey !== "URG"){
       kpis.innerHTML = `
         <span>Libres: <b>${free}</b></span>
         &nbsp;·&nbsp;
@@ -3000,24 +3253,102 @@ function downloadAllTimeCSV(){
         &nbsp;·&nbsp;
         <span>No estructurales: <b>${non}</b></span>
       `;
+    } else {
+      const wkLabel = S.urgWeekStart ? weekRangeLabelFromStart(S.urgWeekStart) : "";
+      kpis.textContent = wkLabel || "Guardias semanales";
+    }
 
-      const toggle = document.createElement("button");
-      toggle.type = "button";
-      toggle.className = "gridCardToggle";
-      toggle.textContent = "Ocultar";
-      toggle.onclick = ()=>{
-        const collapsed = card.classList.toggle("collapsed");
-        toggle.textContent = collapsed ? "Mostrar" : "Ocultar";
-      };
+    const toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "gridCardToggle";
+    toggle.textContent = "Ocultar";
+    toggle.onclick = ()=>{
+      const collapsed = card.classList.toggle("collapsed");
+      toggle.textContent = collapsed ? "Mostrar" : "Ocultar";
+    };
 
-      header.appendChild(h3);
-      header.appendChild(kpis);
-      header.appendChild(toggle);
-      card.appendChild(header);
+    header.appendChild(h3);
+    header.appendChild(kpis);
 
-      const body = document.createElement("div");
-      body.className = "gridCardBody";
+    if(catKey === "URG"){
+      const editBtn = document.createElement("button");
+      editBtn.type = "button";
+      editBtn.className = "gridCardToggle";
+      editBtn.textContent = "Cambiar guardia";
+      editBtn.onclick = ()=>editUrgenciasWeek();
+      header.appendChild(editBtn);
+    }
 
+    header.appendChild(toggle);
+    card.appendChild(header);
+    card.appendChild(header);
+
+    // ===== Cuerpo de la tarjeta =====
+    const body = document.createElement("div");
+    body.className = "gridCardBody";
+
+    if(catKey === "URG"){
+      // Vista específica de guardias: tabla semanal tipo reporte (Fecha / Día / Guardia)
+      const wrap = document.createElement("div");
+      wrap.className = "urgWeeklySummary";
+
+      const res = S.urgWeek;
+      if(!res || !res.ok){
+        wrap.textContent = "No se pudo cargar la información de guardias.";
+      } else {
+        const days = Array.isArray(res.days) ? res.days.slice().sort((a,b)=> String(a.date||"").localeCompare(String(b.date||""))) : [];
+        if(!days.length){
+          wrap.textContent = "No hay guardias registradas en esta semana.";
+        } else {
+          const tbl = document.createElement("table");
+          const thead = document.createElement("thead");
+          const trh = document.createElement("tr");
+          ["Fecha","Día","Guardia"].forEach(t=>{
+            const th = document.createElement("th");
+            th.textContent = t;
+            trh.appendChild(th);
+          });
+          thead.appendChild(trh);
+          tbl.appendChild(thead);
+
+          const tbody = document.createElement("tbody");
+          days.forEach(d=>{
+            const tr = document.createElement("tr");
+            const tdDate = document.createElement("td");
+            tdDate.textContent = fmtDMY(d.date);
+            const tdDow = document.createElement("td");
+            tdDow.textContent = d.weekday || "";
+            const tdItems = document.createElement("td");
+
+            const items = Array.isArray(d.items) ? d.items : [];
+            if(!items.length){
+              tdItems.textContent = "—";
+            } else {
+              const ul = document.createElement("ul");
+              ul.style.margin = "0";
+              ul.style.paddingLeft = "18px";
+              items.forEach(it=>{
+                const li = document.createElement("li");
+                li.textContent = it.title || "Guardia";
+                ul.appendChild(li);
+              });
+              tdItems.appendChild(ul);
+            }
+
+            tr.appendChild(tdDate);
+            tr.appendChild(tdDow);
+            tr.appendChild(tdItems);
+            tbody.appendChild(tr);
+          });
+
+          tbl.appendChild(tbody);
+          wrap.appendChild(tbl);
+        }
+      }
+
+      body.appendChild(wrap);
+    } else {
+      // Vista estándar de parrilla por horas (H9O / HT)
       const table = document.createElement("table");
       const thead = document.createElement("thead");
       const trh = document.createElement("tr");
@@ -3025,7 +3356,7 @@ function downloadAllTimeCSV(){
       thOr.textContent = "Ubicación";
       trh.appendChild(thOr);
 
-      data.hoursOrder.forEach(h=>{
+      visibleHours.forEach(h=>{
         const th = document.createElement("th");
         th.textContent = String(h).padStart(2,"0")+":00";
         trh.appendChild(th);
@@ -3040,33 +3371,38 @@ function downloadAllTimeCSV(){
         tdOr.textContent = formatOrDisplayName(row.orName);
         tr.appendChild(tdOr);
 
-        row.cells.forEach((cell, ci)=>{
+        visibleHours.forEach(h=>{
+          const idxHour = hourIndex[String(h)];
+          const cell = (row.cells && typeof idxHour === "number") ? row.cells[idxHour] : null;
           const td = document.createElement("td");
           td.dataset.orName = row.orName;
-          td.dataset.hour   = cell.hour;
-          td.dataset.status = cell.status;
+          td.dataset.hour   = h;
           td.dataset.date   = data.date;
 
-          if(cell.status === "NA"){
+          if(!cell || !cell.status || cell.status === "NA"){
             td.className = "cellNA";
             td.textContent = "";
-          } else if(cell.status === "FREE"){
-            td.className = "cellFree";
-            td.textContent = "Libre";
-          } else if(cell.status === "NON"){
-            td.className = "cellNon";
-            td.textContent = cell.displayTitle || "No estructural";
-            td.dataset.cellIndex = String(ci);
-          } else if(cell.status === "STRUCT"){
-            td.className = "cellStruct";
-            td.textContent = cell.displayTitle || "Estructural";
-          }
+          } else {
+            td.dataset.status = cell.status;
 
-          if(cell.status !== "NA"){
-            if(cell.eventId) td.dataset.eventId = cell.eventId;
-            if(cell.ruleId)  td.dataset.ruleId  = cell.ruleId;
-            if(cell.label)   td.dataset.label   = cell.label;
-            td.onclick = ()=>onGridCellClick(td);
+            if(cell.status === "FREE"){
+              td.className = "cellFree";
+              td.textContent = "Libre";
+            } else if(cell.status === "NON"){
+              td.className = "cellNon";
+              td.textContent = cell.displayTitle || "No estructural";
+              td.dataset.cellIndex = String(idxHour);
+            } else if(cell.status === "STRUCT"){
+              td.className = "cellStruct";
+              td.textContent = cell.displayTitle || "Estructural";
+            }
+
+            if(cell.status !== "NA"){
+              if(cell.eventId) td.dataset.eventId = cell.eventId;
+              if(cell.ruleId)  td.dataset.ruleId  = cell.ruleId;
+              if(cell.label)   td.dataset.label   = cell.label;
+              td.onclick = ()=>onGridCellClick(td);
+            }
           }
 
           tr.appendChild(td);
@@ -3077,10 +3413,13 @@ function downloadAllTimeCSV(){
 
       table.appendChild(tbody);
       body.appendChild(table);
-      card.appendChild(body);
 
-      return card;
-    };
+    }
+
+    card.appendChild(body);
+    return card;
+  };
+
 
     const sections = [
       buildSection("H9O",           groups.H9O, "H9O"),
@@ -3094,6 +3433,52 @@ function downloadAllTimeCSV(){
 
     box.appendChild(wrapper);
   }
+
+
+
+function extractUrgMiMs(){
+  let miName = "", msName = "";
+  if(S.urgWeek && Array.isArray(S.urgWeek.days)){
+    S.urgWeek.days.forEach(d=>{
+      (d.items || []).forEach(it=>{
+        const raw = String(it.title || "");
+        const cleaned = cleanGuardName_(raw) || raw;
+        const low = raw.toLowerCase();
+        if(!miName && (low.includes("miembro inferior") || /\bminf\b/.test(low) || /\bmi\b/.test(low))){
+          miName = cleaned;
+        }
+        if(!msName && (low.includes("miembro superior") || /\bmsup\b/.test(low) || /\bms\b/.test(low))){
+          msName = cleaned;
+        }
+      });
+    });
+  }
+  return { miName, msName };
+}
+
+function editUrgenciasWeek(){
+  if(!S.pin){
+    alert("Inicia sesión para editar las guardias.");
+    return;
+  }
+  const wkStart = S.urgWeekStart || todayISO();
+  const cur = extractUrgMiMs();
+  const miNew = prompt("Responsable de miembro inferior para la semana:", cur.miName || "");
+  if(miNew === null) return;
+  const msNew = prompt("Responsable de miembro superior para la semana:", cur.msName || "");
+  if(msNew === null) return;
+
+  callGAS("updateUrgenciasWeek", [S.pin, wkStart, miNew.trim(), msNew.trim()], {
+    key: "urgWeekEdit",
+    msg: "Actualizando guardias de urgencias…",
+    onSuccess: (_res)=>{
+      loadGrid();
+    },
+    onFailure: (e)=>{
+      alert(e && e.message ? e.message : String(e));
+    }
+  });
+}
 
 function onGridCellClick(td){
     const status  = td.dataset.status;
@@ -5406,6 +5791,17 @@ function openSwapModal(team, context){
     }
   }, { once:true });
 }
+
+
+  // Wire Guardias Urgencias button
+  window.addEventListener('load', function(){
+    var btn = $("btnUrgWeek");
+    if(btn){
+      btn.addEventListener('click', function(){
+        try { loadUrgenciasWeek(); } catch(e){ console.error(e); }
+      });
+    }
+  });
 
 </script>
 
