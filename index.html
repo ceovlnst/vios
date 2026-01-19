@@ -1154,6 +1154,95 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 .srModalBody{ margin-top:8px; font-size:13px; }
 .srModalActions{ margin-top:10px; display:flex; justify-content:flex-end; }
 
+
+  /* === Parrilla por hospitales (H9O / HT / Urgencias) === */
+  .gridCards{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    align-items:flex-start;
+  }
+  .gridCard{
+    flex:1 1 320px;
+    background:var(--card);
+    border-radius:16px;
+    border:1px solid var(--line);
+    padding:8px 10px 10px;
+    box-shadow:0 6px 18px rgba(15,23,42,0.06);
+    max-height:70vh;
+    display:flex;
+    flex-direction:column;
+  }
+  .gridCard-h9o{
+    border-color:rgba(37,99,235,.45);
+    background:linear-gradient(180deg, rgba(37,99,235,.10), rgba(255,255,255,1));
+  }
+  .gridCard-ht{
+    border-color:rgba(5,150,105,.45);
+    background:linear-gradient(180deg, rgba(5,150,105,.10), rgba(255,255,255,1));
+  }
+  .gridCard-urg{
+    border-color:rgba(220,38,38,.50);
+    background:linear-gradient(180deg, rgba(220,38,38,.10), rgba(255,255,255,1));
+  }
+  /* H9O siempre visible arriba al hacer scroll */
+  .gridCard-h9o{
+    position:sticky;
+    top:0;
+    z-index:5;
+  }
+  .gridCardHeader{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    margin-bottom:4px;
+  }
+  .gridCardHeader h3{
+    margin:0;
+    font-size:14px;
+    font-weight:800;
+    color:var(--text);
+  }
+  .gridCardKpis{
+    font-size:11px;
+    color:var(--muted);
+    text-align:right;
+    white-space:nowrap;
+  }
+  .gridCardKpis b{ color:var(--text); }
+  .gridCardBody{
+    margin-top:4px;
+    overflow:auto;
+  }
+  .gridCard table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:520px;
+  }
+  .gridCard th,
+  .gridCard td{
+    padding:4px 6px;
+    font-size:12px;
+  }
+  .gridCard th{
+    position:sticky;
+    top:0;
+    background:rgba(248,250,252,.96);
+    z-index:1;
+  }
+  .gridCardToggle{
+    border:none;
+    background:transparent;
+    font-size:11px;
+    color:var(--muted);
+    cursor:pointer;
+    padding:2px 4px;
+  }
+  .gridCard.collapsed .gridCardBody{
+    display:none;
+  }
+
 </style>
 </head>
 
@@ -1800,15 +1889,40 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
   
   function getHospitalFromOr(orName){
-    if(String(orName||"").startsWith("HT ")) return "HT";
+    const raw = String(orName || "").trim();
+    if(/^[Hh][Tt]\b/.test(raw)) return "HT";
     return "H9O";
   }
+
   function formatOrDisplayName(orName){
-    const name = String(orName||"");
-    if(name.startsWith("HT ")) return name; // ya viene con HT
-    const hosp = getHospitalFromOr(name);
-    if(hosp === "H9O") return hosp + " " + name;
-    return name;
+    const raw = String(orName || "").trim();
+    if(!raw) return "";
+
+    // Si ya viene en el formato nuevo (p.ej. "H9O CEX 5" o "HT Qx 1"), lo dejamos tal cual
+    if(/^(H9O|HT)\s+(CEX|Qx)\s+\d+\b/.test(raw)) return raw;
+
+    const hosp = getHospitalFromOr(raw);
+    // Quitamos prefijo de hospital si ya va incluido para poder mapear bien
+    let base = raw.replace(/^(H9O|HT)\s*/i, "");
+
+    // Consultas -> CEX
+    let m = base.match(/^Consulta\s+(\d+)/i);
+    if(m){
+      return `${hosp} CEX ${m[1]}`;
+    }
+
+    // Quirófano -> Qx
+    m = base.match(/^Quir[oó]fano\s+(\d+)/i);
+    if(m){
+      return `${hosp} Qx ${m[1]}`;
+    }
+
+    // Urgencias u otros: anteponer hospital si no lo lleva
+    if(!/^(H9O|HT)\b/i.test(raw) && hosp){
+      return `${hosp} ${base}`.trim();
+    }
+
+    return raw;
   }
 const SPECIALTIES = [
     "Traumatología y Cirugía Ortopédica",
@@ -2109,7 +2223,7 @@ function callGAS(fnName, args, opt){
         renderGridKpis();
       };
       const b = document.createElement("b");
-      b.textContent = name;
+      b.textContent = formatOrDisplayName(name);
       lbl.appendChild(cb);
       lbl.appendChild(b);
       box.appendChild(lbl);
@@ -2333,11 +2447,12 @@ S.doctor = doc;
         const tbody = document.createElement("tbody");
         list.forEach(r=>{
           const tr = document.createElement("tr");
+          const locLabel = formatOrDisplayName(r.orName || "");
           tr.innerHTML = `
             <td>${escapeHtml(fmtDMY(r.date))}</td>
             <td>${escapeHtml(r.start)}</td>
             <td>${escapeHtml(r.end)}</td>
-            <td>${escapeHtml(r.orName || "")}</td>
+            <td>${escapeHtml(locLabel)}</td>
             <td>${escapeHtml(r.title || "")}</td>
           `;
           const tdBtn = document.createElement("td");
@@ -2791,6 +2906,12 @@ function downloadAllTimeCSV(){
     a.remove();
   }
 
+
+  // Fallback: evitar error si renderGridKpis no está definida
+  function renderGridKpis(){
+    return;
+  }
+
 // ===== GRID =====
   function loadGrid(){
     hideMsg($("msgGrid"));
@@ -2815,6 +2936,16 @@ function downloadAllTimeCSV(){
     });
   }
 
+  
+  function getGridCategory(orName){
+    const raw = String(orName || "").trim();
+    if(!raw) return "H9O";
+
+    if(/Urgencias/i.test(raw)) return "URG";
+    if(raw.startsWith("HT ")) return "HT";
+    return "H9O";
+  }
+
   function renderGrid(data){
     const box = $("gridBox");
     box.innerHTML = "";
@@ -2824,132 +2955,147 @@ function downloadAllTimeCSV(){
     }
     hideMsg($("msgGrid"));
 
-    const table = document.createElement("table");
-    const thead = document.createElement("thead");
-    const trh = document.createElement("tr");
-    const thOr = document.createElement("th");
-    thOr.textContent = "Ubicación";
-    trh.appendChild(thOr);
-
-    data.hoursOrder.forEach(h=>{
-      const th = document.createElement("th");
-      th.textContent = String(h).padStart(2,"0")+":00";
-      trh.appendChild(th);
+    // Agrupar filas por categoría
+    const groups = { H9O: [], HT: [], URG: [] };
+    data.rows.forEach(row=>{
+      const cat = getGridCategory(row.orName);
+      if(groups[cat]) groups[cat].push(row);
+      else groups.H9O.push(row);
     });
-    thead.appendChild(trh);
-    table.appendChild(thead);
 
-    const tbody = document.createElement("tbody");
-    data.rows.forEach((row)=>{
-      const tr = document.createElement("tr");
-      const tdOr = document.createElement("td");
-      tdOr.textContent = row.orName;
-      tr.appendChild(tdOr);
+    const wrapper = document.createElement("div");
+    wrapper.className = "gridCards";
 
-      row.cells.forEach((cell, ci)=>{
-        const td = document.createElement("td");
-        td.dataset.orName = row.orName;
-        td.dataset.hour = cell.hour;
-        td.dataset.status = cell.status;
-        td.dataset.date = data.date;
+    const buildSection = (title, rows, catKey)=>{
+      if(!rows.length) return null;
 
-        if(cell.status === "NA"){
-          td.className = "cellNA";
-          td.textContent = "";
-        } else if(cell.status === "FREE"){
-          td.className = "cellFree";
-          td.textContent = "Libre";
-        } else if(cell.status === "NON"){
-          td.className = "cellNon";
-          td.textContent = cell.displayTitle || "No estructural";
-          td.dataset.cellIndex = String(ci);
-        } else if(cell.status === "STRUCT"){
-          td.className = "cellStruct";
-          td.textContent = cell.displayTitle || "Estructural";
-        }
-
-        if(cell.status !== "NA"){
-          if(cell.eventId) td.dataset.eventId = cell.eventId;
-          if(cell.ruleId)  td.dataset.ruleId  = cell.ruleId;
-          if(cell.label)   td.dataset.label   = cell.label;
-          td.onclick = ()=>onGridCellClick(td);
-        }
-
-        tr.appendChild(td);
+      // KPIs por tarjeta
+      let free = 0, non = 0, struct = 0;
+      rows.forEach(r=>{
+        (r.cells || []).forEach(c=>{
+          if(c.status === "FREE") free++;
+          else if(c.status === "NON") non++;
+          else if(c.status === "STRUCT") struct++;
+        });
       });
 
-      tbody.appendChild(tr);
-    });
-    table.appendChild(tbody);
-    box.appendChild(table);
-  }
+      const card = document.createElement("div");
+      card.className = "gridCard";
+      if(catKey === "H9O") card.classList.add("gridCard-h9o");
+      else if(catKey === "HT") card.classList.add("gridCard-ht");
+      else if(catKey === "URG") card.classList.add("gridCard-urg");
 
-  function renderGridKpis(){
-    const box = $("gridKpis");
-    box.innerHTML = "";
-    if(!S.lastGrid || !S.lastGrid.rows) return;
+      const header = document.createElement("div");
+      header.className = "gridCardHeader";
 
-    const selectedOrs = new Set(getSelectedORsForCalc());
-    let free = 0, non = 0, struct = 0;
+      const h3 = document.createElement("h3");
+      h3.textContent = title;
 
-    S.lastGrid.rows.forEach(row=>{
-      if(!selectedOrs.has(row.orName)) return;
-      row.cells.forEach(c=>{
-        if(c.status === "FREE") free++;
-        else if(c.status === "NON") non++;
-        else if(c.status === "STRUCT") struct++;
+      const kpis = document.createElement("div");
+      kpis.className = "gridCardKpis";
+      kpis.innerHTML = `
+        <span>Libres: <b>${free}</b></span>
+        &nbsp;·&nbsp;
+        <span>Estructurales: <b>${struct}</b></span>
+        &nbsp;·&nbsp;
+        <span>No estructurales: <b>${non}</b></span>
+      `;
+
+      const toggle = document.createElement("button");
+      toggle.type = "button";
+      toggle.className = "gridCardToggle";
+      toggle.textContent = "Ocultar";
+      toggle.onclick = ()=>{
+        const collapsed = card.classList.toggle("collapsed");
+        toggle.textContent = collapsed ? "Mostrar" : "Ocultar";
+      };
+
+      header.appendChild(h3);
+      header.appendChild(kpis);
+      header.appendChild(toggle);
+      card.appendChild(header);
+
+      const body = document.createElement("div");
+      body.className = "gridCardBody";
+
+      const table = document.createElement("table");
+      const thead = document.createElement("thead");
+      const trh = document.createElement("tr");
+      const thOr = document.createElement("th");
+      thOr.textContent = "Ubicación";
+      trh.appendChild(thOr);
+
+      data.hoursOrder.forEach(h=>{
+        const th = document.createElement("th");
+        th.textContent = String(h).padStart(2,"0")+":00";
+        trh.appendChild(th);
       });
+      thead.appendChild(trh);
+      table.appendChild(thead);
+
+      const tbody = document.createElement("tbody");
+      rows.forEach(row=>{
+        const tr = document.createElement("tr");
+        const tdOr = document.createElement("td");
+        tdOr.textContent = formatOrDisplayName(row.orName);
+        tr.appendChild(tdOr);
+
+        row.cells.forEach((cell, ci)=>{
+          const td = document.createElement("td");
+          td.dataset.orName = row.orName;
+          td.dataset.hour   = cell.hour;
+          td.dataset.status = cell.status;
+          td.dataset.date   = data.date;
+
+          if(cell.status === "NA"){
+            td.className = "cellNA";
+            td.textContent = "";
+          } else if(cell.status === "FREE"){
+            td.className = "cellFree";
+            td.textContent = "Libre";
+          } else if(cell.status === "NON"){
+            td.className = "cellNon";
+            td.textContent = cell.displayTitle || "No estructural";
+            td.dataset.cellIndex = String(ci);
+          } else if(cell.status === "STRUCT"){
+            td.className = "cellStruct";
+            td.textContent = cell.displayTitle || "Estructural";
+          }
+
+          if(cell.status !== "NA"){
+            if(cell.eventId) td.dataset.eventId = cell.eventId;
+            if(cell.ruleId)  td.dataset.ruleId  = cell.ruleId;
+            if(cell.label)   td.dataset.label   = cell.label;
+            td.onclick = ()=>onGridCellClick(td);
+          }
+
+          tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+      });
+
+      table.appendChild(tbody);
+      body.appendChild(table);
+      card.appendChild(body);
+
+      return card;
+    };
+
+    const sections = [
+      buildSection("H9O",           groups.H9O, "H9O"),
+      buildSection("HT",            groups.HT,  "HT"),
+      buildSection("Urgencias 24h", groups.URG, "URG")
+    ];
+
+    sections.forEach(sec=>{
+      if(sec) wrapper.appendChild(sec);
     });
 
-    const mkBox = (title, val, desc)=>{
-      const d = document.createElement("div");
-      d.className = "box";
-      d.innerHTML = `<span>${escapeHtml(title)}</span><b>${val}</b><div>${escapeHtml(desc)}</div>`;
-      return d;
-    };
-
-    box.appendChild(mkBox("Huecos libres", free, "Celdas libres en quirófanos seleccionados"));
-    box.appendChild(mkBox("Bloques no estructurales", non, "Reservas no estructurales"));
-    box.appendChild(mkBox("Bloques estructurales", struct, "Programación estructural ese día"));
+    box.appendChild(wrapper);
   }
 
-  function buildEventBlockInfo(orName, eventId){
-    const g = S.lastGrid;
-    if(!g || !g.rows) return null;
-    const row = g.rows.find(r => r.orName === orName);
-    if(!row) return null;
-    const hours = row.cells
-      .filter(c => c.eventId === eventId)
-      .map(c => c.hour);
-    if(!hours.length) return null;
-    hours.sort((a,b)=>a-b);
-    return {
-      startHour: hours[0],
-      duration: hours.length
-    };
-  }
-
-  function buildBlockInfo(orName, eventId, ruleId){
-    // Devuelve {startHour, duration} buscando por eventId o, si falta, por ruleId
-    const g = S.lastGrid;
-    if(!g || !g.rows) return null;
-    const row = g.rows.find(r => r.orName === orName);
-    if(!row) return null;
-
-    let hours = [];
-    if(eventId){
-      hours = row.cells.filter(c => c.eventId === eventId).map(c => c.hour);
-    }
-    if(!hours.length && ruleId){
-      hours = row.cells.filter(c => c.ruleId === ruleId).map(c => c.hour);
-    }
-    if(!hours.length) return null;
-    hours.sort((a,b)=>a-b);
-    return { startHour: hours[0], duration: hours.length };
-  }
-
-
-  function onGridCellClick(td){
+function onGridCellClick(td){
     const status  = td.dataset.status;
     const orName  = td.dataset.orName;
     const hour    = parseInt(td.dataset.hour,10);
@@ -3127,6 +3273,7 @@ $("modalBack").classList.add("hide");
 
   const dmy = fmtDMY(ctx.dateStr) || "—";
   const orName = ctx.orName || "—";
+  const orLabel = formatOrDisplayName(orName);
 
   const sum = getTeamContactSummary(ctx.label);
   const team = sum.team || (String(ctx.label||"").trim().replace(/^E\b[\s:_-]*/i,"").trim()) || "—";
@@ -3138,7 +3285,7 @@ $("modalBack").classList.add("hide");
 
   const lines = `
     <div class="miniLines">
-      <div class="miniLine">${escapeHtml(dmy)} · ${escapeHtml(orName)} · ${escapeHtml(hh)}–${escapeHtml(eh)} <span class="miniSub">(${dur} h)</span></div>
+      <div class="miniLine">${escapeHtml(dmy)} · ${escapeHtml(orLabel)} · ${escapeHtml(hh)}–${escapeHtml(eh)} <span class="miniSub">(${dur} h)</span></div>
       <div class="miniLine">Equipo: ${escapeHtml(team)}</div>
       <div class="miniLine">Contacto: ${escapeHtml(contact)}</div>
     </div>
@@ -3191,7 +3338,7 @@ $("modalBack").classList.add("hide");
     const body = `
       Hueco libre\n
       Fecha: ${fmtDMY(ctx.dateStr)}\n
-      Quirófano: ${ctx.orName}\n
+      Ubicación: ${formatOrDisplayName(ctx.orName)}\n
       Hora: ${String(ctx.hour).padStart(2,"0")}:00\n
       (Solo consulta desde la parrilla)
     `;
@@ -3250,7 +3397,7 @@ $("modalBack").classList.add("hide");
     OR_LIST.forEach(o=>{
       const opt = document.createElement("option");
       opt.value = o;
-      opt.textContent = o;
+      opt.textContent = formatOrDisplayName(o);
       mfOr.appendChild(opt);
     });
     mfOr.value = S.modalCtx.orName;
@@ -3430,7 +3577,7 @@ const mfOr = $("mfOr");
       OR_LIST.forEach(o=>{
         const opt = document.createElement("option");
         opt.value = o;
-        opt.textContent = o;
+        opt.textContent = formatOrDisplayName(o);
         stOr.appendChild(opt);
       });
     }
@@ -3453,7 +3600,7 @@ const mfOr = $("mfOr");
       OR_LIST.forEach(o=>{
         const opt = document.createElement("option");
         opt.value = o;
-        opt.textContent = o;
+        opt.textContent = formatOrDisplayName(o);
         mfOr.appendChild(opt);
       });
     }
@@ -3660,10 +3807,11 @@ function renderStructFiltersAndList(){
 
     filtered.forEach(r=>{
       const tr = document.createElement("tr");
+      const locLabel = formatOrDisplayName(r.orName || r.location || "");
       tr.innerHTML = `
         <td>${escapeHtml(r.id)}</td>
         <td>${escapeHtml(r.label || "")}</td>
-        <td>${escapeHtml(r.orName || "")}</td>
+        <td>${escapeHtml(locLabel)}</td>
         <td>${escapeHtml(fmtDMY(r.startDate || ""))}</td>
         <td>${escapeHtml(fmtDMY(r.endDate || ""))}</td>
         <td>${String(r.startHour).padStart(2,"0")}:00</td>
@@ -4657,7 +4805,7 @@ function groupInfoHtmlForLabel(label){
 
       const tdLoc = document.createElement("td");
       tdLoc.className = "srLocCell";
-      tdLoc.textContent = loc;
+      tdLoc.textContent = formatOrDisplayName(loc);
       tr.appendChild(tdLoc);
 
       dayOrder.forEach(d=>{
