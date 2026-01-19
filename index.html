@@ -1877,7 +1877,9 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
                 </div>
                 <div style="flex:1;min-width:240px">
                   <label>Cirujano</label>
-                  <input id="stLabel" placeholder="Ej: Jaime Alonso" />
+                  <select id="stLabel">
+                    <option value="">(Seleccionar cirujano)</option>
+                  </select>
                 </div>
               </div>
 
@@ -3859,6 +3861,16 @@ function buildDoctorSelectForUrgencias(selectEl, currentName){
   }
 }
 
+function fillStructSurgeonSelect(currentName){
+  const name = currentName || "";
+  ensureDoctorListForUrgencias(()=>{
+    const sel = $("stLabel");
+    if(!sel) return;
+    buildDoctorSelectForUrgencias(sel, name);
+  });
+}
+
+
 function updateUrgEditSummary(){
   const weekSel = $("urgEditWeekSelect");
   const summary = $("urgEditSummary");
@@ -4604,7 +4616,7 @@ const mfOr = $("mfOr");
 
   function clearStructEditor(){
     $("stId").value = "";
-    $("stLabel").value = "";
+    fillStructSurgeonSelect("");
     $("stOr").selectedIndex = 0;
     $("stStartHour").value = "8";
     $("stDur").value = "4";
@@ -4841,7 +4853,7 @@ function renderStructFiltersAndList(){
       return;
     }
     $("stId").value = rule.id || "";
-    $("stLabel").value = rule.label || "";
+    fillStructSurgeonSelect(rule.label || "");
     $("stOr").value = rule.orName || OR_LIST[0];
     $("stStartHour").value = String(rule.startHour || 8);
     $("stDur").value = String(rule.durationHours || 4);
