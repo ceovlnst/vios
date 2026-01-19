@@ -1183,7 +1183,35 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
   }
   .gridCard-urg{
     border-color:rgba(220,38,38,.50);
-    background:linear-gradient(180deg, rgba(220,38,38,.10), rgba(255,255,255,1));
+    background:linear-gradient(180deg, rgba(220,38,38,.
+  .gridToggleLibre{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    font-size:11px;
+    color:var(--muted);
+    cursor:pointer;
+    user-select:none;
+  }
+  .gridToggleLibre input[type="checkbox"]{
+    margin:0;
+  }
+  .cell-struct{
+    background:rgba(37,99,235,.08);
+    color:#1d4ed8;
+    font-weight:600;
+  }
+  .cell-non{
+    background:rgba(234,179,8,.10);
+    color:#92400e;
+    font-weight:500;
+  }
+  .cell-free{
+    background:transparent;
+    color:rgba(15,23,42,.45);
+    font-style:italic;
+  }
+10), rgba(255,255,255,1));
   }
   /* H9O siempre visible arriba al hacer scroll */
   .gridCard-h9o{
@@ -1588,8 +1616,12 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
           <div id="gridReserveInfo" class="msg hide" style="margin-top:8px"></div>
           <div class="kpi" id="gridKpis"></div>
 
-          <div class="actions" style="margin-top:8px">
+          <div class="actions" style="margin-top:8px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
             <button class="btn small" id="btnToggleAdvanced">Búsqueda avanzada</button>
+            <label class="gridToggleLibre">
+              <input type="checkbox" id="chkShowLibre" checked />
+              Mostrar texto "Libre"
+            </label>
           </div>
           <div id="advancedBox" class="hide" style="margin-top:4px">
             <label>Quirófanos incluidos en KPIs</label>
@@ -2119,6 +2151,38 @@ const SPECIALTIES = [
     if(!m) return String(dateStr);
     return `${m[3]}/${m[2]}/${m[1]}`;
   }
+
+  // ===== Local-date helpers (evita desfases por UTC) =====
+  function ymdLocal_(d){
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,"0");
+    const da = String(d.getDate()).padStart(2,"0");
+    return `${y}-${m}-${da}`;
+  }
+  function parseISOToLocalDate_(iso){
+    const [y,m,d] = String(iso).slice(0,10).split("-").map(Number);
+    return new Date(y, (m||1)-1, d||1);
+  }
+  function weekStartMondayISO_local(iso){
+    const d = parseISOToLocalDate_(iso);
+    const day = (d.getDay()+6)%7; // Mon=0..Sun=6
+    d.setDate(d.getDate()-day);
+    return ymdLocal_(d);
+  }
+  function addDaysISO_local(iso, days){
+    const d = parseISOToLocalDate_(iso);
+    d.setDate(d.getDate()+days);
+    return ymdLocal_(d);
+  }
+  function weekRangeLabel_local(weekStartIso){
+    const d0 = parseISOToLocalDate_(weekStartIso);
+    const d1 = new Date(d0.getFullYear(), d0.getMonth(), d0.getDate());
+    d1.setDate(d1.getDate()+6);
+    const s0 = ymdLocal_(d0);
+    const s1 = ymdLocal_(d1);
+    return `${fmtDMY(s0)}–${fmtDMY(s1)}`;
+  }
+
   function isoLocal(dateStr, hour){
     // Devuelve ISO con offset local, p.ej. 2026-01-08T08:00:00+01:00
     const d = new Date(`${dateStr}T${String(hour).padStart(2,"0")}:00:00`);
@@ -2357,7 +2421,7 @@ function callGAS(fnName, args, opt){
     tbl.className = "simpleTable";
     const thead = document.createElement("thead");
     const trh = document.createElement("tr");
-    ['Fecha','Día','Guardias'].forEach(t=>{
+    ["Fecha","Guardias"].forEach(t=>{
       const th = document.createElement("th");
       th.textContent = t;
       trh.appendChild(th);
@@ -2370,8 +2434,6 @@ function callGAS(fnName, args, opt){
       const tr = document.createElement("tr");
       const tdDate = document.createElement("td");
       tdDate.textContent = fmtDMY(d.date);
-      const tdDow = document.createElement("td");
-      tdDow.textContent = d.weekday || '';
       const tdItems = document.createElement("td");
 
       const items = Array.isArray(d.items) ? d.items : [];
@@ -2379,8 +2441,8 @@ function callGAS(fnName, args, opt){
         tdItems.textContent = "—";
       } else {
         const ul = document.createElement("ul");
-        ul.style.margin = '0';
-        ul.style.paddingLeft = '18px';
+        ul.style.margin = "0";
+        ul.style.paddingLeft = "18px";
         items.forEach(it=>{
           const li = document.createElement("li");
           const timeRange = (it.start && it.end)
@@ -2393,7 +2455,6 @@ function callGAS(fnName, args, opt){
       }
 
       tr.appendChild(tdDate);
-      tr.appendChild(tdDow);
       tr.appendChild(tdItems);
       tbody.appendChild(tr);
     });
@@ -3099,7 +3160,7 @@ function downloadAllTimeCSV(){
   }
 
 
-  function weekStartMondayISO(dateStr){
+  function weekStartMondayISO_local(dateStr){
     // dateStr: YYYY-MM-DD
     const d = new Date(String(dateStr||"").slice(0,10) + "T00:00:00");
     if(isNaN(d.getTime())) return dateStr;
@@ -3160,13 +3221,21 @@ function downloadAllTimeCSV(){
       onSuccess:(res)=>{
         S.lastGrid = res;
         // Cargar también guardias de urgencias para la semana del día seleccionado
-        const wkStart = weekStartMondayISO(dateStr);
+        const wkStart = weekStartMondayISO_local(dateStr);
         S.urgWeekStart = wkStart;
         callGAS("getUrgenciasWeek", [S.pin, wkStart], {
           key:"urgWeekInGrid",
           msg:null,
-          onSuccess:(u)=>{ S.urgWeek = u; renderGrid(res); renderGridKpis(); },
-          onFailure:(_e)=>{ S.urgWeek = null; renderGrid(res); renderGridKpis(); }
+          onSuccess:(u)=>{
+            S.urgWeek = u;
+            ensureUrgenciasWeeks12(wkStart, res);
+          },
+          onFailure:(_e)=>{
+            S.urgWeek = null;
+            S.urgWeeks12 = [];
+            renderGrid(res);
+            renderGridKpis();
+          }
         });
         return;
         },
@@ -3175,6 +3244,58 @@ function downloadAllTimeCSV(){
       }
     });
   }
+
+function ensureUrgenciasWeeks12(baseWeekStart, gridData){
+  // baseWeekStart: lunes de referencia de la primera semana
+  const base = baseWeekStart || weekStartMondayISO(todayISO());
+  S.urgWeekStart = base;
+
+  // Si ya tenemos calculadas las 12 semanas para este mismo lunes, reutilizamos
+  if (S.urgWeeks12Base === base && Array.isArray(S.urgWeeks12) && S.urgWeeks12.length === 12){
+    renderGrid(gridData);
+    renderGridKpis();
+    return;
+  }
+
+  const weeks = [];
+    for (let i = 0; i < 12; i++) {
+      weeks.push(addDaysISO_local(base, 7*i));
+    }
+
+  S.urgWeeks12Base = base;
+  S.urgWeeks12 = new Array(12);
+  // Primera semana: reutilizamos la respuesta ya obtenida (S.urgWeek)
+  S.urgWeeks12[0] = { weekStart: weeks[0], data: S.urgWeek };
+
+  let pending = weeks.length - 1;
+  if (pending <= 0){
+    renderGrid(gridData);
+    renderGridKpis();
+    return;
+  }
+
+  for (let i = 1; i < weeks.length; i++) {
+    const wkStart = weeks[i];
+    callGAS("getUrgenciasWeek", [S.pin, wkStart], {
+      key: null,
+      msg: null,
+      onSuccess:(u)=>{
+        S.urgWeeks12[i] = { weekStart: wkStart, data: u };
+        if(--pending === 0){
+          renderGrid(gridData);
+          renderGridKpis();
+        }
+      },
+      onFailure:(_e)=>{
+        S.urgWeeks12[i] = { weekStart: wkStart, data: null };
+        if(--pending === 0){
+          renderGrid(gridData);
+          renderGridKpis();
+        }
+      }
+    });
+  }
+}
 
   
   function getGridCategory(orName){
@@ -3219,7 +3340,7 @@ function downloadAllTimeCSV(){
     // Para H9O y HT: si no hay filas, no mostramos tarjeta
     if(catKey !== "URG" && (!rows || !rows.length)) return null;
 
-    // KPIs (solo para H9O / HT, no tienen mucho sentido para la vista agregada de urgencias)
+    // KPIs (solo para H9O / HT)
     let free = 0, non = 0, struct = 0;
     if(catKey !== "URG"){
       rows.forEach(r=>{
@@ -3254,8 +3375,7 @@ function downloadAllTimeCSV(){
         <span>No estructurales: <b>${non}</b></span>
       `;
     } else {
-      const wkLabel = S.urgWeekStart ? weekRangeLabelFromStart(S.urgWeekStart) : "";
-      kpis.textContent = wkLabel || "Guardias semanales";
+      kpis.textContent = "Próximas 12 semanas";
     }
 
     const toggle = document.createElement("button");
@@ -3288,67 +3408,72 @@ function downloadAllTimeCSV(){
     body.className = "gridCardBody";
 
     if(catKey === "URG"){
-      // Vista específica de guardias: tabla semanal tipo reporte (Fecha / Día / Guardia)
       const wrap = document.createElement("div");
       wrap.className = "urgWeeklySummary";
 
-      const res = S.urgWeek;
-      if(!res || !res.ok){
+      const weeks = Array.isArray(S.urgWeeks12) ? S.urgWeeks12 : [];
+      if(!weeks.length){
         wrap.textContent = "No se pudo cargar la información de guardias.";
       } else {
-        const days = Array.isArray(res.days) ? res.days.slice().sort((a,b)=> String(a.date||"").localeCompare(String(b.date||""))) : [];
-        if(!days.length){
-          wrap.textContent = "No hay guardias registradas en esta semana.";
-        } else {
-          const tbl = document.createElement("table");
-          const thead = document.createElement("thead");
-          const trh = document.createElement("tr");
-          ["Fecha","Día","Guardia"].forEach(t=>{
-            const th = document.createElement("th");
-            th.textContent = t;
-            trh.appendChild(th);
-          });
-          thead.appendChild(trh);
-          tbl.appendChild(thead);
+        const tbl = document.createElement("table");
+        const thead = document.createElement("thead");
+        const trh = document.createElement("tr");
+        ["Semana","Guardia"].forEach(t=>{
+          const th = document.createElement("th");
+          th.textContent = t;
+          trh.appendChild(th);
+        });
+        thead.appendChild(trh);
+        tbl.appendChild(thead);
 
-          const tbody = document.createElement("tbody");
-          days.forEach(d=>{
-            const tr = document.createElement("tr");
-            const tdDate = document.createElement("td");
-            tdDate.textContent = fmtDMY(d.date);
-            const tdDow = document.createElement("td");
-            tdDow.textContent = d.weekday || "";
-            const tdItems = document.createElement("td");
+        const tbody = document.createElement("tbody");
+        weeks.forEach(rec=>{
+          const tr = document.createElement("tr");
 
-            const items = Array.isArray(d.items) ? d.items : [];
-            if(!items.length){
-              tdItems.textContent = "—";
+          // Columna semana: rango L-D usando el lunes almacenado
+          const tdWeek = document.createElement("td");
+          const wkStart = rec && rec.weekStart ? rec.weekStart : "";
+              const label = wkStart ? (fmtDMY(addDaysISO_local(wkStart,1)) + "–" + fmtDMY(addDaysISO_local(wkStart,7))) : "—";
+          tdWeek.textContent = label || "—";
+          tr.appendChild(tdWeek);
+
+          // Columna guardias: una sola pareja MINF + MSUP por semana
+          const tdGuard = document.createElement("td");
+          const res = rec && rec.data ? rec.data : null;
+          if(!res || !res.ok){
+            tdGuard.textContent = "—";
+          } else {
+            const g = extractUrgMiMs(res);
+            if(!g.miName && !g.msName){
+              tdGuard.textContent = "—";
             } else {
               const ul = document.createElement("ul");
               ul.style.margin = "0";
               ul.style.paddingLeft = "18px";
-              items.forEach(it=>{
-                const li = document.createElement("li");
-                li.textContent = it.title || "Guardia";
-                ul.appendChild(li);
-              });
-              tdItems.appendChild(ul);
+              if(g.miName){
+                const liMi = document.createElement("li");
+                liMi.textContent = "MINF: " + g.miName;
+                ul.appendChild(liMi);
+              }
+              if(g.msName){
+                const liMs = document.createElement("li");
+                liMs.textContent = "MSUP: " + g.msName;
+                ul.appendChild(liMs);
+              }
+              tdGuard.appendChild(ul);
             }
+          }
 
-            tr.appendChild(tdDate);
-            tr.appendChild(tdDow);
-            tr.appendChild(tdItems);
-            tbody.appendChild(tr);
-          });
+          tr.appendChild(tdGuard);
+          tbody.appendChild(tr);
+        });
 
-          tbl.appendChild(tbody);
-          wrap.appendChild(tbl);
-        }
+        tbl.appendChild(tbody);
+        wrap.appendChild(tbl);
       }
 
       body.appendChild(wrap);
     } else {
-      // Vista estándar de parrilla por horas (H9O / HT)
       const table = document.createElement("table");
       const thead = document.createElement("thead");
       const trh = document.createElement("tr");
@@ -3368,43 +3493,34 @@ function downloadAllTimeCSV(){
       rows.forEach(row=>{
         const tr = document.createElement("tr");
         const tdOr = document.createElement("td");
-        tdOr.textContent = formatOrDisplayName(row.orName);
+        tdOr.textContent = row.orName || "";
         tr.appendChild(tdOr);
 
         visibleHours.forEach(h=>{
-          const idxHour = hourIndex[String(h)];
-          const cell = (row.cells && typeof idxHour === "number") ? row.cells[idxHour] : null;
           const td = document.createElement("td");
-          td.dataset.orName = row.orName;
-          td.dataset.hour   = h;
-          td.dataset.date   = data.date;
+          const cell = (row.cells || []).find(c=> String(c.hour) === String(h)) || {};
+          const status = cell.status || "";
+          td.dataset.status = status;
+          td.dataset.orName = row.orName || "";
+          td.dataset.hour = h;
+          td.dataset.date = row.date || "";
+          td.dataset.eventId = cell.eventId || "";
+          td.dataset.ruleId = cell.ruleId || "";
+          td.dataset.label = cell.label || "";
+          td.dataset.cellIndex = cell.cellIndex != null ? cell.cellIndex : "";
 
-          if(!cell || !cell.status || cell.status === "NA"){
-            td.className = "cellNA";
-            td.textContent = "";
+          if(status === "STRUCT"){
+            td.className = "cell-struct";
+            td.textContent = cell.label || "Estructural";
+          } else if(status === "NON"){
+            td.className = "cell-non";
+            td.textContent = cell.label || "No estructural";
           } else {
-            td.dataset.status = cell.status;
-
-            if(cell.status === "FREE"){
-              td.className = "cellFree";
-              td.textContent = "Libre";
-            } else if(cell.status === "NON"){
-              td.className = "cellNon";
-              td.textContent = cell.displayTitle || "No estructural";
-              td.dataset.cellIndex = String(idxHour);
-            } else if(cell.status === "STRUCT"){
-              td.className = "cellStruct";
-              td.textContent = cell.displayTitle || "Estructural";
-            }
-
-            if(cell.status !== "NA"){
-              if(cell.eventId) td.dataset.eventId = cell.eventId;
-              if(cell.ruleId)  td.dataset.ruleId  = cell.ruleId;
-              if(cell.label)   td.dataset.label   = cell.label;
-              td.onclick = ()=>onGridCellClick(td);
-            }
+            td.className = "cell-free";
+            td.textContent = "Libre";
           }
 
+          td.onclick = ()=>onGridCellClick(td);
           tr.appendChild(td);
         });
 
@@ -3413,15 +3529,12 @@ function downloadAllTimeCSV(){
 
       table.appendChild(tbody);
       body.appendChild(table);
-
     }
 
     card.appendChild(body);
     return card;
   };
-
-
-    const sections = [
+const sections = [
       buildSection("H9O",           groups.H9O, "H9O"),
       buildSection("HT",            groups.HT,  "HT"),
       buildSection("Urgencias 24h", groups.URG, "URG")
@@ -3432,27 +3545,75 @@ function downloadAllTimeCSV(){
     });
 
     box.appendChild(wrapper);
+    if (typeof applyLibreVisibility === "function") {
+      applyLibreVisibility();
+    }
   }
 
 
-
-function extractUrgMiMs(){
-  let miName = "", msName = "";
-  if(S.urgWeek && Array.isArray(S.urgWeek.days)){
-    S.urgWeek.days.forEach(d=>{
-      (d.items || []).forEach(it=>{
-        const raw = String(it.title || "");
-        const cleaned = cleanGuardName_(raw) || raw;
-        const low = raw.toLowerCase();
-        if(!miName && (low.includes("miembro inferior") || /\bminf\b/.test(low) || /\bmi\b/.test(low))){
-          miName = cleaned;
+  function applyLibreVisibility(){
+    const chk = $("chkShowLibre");
+    const show = !chk || chk.checked;
+    const cells = document.querySelectorAll(".gridCard-h9o .cell-free, .gridCard-ht .cell-free");
+    cells.forEach(td=>{
+      if(show){
+        if(!td.textContent.trim()){
+          td.textContent = "Libre";
         }
-        if(!msName && (low.includes("miembro superior") || /\bmsup\b/.test(low) || /\bms\b/.test(low))){
-          msName = cleaned;
+        td.style.opacity = "";
+      }else{
+        td.textContent = "";
+        td.style.opacity = "0.35";
+      }
+    });
+  }
+
+  document.addEventListener("change", (ev)=>{
+    if(ev.target && ev.target.id === "chkShowLibre"){
+      applyLibreVisibility();
+    }
+  });
+
+
+
+function extractUrgMiMs(urgRes){
+  let miName = "", msName = "";
+  const src = urgRes || S.urgWeek;
+
+  function setIfEmpty(kind, name){
+    const v = String(name || "").trim();
+    if(!v) return;
+    if(kind === "MI" && !miName) miName = v;
+    if(kind === "MS" && !msName) msName = v;
+  }
+
+  if (src && Array.isArray(src.days)) {
+    src.days.forEach(d=>{
+      (d.items || []).forEach(it=>{
+        const raw0 = String(it.title || "");
+        const raw = (typeof cleanGuardName_ === "function" ? (cleanGuardName_(raw0) || raw0) : raw0);
+        const low = raw.toLowerCase();
+
+        // 1) Prioridad: formato "MINF: Nombre" / "MSUP: Nombre"
+        const mMi = raw.match(/\bMINF\s*:\s*(.+)$/i);
+        if(mMi) setIfEmpty("MI", mMi[1]);
+
+        const mMs = raw.match(/\bMSUP\s*:\s*(.+)$/i);
+        if(mMs) setIfEmpty("MS", mMs[1]);
+
+        // 2) Fallback por palabras clave si no venía con ":"
+        if(!miName && (low.includes("miembro inferior") || /\bminf\b/.test(low))) {
+          setIfEmpty("MI", raw.replace(/^.*\bminf\b\s*/i,"").replace(/^:\s*/,"") || raw);
+        }
+        if(!msName && (low.includes("miembro superior") || /\bmsup\b/.test(low))) {
+          setIfEmpty("MS", raw.replace(/^.*\bmsup\b\s*/i,"").replace(/^:\s*/,"") || raw);
         }
       });
     });
   }
+
+  miName = miName.replace(/^\s*[:\-]\s*/,"").trim();
+  msName = msName.replace(/^\s*[:\-]\s*/,"").trim();
   return { miName, msName };
 }
 
@@ -3461,14 +3622,55 @@ function editUrgenciasWeek(){
     alert("Inicia sesión para editar las guardias.");
     return;
   }
-  const wkStart = S.urgWeekStart || todayISO();
-  const cur = extractUrgMiMs();
-  const miNew = prompt("Responsable de miembro inferior para la semana:", cur.miName || "");
-  if(miNew === null) return;
-  const msNew = prompt("Responsable de miembro superior para la semana:", cur.msName || "");
-  if(msNew === null) return;
 
-  callGAS("updateUrgenciasWeek", [S.pin, wkStart, miNew.trim(), msNew.trim()], {
+  // 1) Elegir qué semana queremos modificar (entre las 12 cargadas)
+  let wkStart = S.urgWeekStart || todayISO();
+  let curWeekData = S.urgWeek;
+
+  if(Array.isArray(S.urgWeeks12) && S.urgWeeks12.length){
+    const lines = S.urgWeeks12.map((rec, idx)=>{
+      const base = rec && rec.weekStart ? rec.weekStart : "";
+      if(!base) return (idx+1) + " - (sin fecha)";
+      const ini = fmtDMY(addDaysISO_local(base,1));
+      const fin = fmtDMY(addDaysISO_local(base,7));
+      return (idx+1) + " - " + ini + "–" + fin;
+    }).join("\n");
+
+    const ans = prompt("¿Qué semana quieres modificar? (1-" + S.urgWeeks12.length + ")\n" + lines, "1");
+    if(ans === null) return;
+    const idx = parseInt(ans,10) - 1;
+    if(isNaN(idx) || idx < 0 || idx >= S.urgWeeks12.length){
+      alert("Número de semana no válido.");
+      return;
+    }
+    const rec = S.urgWeeks12[idx] || {};
+    wkStart = rec.weekStart || wkStart;
+    curWeekData = rec.data || curWeekData;
+  }
+
+  const cur = extractUrgMiMs(curWeekData);
+
+  // 2) Elegir qué miembro queremos modificar
+  let which = prompt("¿Qué quieres cambiar? Escribe MI para miembro inferior, MS para miembro superior, o deja vacío para ambos:", "");
+  if(which === null) return;
+  which = String(which).trim().toUpperCase();
+
+  let miNew = cur.miName || "";
+  let msNew = cur.msName || "";
+
+  // 3) Pedimos solo lo necesario según la elección
+  if(!which || which === "MI"){
+    const v = prompt("Responsable de miembro inferior para la semana:", miNew);
+    if(v === null) return;
+    miNew = v.trim();
+  }
+  if(!which || which === "MS"){
+    const v2 = prompt("Responsable de miembro superior para la semana:", msNew);
+    if(v2 === null) return;
+    msNew = v2.trim();
+  }
+
+  callGAS("updateUrgenciasWeek", [S.pin, wkStart, miNew, msNew], {
     key: "urgWeekEdit",
     msg: "Actualizando guardias de urgencias…",
     onSuccess: (_res)=>{
