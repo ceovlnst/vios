@@ -1448,6 +1448,75 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
   user-select:none;
 }
 
+
+
+/* === Modal asistente Urgencias 24h (pequeño y centrado) === */
+.urgModalBack{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  background:rgba(15,23,42,.40);
+  z-index:2000;
+}
+
+.urgModalBack .modalCard{
+  width:min(560px, 94vw);
+  background:var(--card);
+  border-radius:18px;
+  border:1px solid var(--line);
+  box-shadow:0 24px 60px rgba(15,23,42,.35);
+  padding:16px 18px 14px;
+}
+
+.urgModalBack .modalTop{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:8px;
+}
+
+.urgModalBack .modalTitle{
+  font-weight:900;
+  font-size:16px;
+}
+
+.urgModalBack .dlgActions{
+  margin-top:16px;
+}
+
+/* === Radios MI/MS/Ambos alineados === */
+.urgWizardRadios{
+  margin-top:6px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.urgWizardOption{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 10px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:#fff;
+  cursor:pointer;
+  font-size:13px;
+}
+
+.urgWizardOption input{
+  margin:0;
+}
+
+.urgWizardOption:hover{
+  border-color:rgba(29,78,216,.35);
+  box-shadow:0 4px 10px rgba(15,23,42,.06);
+}
+
 </style>
 </head>
 
@@ -3708,68 +3777,306 @@ function extractUrgMiMs(urgRes){
   return { miName, msName };
 }
 
-function editUrgenciasWeek(){
-  if(!S.pin){
-    alert("Inicia sesión para editar las guardias.");
+// === Asistente para editar guardias de Urgencias 24h ===
+let __urgEditCtx = null;
+
+function buildUrgWeekLabel(rec, idx){
+  const base = rec && rec.weekStart ? rec.weekStart : "";
+  if(!base) return (idx+1) + " - (sin fecha)";
+  const ini = fmtDMY(addDaysISO_local(base,1));
+  const fin = fmtDMY(addDaysISO_local(base,7));
+  return (idx+1) + " - " + ini + "–" + fin;
+}
+
+function ensureUrgenciasWeeksFallback(){
+  // Si por lo que sea no tenemos precargadas las 12 semanas,
+  // construimos al menos la semana actual para poder editar.
+  if(Array.isArray(S.urgWeeks12) && S.urgWeeks12.length) return;
+
+  const wkStart = S.urgWeekStart || weekStartMondayISO_local(todayISO());
+  S.urgWeeks12Base = wkStart;
+  S.urgWeeks12 = [{
+    weekStart: wkStart,
+    data: S.urgWeek || null
+  }];
+}
+
+// Cargar listado de profesionales desde "Cirujanos" (Nombre/Apellidos)
+function ensureDoctorListForUrgencias(cb){
+  if(S.doctorListLoaded && Array.isArray(S.doctorList) && S.doctorList.length){
+    cb();
+    return;
+  }
+  callGAS("listDoctorsForMaster", [S.pin], {
+    key:"listDoctorsUrg",
+    msg:"Cargando profesionales…",
+    onSuccess:(res)=>{
+      S.doctorList = res.doctors || res.lista || [];
+      S.doctorListLoaded = true;
+      cb();
+    },
+    onFailure:(_)=>{
+      S.doctorList = S.doctorList || [];
+      S.doctorListLoaded = true;
+      cb();
+    }
+  });
+}
+
+function buildDoctorSelectForUrgencias(selectEl, currentName){
+  if(!selectEl) return;
+  const list = Array.isArray(S.doctorList) ? S.doctorList : [];
+  const cur = String(currentName || "").trim();
+
+  selectEl.innerHTML = "";
+  const optEmpty = document.createElement("option");
+  optEmpty.value = "";
+  optEmpty.textContent = "(Seleccionar profesional)";
+  selectEl.appendChild(optEmpty);
+
+  let foundCurrent = false;
+
+  list.forEach(d=>{
+    const full = [d.nombre, d.apellidos].filter(Boolean).join(" ").trim();
+    if(!full) return;
+    const opt = document.createElement("option");
+    opt.value = full;                  // ➜ se guarda "Nombre Apellidos"
+    opt.textContent = full;            // ➜ se muestra "Nombre Apellidos"
+    if(cur && full === cur){
+      opt.selected = true;
+      foundCurrent = true;
+    }
+    selectEl.appendChild(opt);
+  });
+
+  // Si la guardia actual no está en la lista, la añadimos para no perderla
+  if(cur && !foundCurrent){
+    const optCur = document.createElement("option");
+    optCur.value = cur;
+    optCur.textContent = cur + " (actual)";
+    optCur.selected = true;
+    selectEl.insertBefore(optCur, selectEl.children[1] || null);
+  }
+}
+
+function updateUrgEditSummary(){
+  const weekSel = $("urgEditWeekSelect");
+  const summary = $("urgEditSummary");
+  if(!weekSel || !summary || !Array.isArray(S.urgWeeks12)) return;
+
+  const idx = parseInt(weekSel.value,10) || 0;
+  const rec = S.urgWeeks12[idx] || {};
+  const curWeekData = rec.data || S.urgWeek;
+  const cur = extractUrgMiMs(curWeekData);
+
+  __urgEditCtx.weekIndex = idx;
+  __urgEditCtx.weekStart = rec.weekStart || S.urgWeekStart || todayISO();
+  __urgEditCtx.curMi = cur.miName || "";
+  __urgEditCtx.curMs = cur.msName || "";
+
+  summary.innerHTML = `
+    <div class="urgWeeklySummary">
+      <table>
+        <tr><th>Miembro inferior (MINF)</th><td>${escapeHtml(__urgEditCtx.curMi || "—")}</td></tr>
+        <tr><th>Miembro superior (MSUP)</th><td>${escapeHtml(__urgEditCtx.curMs || "—")}</td></tr>
+      </table>
+    </div>
+  `;
+}
+
+function setUrgEditStep(step){
+  __urgEditCtx.step = step;
+  const s1 = $("urgEditStep1");
+  const s2 = $("urgEditStep2");
+  const s3 = $("urgEditStep3");
+  if(!s1 || !s2 || !s3) return;
+
+  s1.classList.toggle("hide", step !== 1);
+  s2.classList.toggle("hide", step !== 2);
+  s3.classList.toggle("hide", step !== 3);
+
+  const btnPrev  = $("urgEditPrevBtn");
+  const btnNext  = $("urgEditNextBtn");
+  const btnApply = $("urgEditApplyBtn");
+
+  if(btnPrev)  btnPrev.classList.toggle("hide", step === 1);
+  if(btnNext)  btnNext.classList.toggle("hide", step === 3);
+  if(btnApply) btnApply.classList.toggle("hide", step !== 3);
+}
+
+function openUrgenciasEditModal(){
+  const modal = $("urgEditModal");
+  if(!modal) return;
+  modal.style.display = "flex";
+}
+
+function closeUrgenciasEditModal(){
+  const modal = $("urgEditModal");
+  const status = $("urgEditStatus");
+  if(modal) modal.style.display = "none";
+  if(status) status.textContent = "";
+  __urgEditCtx = null;
+}
+
+function initUrgenciasEditUI(){
+  ensureUrgenciasWeeksFallback();
+  __urgEditCtx = {
+    step: 1,
+    weekIndex: 0,
+    weekStart: (S.urgWeeks12 && S.urgWeeks12[0] && S.urgWeeks12[0].weekStart) || S.urgWeekStart || todayISO(),
+    which: "BOTH",
+    curMi: "",
+    curMs: ""
+  };
+
+  const weekSel = $("urgEditWeekSelect");
+  if(weekSel && Array.isArray(S.urgWeeks12)){
+    weekSel.innerHTML = "";
+    S.urgWeeks12.forEach((rec, idx)=>{
+      const opt = document.createElement("option");
+      opt.value = String(idx);
+      opt.textContent = buildUrgWeekLabel(rec, idx);
+      if(idx === 0) opt.selected = true;
+      weekSel.appendChild(opt);
+    });
+    weekSel.onchange = ()=>updateUrgEditSummary();
+  }
+
+  // Paso 2: radios de qué cambiar
+  const radios = document.querySelectorAll("input[name='urgChangeScope']");
+  radios.forEach(r=>{
+    r.onchange = ()=>{
+      if(r.checked){
+        __urgEditCtx.which = r.value || "BOTH";
+        // Ajustar visibilidad de selects en paso 3
+        const miRow = $("urgEditMiRow");
+        const msRow = $("urgEditMsRow");
+        const which = __urgEditCtx.which;
+        if(miRow) miRow.classList.toggle("hide", !(which === "BOTH" || which === "MI"));
+        if(msRow) msRow.classList.toggle("hide", !(which === "BOTH" || which === "MS"));
+      }
+    };
+  });
+
+  updateUrgEditSummary();
+
+  // Preparamos selects de MI/MS sin llenarlos todavía (se llenan al entrar en paso 3)
+  const miRow = $("urgEditMiRow");
+  const msRow = $("urgEditMsRow");
+  const which = __urgEditCtx.which;
+  if(miRow) miRow.classList.toggle("hide", !(which === "BOTH" || which === "MI"));
+  if(msRow) msRow.classList.toggle("hide", !(which === "BOTH" || which === "MS"));
+
+  setUrgEditStep(1);
+  openUrgenciasEditModal();
+}
+
+function goNextUrgEditStep(){
+  if(!__urgEditCtx) return;
+  const step = __urgEditCtx.step || 1;
+
+  if(step === 1){
+    // Validar que haya semana elegida
+    const weekSel = $("urgEditWeekSelect");
+    if(!weekSel || !weekSel.value){
+      alert("Selecciona una semana.");
+      return;
+    }
+    updateUrgEditSummary();
+    setUrgEditStep(2);
     return;
   }
 
-  // 1) Elegir qué semana queremos modificar (entre las 12 cargadas)
-  let wkStart = S.urgWeekStart || todayISO();
-  let curWeekData = S.urgWeek;
+  if(step === 2){
+    // Al pasar al paso 3, llenamos los selects con la lista de Cirujanos
+    const miSel = $("urgEditMiSelect");
+    const msSel = $("urgEditMsSelect");
+    const which = __urgEditCtx.which || "BOTH";
 
-  if(Array.isArray(S.urgWeeks12) && S.urgWeeks12.length){
-    const lines = S.urgWeeks12.map((rec, idx)=>{
-      const base = rec && rec.weekStart ? rec.weekStart : "";
-      if(!base) return (idx+1) + " - (sin fecha)";
-      const ini = fmtDMY(addDaysISO_local(base,1));
-      const fin = fmtDMY(addDaysISO_local(base,7));
-      return (idx+1) + " - " + ini + "–" + fin;
-    }).join("\n");
-
-    const ans = prompt("¿Qué semana quieres modificar? (1-" + S.urgWeeks12.length + ")\n" + lines, "1");
-    if(ans === null) return;
-    const idx = parseInt(ans,10) - 1;
-    if(isNaN(idx) || idx < 0 || idx >= S.urgWeeks12.length){
-      alert("Número de semana no válido.");
-      return;
+    if(which === "BOTH" || which === "MI"){
+      buildDoctorSelectForUrgencias(miSel, __urgEditCtx.curMi);
     }
-    const rec = S.urgWeeks12[idx] || {};
-    wkStart = rec.weekStart || wkStart;
-    curWeekData = rec.data || curWeekData;
+    if(which === "BOTH" || which === "MS"){
+      buildDoctorSelectForUrgencias(msSel, __urgEditCtx.curMs);
+    }
+
+    setUrgEditStep(3);
+    return;
+  }
+}
+
+function goPrevUrgEditStep(){
+  if(!__urgEditCtx) return;
+  const step = __urgEditCtx.step || 1;
+  if(step === 2){
+    setUrgEditStep(1);
+  }else if(step === 3){
+    setUrgEditStep(2);
+  }
+}
+
+function applyUrgenciasEdit(){
+  if(!__urgEditCtx) return;
+  const status = $("urgEditStatus");
+  if(status) status.textContent = "";
+
+  const weekSel = $("urgEditWeekSelect");
+  if(!weekSel || !weekSel.value){
+    alert("Selecciona una semana.");
+    return;
+  }
+  const idx = parseInt(weekSel.value,10) || 0;
+  const rec = (Array.isArray(S.urgWeeks12) && S.urgWeeks12[idx]) || {};
+  const wkStart = rec.weekStart || S.urgWeekStart || todayISO();
+
+  const which = __urgEditCtx.which || "BOTH";
+
+  let miNew = __urgEditCtx.curMi || "";
+  let msNew = __urgEditCtx.curMs || "";
+
+  const miSel = $("urgEditMiSelect");
+  const msSel = $("urgEditMsSelect");
+
+  if(which === "BOTH" || which === "MI"){
+    miNew = (miSel && miSel.value ? miSel.value.trim() : "").trim();
+  }
+  if(which === "BOTH" || which === "MS"){
+    msNew = (msSel && msSel.value ? msSel.value.trim() : "").trim();
   }
 
-  const cur = extractUrgMiMs(curWeekData);
-
-  // 2) Elegir qué miembro queremos modificar
-  let which = prompt("¿Qué quieres cambiar? Escribe MI para miembro inferior, MS para miembro superior, o deja vacío para ambos:", "");
-  if(which === null) return;
-  which = String(which).trim().toUpperCase();
-
-  let miNew = cur.miName || "";
-  let msNew = cur.msName || "";
-
-  // 3) Pedimos solo lo necesario según la elección
-  if(!which || which === "MI"){
-    const v = prompt("Responsable de miembro inferior para la semana:", miNew);
-    if(v === null) return;
-    miNew = v.trim();
+  if((which === "BOTH" || which === "MI") && !miNew){
+    alert("Selecciona quién hará la guardia de miembro inferior.");
+    return;
   }
-  if(!which || which === "MS"){
-    const v2 = prompt("Responsable de miembro superior para la semana:", msNew);
-    if(v2 === null) return;
-    msNew = v2.trim();
+  if((which === "BOTH" || which === "MS") && !msNew){
+    alert("Selecciona quién hará la guardia de miembro superior.");
+    return;
   }
 
   callGAS("updateUrgenciasWeek", [S.pin, wkStart, miNew, msNew], {
     key: "urgWeekEdit",
     msg: "Actualizando guardias de urgencias…",
     onSuccess: (_res)=>{
+      if(status) status.textContent = "Guardias actualizadas correctamente.";
+      closeUrgenciasEditModal();
       loadGrid();
     },
     onFailure: (e)=>{
+      if(status) status.textContent = (e && e.message) ? e.message : String(e);
       alert(e && e.message ? e.message : String(e));
     }
+  });
+}
+
+function editUrgenciasWeek(){
+  if(!S.pin){
+    alert("Inicia sesión para editar las guardias.");
+    return;
+  }
+
+  ensureUrgenciasWeeksFallback();
+  ensureDoctorListForUrgencias(()=>{
+    initUrgenciasEditUI();
   });
 }
 
@@ -6096,6 +6403,15 @@ function openSwapModal(team, context){
     }
   });
 
+
+
+// Wire botones del asistente de guardias (Urgencias)
+window.addEventListener("load", function(){
+  if($("urgEditCancelBtn")) $("urgEditCancelBtn").onclick = closeUrgenciasEditModal;
+  if($("urgEditPrevBtn"))   $("urgEditPrevBtn").onclick   = goPrevUrgEditStep;
+  if($("urgEditNextBtn"))   $("urgEditNextBtn").onclick   = goNextUrgEditStep;
+  if($("urgEditApplyBtn"))  $("urgEditApplyBtn").onclick  = applyUrgenciasEdit;
+});
 </script>
 
 <!-- Modal: Solicitud de cambio -->
@@ -6125,6 +6441,73 @@ function openSwapModal(team, context){
   </div>
 </div>
 
+
+
+<!-- Modal: Edición de guardias de Urgencias 24h -->
+<div id="urgEditModal" class="urgModalBack" style="display:none">
+  <div class="modalCard">
+    <div class="modalTop">
+      <div class="modalTitle">Editar guardias de Urgencias 24h</div>
+    </div>
+
+    <!-- Paso 1: Semana -->
+    <div id="urgEditStep1" class="urgWizardStep">
+      <h3 style="margin:10px 0 6px 0">1. Selecciona la semana</h3>
+      <div class="row" style="align-items:flex-end;gap:12px;flex-wrap:wrap">
+        <div style="flex:1;min-width:260px">
+          <label>Semana</label>
+          <select id="urgEditWeekSelect"></select>
+          <div class="hint">Se muestran las próximas 12 semanas calculadas desde la parrilla.</div>
+        </div>
+      </div>
+      <div id="urgEditSummary" style="margin-top:10px"></div>
+    </div>
+
+    <!-- Paso 2: Qué quieres cambiar -->
+    <div id="urgEditStep2" class="urgWizardStep hide">
+      <h3 style="margin:10px 0 6px 0">2. ¿Qué quieres cambiar?</h3>
+      <div class="urgWizardRadios">
+        <label class="urgWizardOption">
+          <input type="radio" name="urgChangeScope" value="BOTH" checked />
+          <span>MI y MS (ambos)</span>
+        </label>
+        <label class="urgWizardOption">
+          <input type="radio" name="urgChangeScope" value="MI" />
+          <span>Solo Miembro Inferior (MINF)</span>
+        </label>
+        <label class="urgWizardOption">
+          <input type="radio" name="urgChangeScope" value="MS" />
+          <span>Solo Miembro Superior (MSUP)</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Paso 3: Quién la hará -->
+    <div id="urgEditStep3" class="urgWizardStep hide">
+      <h3 style="margin:10px 0 6px 0">3. Selecciona quién hará la guardia</h3>
+      <div id="urgEditMiRow" style="margin-top:4px">
+        <label>Responsable Miembro Inferior (MINF)</label>
+        <select id="urgEditMiSelect"></select>
+      </div>
+      <div id="urgEditMsRow" style="margin-top:10px">
+        <label>Responsable Miembro Superior (MSUP)</label>
+        <select id="urgEditMsSelect"></select>
+      </div>
+      <div class="hint" style="margin-top:8px">
+        El desplegable se alimenta de la hoja <b>Cirujanos</b> y guarda solo <b>Nombre Apellidos</b>.
+      </div>
+    </div>
+
+    <div id="urgEditStatus" class="mut" style="margin-top:10px"></div>
+
+    <div class="dlgActions" style="margin-top:12px">
+      <button class="btn ghost" id="urgEditCancelBtn" type="button">Cancelar</button>
+      <button class="btn hide" id="urgEditPrevBtn" type="button">Atrás</button>
+      <button class="btn good" id="urgEditNextBtn" type="button">Siguiente</button>
+      <button class="btn primary hide" id="urgEditApplyBtn" type="button">Aplicar cambios</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
