@@ -4440,7 +4440,59 @@ $("modalBack").classList.add("hide");
   }
 
   
-  function openModalStruct(ctx){
+  
+// ===== FIX: buildBlockInfo (required for occupied cards) =====
+function buildBlockInfo(orName, eventId, ruleId){
+  try{
+    const g = S.lastGrid;
+    if(!g || !Array.isArray(g.rows)) return null;
+
+    const row = g.rows.find(r => r && r.orName === orName);
+    if(!row || !Array.isArray(row.cells)) return null;
+
+    const hasEvent = !!String(eventId||"");
+    const hasRule  = !!String(ruleId||"");
+
+    let idx = -1;
+    for(let i=0; i<row.cells.length; i++){
+      const c = row.cells[i] || {};
+      if(hasEvent && String(c.eventId||"") === String(eventId)) { idx = i; break; }
+      if(!hasEvent && hasRule && String(c.ruleId||"") === String(ruleId)) { idx = i; break; }
+    }
+    if(idx < 0) return null;
+
+    let i0 = idx;
+    while(i0 > 0){
+      const prev = row.cells[i0-1] || {};
+      const cur  = row.cells[i0]   || {};
+      const sameEvent = hasEvent && String(prev.eventId||"") === String(cur.eventId||"") && String(cur.eventId||"");
+      const sameRule  = !hasEvent && hasRule && String(prev.ruleId||"") === String(cur.ruleId||"") && String(cur.ruleId||"");
+      if(sameEvent || sameRule) i0--;
+      else break;
+    }
+
+    let dur = 1;
+    for(let j=i0+1; j<row.cells.length; j++){
+      const c0 = row.cells[i0] || {};
+      const cj = row.cells[j]  || {};
+      const sameEvent = hasEvent && String(cj.eventId||"") === String(c0.eventId||"") && String(c0.eventId||"");
+      const sameRule  = !hasEvent && hasRule && String(cj.ruleId||"") === String(c0.ruleId||"") && String(c0.ruleId||"");
+      if(sameEvent || sameRule) dur++;
+      else break;
+    }
+
+    const startHour = (row.cells[i0] && row.cells[i0].hour != null) ? row.cells[i0].hour : null;
+    if(startHour == null) return null;
+
+    return { startHour, duration: dur };
+  }catch(e){
+    return null;
+  }
+}
+// ===== END FIX =====
+
+
+function openModalStruct(ctx){
     ctx.kind = "STRUCT";
     ctx.isStructural = true;
 
