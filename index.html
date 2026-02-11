@@ -1518,6 +1518,33 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 }
 
 </style>
+
+  <style>
+    /* === OVERRIDES AZUL PARA BLOQUES OCUPADOS (STRUCT / NON) === */
+    .cell-struct,
+    .cell-non{
+      background:#1d4ed8 !important;   /* azul intenso */
+      color:#ffffff !important;        /* texto blanco */
+      font-weight:600 !important;
+      border-radius:999px;
+      border:1px solid rgba(15,23,42,0.25);
+      box-shadow:0 4px 10px rgba(15,23,42,0.20);
+      text-align:center;
+      vertical-align:middle;
+    }
+
+    /* Libre se mantiene en verde tipo "OK" */
+    .cell-free{
+      background:rgba(16,185,129,0.12) !important;
+      color:#065f46 !important;
+      font-style:normal !important;
+      font-weight:500 !important;
+      border-radius:999px;
+      border:1px dashed rgba(16,185,129,0.45) !important;
+      box-shadow:0 4px 10px rgba(15,23,42,0.04) !important;
+    }
+  </style>
+
 </head>
 
 <body>
@@ -2163,7 +2190,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
   "Consulta 5", "Consulta 6", "Consulta 7", "Consulta 8",
   "Consulta 9", "Consulta 10", "Consulta 13", "Consulta 14",
   // H9O – Quirófanos
-  "Quirófano 1", "Quirófano 2",
+  "Quirófano 1", "Quirófano 2", "Quirófano 3",
   // H9O – Urgencias 24h
   "Urgencias Miembro Superior", "Urgencias Miembro Inferior",
   // HT – Consultas
