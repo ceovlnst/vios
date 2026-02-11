@@ -1545,6 +1545,15 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
     }
   </style>
 
+
+  <style>
+    /* Ocultar opciones de usuario general: Solicitud de Actividad y Mis solicitudes */
+    #btnGoReserve,
+    #btnGoMine{
+      display:none !important;
+    }
+  </style>
+
 </head>
 
 <body>
@@ -2952,12 +2961,16 @@ S.doctor = doc;
   function doPunchIn(){
     hideMsg($("msgTime"));
     const note = ($("timeNote").value || "").trim();
-    callGAS("punchIn", [S.pin, note, navigator.userAgent], {
+    const loc  = `${window.location.hostname || ""} – ${navigator.userAgent || ""}`;
+    callGAS("punchIn", [S.pin, note, loc], {
       key:"punchIn",
       disable:[$("btnPunchIn"), $("btnPunchOut")],
       msg:"Registrando entrada…",
       onSuccess:(res)=>{
         showMsg($("msgTime"), res?.message || "Entrada registrada.", "ok");
+        // Forzamos estado local mientras refresca
+        $("btnPunchIn").disabled = true;
+        $("btnPunchOut").disabled = false;
         refreshTimeStatus();
       },
       onFailure:(e)=> showMsg($("msgTime"), e?.message || String(e), "bad")
@@ -2967,12 +2980,16 @@ S.doctor = doc;
   function doPunchOut(){
     hideMsg($("msgTime"));
     const note = ($("timeNote").value || "").trim();
-    callGAS("punchOut", [S.pin, note, navigator.userAgent], {
+    const loc  = `${window.location.hostname || ""} – ${navigator.userAgent || ""}`;
+    callGAS("punchOut", [S.pin, note, loc], {
       key:"punchOut",
       disable:[$("btnPunchIn"), $("btnPunchOut")],
       msg:"Registrando salida…",
       onSuccess:(res)=>{
         showMsg($("msgTime"), res?.message || "Salida registrada.", "ok");
+        // Forzamos estado local mientras refresca
+        $("btnPunchIn").disabled = false;
+        $("btnPunchOut").disabled = true;
         refreshTimeStatus();
       },
       onFailure:(e)=> showMsg($("msgTime"), e?.message || String(e), "bad")
