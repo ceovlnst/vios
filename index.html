@@ -1554,6 +1554,184 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
     }
   </style>
 
+
+  <style>
+    /* === Landing común pacientes / profesionales === */
+    .entryHero{
+      position:relative;
+      overflow:hidden;
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:24px 20px 20px;
+      background:
+        radial-gradient(700px 240px at 0% 0%, rgba(29,78,216,.12), transparent 60%),
+        radial-gradient(600px 220px at 100% 100%, rgba(4,120,87,.10), transparent 58%),
+        linear-gradient(180deg, rgba(255,255,255,.98), rgba(255,255,255,.92));
+      box-shadow:0 24px 60px rgba(15,23,42,.10);
+      text-align:center;
+    }
+    .entryHeroLogoWrap{
+      width:150px;
+      height:150px;
+      margin:0 auto 18px;
+      border-radius:34px;
+      background:linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.86));
+      border:1px solid rgba(255,255,255,.85);
+      display:grid;
+      place-items:center;
+      box-shadow:
+        0 20px 50px rgba(15,23,42,.12),
+        inset 0 1px 0 rgba(255,255,255,.9);
+    }
+    .entryHeroLogo{
+      width:102px;
+      height:102px;
+      object-fit:contain;
+      filter:drop-shadow(0 10px 24px rgba(15,23,42,.14));
+    }
+    .entryOverline{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(29,78,216,.16);
+      background:rgba(255,255,255,.84);
+      color:#33527c;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .entryHero h2{
+      margin:14px 0 8px;
+      font-size:30px;
+      line-height:1.05;
+    }
+    .entryHeroLead{
+      max-width:520px;
+      margin:0 auto;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.55;
+    }
+    .entryTabs{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+      margin-top:20px;
+    }
+    .entryTab{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:16px 18px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:rgba(255,255,255,.96);
+      color:var(--text);
+      cursor:pointer;
+      font-weight:850;
+      text-align:left;
+      box-shadow:0 14px 30px rgba(15,23,42,.07);
+      transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    }
+    .entryTab:hover{
+      border-color:rgba(29,78,216,.30);
+      transform:translateY(-1px);
+      box-shadow:0 18px 36px rgba(15,23,42,.10);
+    }
+    .entryTabMain{display:flex;flex-direction:column;gap:4px;min-width:0}
+    .entryTabTitle{font-size:15px;font-weight:900;color:var(--text)}
+    .entryTabSub{font-size:12px;color:var(--muted);font-weight:700;line-height:1.35}
+    .entryTabArrow{
+      flex:0 0 auto;
+      width:34px;
+      height:34px;
+      border-radius:12px;
+      display:grid;
+      place-items:center;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--text);
+      font-size:18px;
+      font-weight:900;
+    }
+    .entryTab.active{
+      background:var(--softAcc);
+      border-color:rgba(29,78,216,.30);
+      color:#0b2a78;
+    }
+    .entryTab.active .entryTabArrow{
+      border-color:rgba(29,78,216,.22);
+      background:rgba(255,255,255,.8);
+      color:#0b2a78;
+    }
+    .entryAccessCard{
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:rgba(255,255,255,.96);
+      padding:18px;
+      box-shadow:0 18px 45px rgba(15,23,42,.08);
+    }
+    .entryAccessCard h2{margin:0 0 6px 0}
+    .entrySectionLead{color:var(--muted);font-size:13px;line-height:1.45;margin-bottom:10px}
+    .entryIntro{
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:
+        radial-gradient(900px 240px at 10% 0%, rgba(29,78,216,.08), transparent 56%),
+        radial-gradient(900px 260px at 100% 100%, rgba(4,120,87,.08), transparent 58%),
+        rgba(255,255,255,.96);
+      padding:20px;
+      box-shadow:0 16px 38px rgba(15,23,42,.07);
+      margin-top:10px;
+      text-align:center;
+    }
+    .entryIntroLogo{
+      width:124px;
+      height:124px;
+      object-fit:contain;
+      margin:0 auto 14px;
+      display:block;
+      filter:drop-shadow(0 14px 28px rgba(15,23,42,.12));
+    }
+    .entryCards{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+      margin-top:16px;
+    }
+    @media(min-width:700px){ .entryCards{grid-template-columns:1fr 1fr;} }
+    .entryCard{
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:rgba(255,255,255,.97);
+      padding:18px;
+      box-shadow:0 18px 45px rgba(15,23,42,.08);
+      text-align:left;
+    }
+    .entryCard h3{margin:0 0 6px 0;font-size:16px;color:var(--text)}
+    .entryCard p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
+    .entryCard .actions{margin-top:14px}
+    .entryBadge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:5px 9px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--muted);
+      font-size:11px;
+      font-weight:900;
+      margin-bottom:10px;
+    }
+    .entryBackRow{display:flex;justify-content:flex-end;margin-top:10px}
+  </style>
+
 </head>
 
 <body>
@@ -1579,51 +1757,101 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
     <div class="grid">
       <!-- LEFT -->
       <div class="card">
-        <h2>Acceso</h2>
-
-        <label>PIN (contraseña)</label>
-        <input id="pinInput" type="password" inputmode="numeric" placeholder="Introduce tu PIN" />
-
-        <div class="actions">
-          <button class="btn primary" id="btnLogin">Entrar</button>
-          <button class="btn" id="btnClear">Limpiar</button>
-        </div>
-
-        <div id="msgLogin" class="msg hide"></div>
-
-        <div class="hr"></div>
-
-        <h3 style="margin:0 0 8px 0">¿Olvidaste tu PIN?</h3>
-        <div class="row" style="gap:10px;flex-wrap:wrap;align-items:flex-end">
-          <div style="flex:1;min-width:240px">
-            <label>Email</label>
-            <input id="recoverEmail" type="email" placeholder="Correo Electrónico" />
+        <div id="entrySelectorBox" class="entryHero">
+          <div class="entryHeroLogoWrap">
+            <img class="entryHeroLogo" src="https://ceovlnst.github.io/vios/og-image.png" alt="VIOS" />
           </div>
-          <div class="actions" style="margin-top:26px">
-            <button class="btn" id="btnRecoverPin">Enviar PIN</button>
+          <div class="entryOverline">Plataforma VIOS</div>
+          <h2>Bienvenido a VIOS</h2>
+          <div class="entryHeroLead">
+            Acceso unificado para pacientes y profesionales. Selecciona tu área para continuar con la misma identidad visual del entorno actual.
+          </div>
+
+          <div class="entryTabs">
+            <button class="entryTab" id="btnEntryPatients" type="button">
+              <span class="entryTabMain">
+                <span class="entryTabTitle">Acceso pacientes</span>
+                <span class="entryTabSub">Zona independiente para pacientes. La diseñaremos a continuación con su propio flujo.</span>
+              </span>
+              <span class="entryTabArrow">→</span>
+            </button>
+            <button class="entryTab" id="btnEntryProfessionals" type="button">
+              <span class="entryTabMain">
+                <span class="entryTabTitle">Acceso profesionales</span>
+                <span class="entryTabSub">Entrada al entorno actual de VIOS con PIN, recuperación de acceso y alta profesional.</span>
+              </span>
+              <span class="entryTabArrow">→</span>
+            </button>
           </div>
         </div>
-        <div id="msgRecover" class="msg hide"></div>
 
-        <div class="hr"></div>
-
-        <div class="actions">
-          <button class="btn" id="btnToggleSignup">Darme de alta</button>
+        <div id="patientAccessBox" class="entryAccessCard hide">
+          <h2>Acceso pacientes</h2>
+          <div class="entrySectionLead">
+            Esta zona queda preparada para la futura experiencia de pacientes. De momento funciona como puerta de entrada independiente.
+          </div>
+          <div class="msg ok">
+            Próximo paso: diseñar aquí la página específica de pacientes con el mismo estilo visual de VIOS.
+          </div>
+          <div class="entryBackRow">
+            <button class="btn small" id="btnBackToEntryFromPatients" type="button">Volver</button>
+          </div>
         </div>
 
-        <div id="signupBox" class="hide">
-          <h3 style="margin-top:10px">Alta profesional</h3>
+        <div id="professionalAccessBox" class="entryAccessCard hide">
+          <h2>Acceso profesionales</h2>
+          <div class="entrySectionLead">
+            Acceso para cirujanos, profesionales y administración, manteniendo exactamente el flujo actual del sistema.
+          </div>
 
-          <label>Nombre</label><input id="suNombre" placeholder="Nombre" />
-          <label>Apellidos</label><input id="suApellidos" placeholder="Apellidos" />
-          <label>Servicio / Especialidad</label><select id="suEsp"></select>
-          <label>Correo</label><input id="suCorreo" placeholder="Correo electrónico" />
-          <label>Teléfono</label><input id="suTel" placeholder="Teléfono" />
+          <label>PIN (contraseña)</label>
+          <input id="pinInput" type="password" inputmode="numeric" placeholder="Introduce tu PIN" />
 
           <div class="actions">
-            <button class="btn good" id="btnSignup">Completar alta</button>
+            <button class="btn primary" id="btnLogin">Entrar</button>
+            <button class="btn" id="btnClear">Limpiar</button>
           </div>
-          <div id="msgSignup" class="msg hide"></div>
+
+          <div id="msgLogin" class="msg hide"></div>
+
+          <div class="hr"></div>
+
+          <h3 style="margin:0 0 8px 0">¿Olvidaste tu PIN?</h3>
+          <div class="row" style="gap:10px;flex-wrap:wrap;align-items:flex-end">
+            <div style="flex:1;min-width:240px">
+              <label>Email</label>
+              <input id="recoverEmail" type="email" placeholder="Correo Electrónico" />
+            </div>
+            <div class="actions" style="margin-top:26px">
+              <button class="btn" id="btnRecoverPin">Enviar PIN</button>
+            </div>
+          </div>
+          <div id="msgRecover" class="msg hide"></div>
+
+          <div class="hr"></div>
+
+          <div class="actions">
+            <button class="btn" id="btnToggleSignup">Darme de alta</button>
+          </div>
+
+          <div id="signupBox" class="hide">
+            <h3 style="margin-top:10px">Alta profesional</h3>
+
+            <label>Nombre</label><input id="suNombre" placeholder="Nombre" />
+            <label>Apellidos</label><input id="suApellidos" placeholder="Apellidos" />
+            <label>Servicio / Especialidad</label><select id="suEsp"></select>
+            <label>Correo</label><input id="suCorreo" placeholder="Correo electrónico" />
+            <label>Teléfono</label><input id="suTel" placeholder="Teléfono" />
+
+            <div class="actions">
+              <button class="btn good" id="btnSignup">Completar alta</button>
+            </div>
+            <div id="msgSignup" class="msg hide"></div>
+          </div>
+
+          <div class="entryBackRow">
+            <button class="btn small" id="btnBackToEntryFromProfessionals" type="button">Volver</button>
+          </div>
         </div>
 
         <div class="hr"></div>
@@ -1634,12 +1862,12 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
           <button class="btn hide" id="btnGoMine">Mis solicitudes</button>
 
           <button class="btn hide" id="btnGoTime">Control horario</button>
-                    <button class="btn hide" id="btnGoPin">Cambiar PIN</button>
-<button class="btn hide" id="btnGoGrid">Calendario</button>
+          <button class="btn hide" id="btnGoPin">Cambiar PIN</button>
+          <button class="btn hide" id="btnGoGrid">Calendario</button>
           <button class="btn hide" id="btnGoStruct">Gestor de Actividad</button>
           <button class="btn hide" id="btnGoWait">Lista de espera</button>
           <button class="btn hide" id="btnGoReport">Reporte</button>
-</div>
+        </div>
 
         <div id="msgMenu" class="msg hide"></div>
       </div>
@@ -2125,11 +2353,34 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
         <!-- DEFAULT -->
         <div id="viewWelcome">
-          <h2>Bienvenido</h2>
-          <div class="msg">
-            1) Introduce tu PIN.<br/>
-            2) Si no tienes PIN, pulsa <b>“Darme de alta”</b>.<br/>
-            3) Al acceder, verás el panel según tu perfil.
+          <h2>Primera página</h2>
+          <div class="entryIntro">
+            <img class="entryIntroLogo" src="https://ceovlnst.github.io/vios/og-image.png" alt="VIOS" />
+            <div class="entryOverline">Gestión de actividad</div>
+            <h2 style="margin:14px 0 8px 0;font-size:28px;line-height:1.05">Una entrada común para todo VIOS</h2>
+            <div class="entryHeroLead" style="max-width:620px">
+              La portada separa claramente el acceso de pacientes y el acceso de profesionales, sin perder el lenguaje visual actual ni la lógica ya implementada para los usuarios internos.
+            </div>
+
+            <div class="entryCards">
+              <div class="entryCard">
+                <div class="entryBadge">PACIENTES</div>
+                <h3>Acceso pacientes</h3>
+                <p>Espacio reservado para la futura experiencia de pacientes, con su flujo específico y diferenciado del entorno profesional.</p>
+                <div class="actions">
+                  <button class="btn" id="btnWelcomePatients" type="button">Entrar como paciente</button>
+                </div>
+              </div>
+
+              <div class="entryCard">
+                <div class="entryBadge">PROFESIONALES</div>
+                <h3>Acceso profesionales</h3>
+                <p>Acceso directo al entorno actual de VIOS para cirujanos, profesionales y administración, con el mismo flujo de PIN y alta.</p>
+                <div class="actions">
+                  <button class="btn primary" id="btnWelcomeProfessionals" type="button">Entrar como profesional</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -2339,6 +2590,39 @@ const SPECIALTIES = [
   function go(viewId){
     hideAllViews();
     $(viewId).classList.remove("hide");
+  }
+  function setEntryMode(mode){
+    const entry = $("entrySelectorBox");
+    const prof = $("professionalAccessBox");
+    const pat = $("patientAccessBox");
+    const btnPat = $("btnEntryPatients");
+    const btnProf = $("btnEntryProfessionals");
+
+    if(entry) entry.classList.toggle("hide", !!mode);
+    if(prof) prof.classList.toggle("hide", mode !== "professionals");
+    if(pat) pat.classList.toggle("hide", mode !== "patients");
+    if(btnPat) btnPat.classList.toggle("active", mode === "patients");
+    if(btnProf) btnProf.classList.toggle("active", mode === "professionals");
+
+    if(!mode){
+      hideMsg($("msgLogin"));
+      hideMsg($("msgRecover"));
+      hideMsg($("msgSignup"));
+      if($("signupBox")) $("signupBox").classList.add("hide");
+    }
+  }
+  function openProfessionalsEntry(){
+    go("viewWelcome");
+    setEntryMode("professionals");
+    if($("pinInput")) $("pinInput").focus();
+  }
+  function openPatientsEntry(){
+    go("viewWelcome");
+    setEntryMode("patients");
+  }
+  function openEntryLanding(){
+    go("viewWelcome");
+    setEntryMode("");
   }
   function isMaster(){ return S.role === "Master" || S.role === "Administrador"; }
 
@@ -6374,6 +6658,7 @@ function openStructReportBlockModal(info){
     initDatesAndDefaults();
     setSessionPill();
     setMenuButtons();
+    openEntryLanding();
 
     if($("btnLogin")) $("btnLogin").onclick = login;
     if($("btnClear")) $("btnClear").onclick = ()=>{$("pinInput").value = ""; hideMsg($("msgLogin"));};
@@ -6382,6 +6667,13 @@ function openStructReportBlockModal(info){
     if($("btnToggleSignup")) $("btnToggleSignup").onclick = toggleSignup;
     if($("btnSignup")) $("btnSignup").onclick = signup;
     if($("btnRecoverPin")) $("btnRecoverPin").onclick = recoverPin;
+
+    if($("btnEntryPatients")) $("btnEntryPatients").onclick = openPatientsEntry;
+    if($("btnEntryProfessionals")) $("btnEntryProfessionals").onclick = openProfessionalsEntry;
+    if($("btnWelcomePatients")) $("btnWelcomePatients").onclick = openPatientsEntry;
+    if($("btnWelcomeProfessionals")) $("btnWelcomeProfessionals").onclick = openProfessionalsEntry;
+    if($("btnBackToEntryFromPatients")) $("btnBackToEntryFromPatients").onclick = openEntryLanding;
+    if($("btnBackToEntryFromProfessionals")) $("btnBackToEntryFromProfessionals").onclick = openEntryLanding;
 
     if($("btnGoReserve")) $("btnGoReserve").onclick = ()=>go("viewReserve");
     if($("btnGoMine")) $("btnGoMine").onclick    = ()=>go("viewMine");
