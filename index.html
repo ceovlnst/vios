@@ -2579,7 +2579,7 @@ const PROFESSIONAL_ROLES = [
     "Anestesia"
   ];
 
-  function fillSpecialties(){
+  function fillRoles(){
     const sel = $("suEsp");
     if(!sel) return;
     if(sel.dataset.filled) return;
@@ -2806,7 +2806,7 @@ const PROFESSIONAL_ROLES = [
       if($("signupBox")) $("signupBox").classList.toggle("hide", S.profSubMode !== "signup");
       if(S.profSubMode === "recover" && $("recoverEmail")) $("recoverEmail").focus();
       if(S.profSubMode === "login" && $("pinInput")) $("pinInput").focus();
-      if(S.profSubMode === "signup") fillSpecialties();
+      if(S.profSubMode === "signup") fillRoles();
     }
 
     if(mode === "patients"){
@@ -3255,10 +3255,14 @@ S.doctor = doc;
 
   function signup(){
     hideMsg($("msgSignup"));
+    const selectedRole = $("suEsp").value;
     const data = {
       nombre:    $("suNombre").value,
       apellidos: $("suApellidos").value,
-      especialidad: $("suEsp").value,
+      rol:       selectedRole,
+      role:      selectedRole,
+      tipo:      selectedRole,
+      especialidad: selectedRole,
       correo:    $("suCorreo").value,
       telefono:  $("suTel").value
     };
@@ -6857,7 +6861,7 @@ function openStructReportBlockModal(info){
     initOrCalcDefaults();
     buildOrCalcChips();
     fillStructSelectors();
-    fillSpecialties();
+    fillRoles();
     syncCadenceUI();
     initDatesAndDefaults();
     setSessionPill();
