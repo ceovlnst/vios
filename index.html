@@ -4,24 +4,24 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gestión de Quirófanos – VIOS</title>
+  <title>VIOS | Cirugía Ortopédica y Traumatología Especializada</title>
 
   
   <!-- Iconos / previsualización al compartir -->
-  <meta name="description" content="Gestión de Actividad: Calendarios, Control de Horarios y Coordinación – VIOS" />
+  <meta name="description" content="VIOS | Unidad de cirugía ortopédica y traumatología especializada, planificación asistencial y coordinación clínica." />
 
   <link rel="icon" type="image/png" href="https://ceovlnst.github.io/vios/og-image.png" />
   <link rel="apple-touch-icon" href="https://ceovlnst.github.io/vios/og-image.png" />
 
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Gestión de Quirófanos – VIOS" />
-  <meta property="og:description" content="Parrilla de quirófanos, lista de espera y coordinación." />
+  <meta property="og:title" content="VIOS | Cirugía Ortopédica y Traumatología Especializada" />
+  <meta property="og:description" content="Equipo de cirugía ortopédica y traumatología especializada, coordinación clínica, planificación y atención integral." />
   <meta property="og:image" content="https://ceovlnst.github.io/vios/og-image.png" />
   <meta property="og:url" content="https://ceovlnst.github.io/vios/" />
 
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Gestión de Quirófanos – VIOS" />
-  <meta name="twitter:description" content="Parrilla de quirófanos, lista de espera y coordinación." />
+  <meta name="twitter:title" content="VIOS | Cirugía Ortopédica y Traumatología Especializada" />
+  <meta name="twitter:description" content="Equipo de cirugía ortopédica y traumatología especializada, coordinación clínica, planificación y atención integral." />
   <meta name="twitter:image" content="https://ceovlnst.github.io/vios/og-image.png" />
 <style>
     :root{
@@ -1557,161 +1557,54 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
   <style>
     /* === Landing común pacientes / profesionales === */
-    .entryHero{
-      position:relative;
-      overflow:hidden;
-      border:1px solid var(--line);
-      border-radius:24px;
-      padding:24px 20px 20px;
-      background:
-        radial-gradient(700px 240px at 0% 0%, rgba(29,78,216,.12), transparent 60%),
-        radial-gradient(600px 220px at 100% 100%, rgba(4,120,87,.10), transparent 58%),
-        linear-gradient(180deg, rgba(255,255,255,.98), rgba(255,255,255,.92));
-      box-shadow:0 24px 60px rgba(15,23,42,.10);
-      text-align:center;
-    }
-    .entryHeroLogoWrap{
-      width:150px;
-      height:150px;
-      margin:0 auto 18px;
-      border-radius:34px;
-      background:linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.86));
-      border:1px solid rgba(255,255,255,.85);
-      display:grid;
-      place-items:center;
-      box-shadow:
-        0 20px 50px rgba(15,23,42,.12),
-        inset 0 1px 0 rgba(255,255,255,.9);
-    }
-    .entryHeroLogo{
-      width:102px;
-      height:102px;
-      object-fit:contain;
-      filter:drop-shadow(0 10px 24px rgba(15,23,42,.14));
-    }
-    .entryOverline{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid rgba(29,78,216,.16);
-      background:rgba(255,255,255,.84);
-      color:#33527c;
-      font-size:11px;
-      font-weight:900;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-    .entryHero h2{
-      margin:14px 0 8px;
-      font-size:30px;
-      line-height:1.05;
-    }
-    .entryHeroLead{
-      max-width:520px;
-      margin:0 auto;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.55;
-    }
     .entryTabs{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:12px;
-      margin-top:20px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:10px;
     }
     .entryTab{
-      width:100%;
+      flex:1 1 220px;
       display:flex;
       align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding:16px 18px;
+      justify-content:center;
+      gap:8px;
+      padding:12px 14px;
       border:1px solid var(--line);
-      border-radius:18px;
-      background:rgba(255,255,255,.96);
+      border-radius:14px;
+      background:#fff;
       color:var(--text);
       cursor:pointer;
       font-weight:850;
-      text-align:left;
-      box-shadow:0 14px 30px rgba(15,23,42,.07);
-      transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+      box-shadow:0 8px 20px rgba(15,23,42,.06);
     }
-    .entryTab:hover{
-      border-color:rgba(29,78,216,.30);
-      transform:translateY(-1px);
-      box-shadow:0 18px 36px rgba(15,23,42,.10);
-    }
-    .entryTabMain{display:flex;flex-direction:column;gap:4px;min-width:0}
-    .entryTabTitle{font-size:15px;font-weight:900;color:var(--text)}
-    .entryTabSub{font-size:12px;color:var(--muted);font-weight:700;line-height:1.35}
-    .entryTabArrow{
-      flex:0 0 auto;
-      width:34px;
-      height:34px;
-      border-radius:12px;
-      display:grid;
-      place-items:center;
-      border:1px solid var(--line);
-      background:#fff;
-      color:var(--text);
-      font-size:18px;
-      font-weight:900;
-    }
+    .entryTab:hover{border-color:rgba(29,78,216,.35)}
     .entryTab.active{
       background:var(--softAcc);
       border-color:rgba(29,78,216,.30);
       color:#0b2a78;
     }
-    .entryTab.active .entryTabArrow{
-      border-color:rgba(29,78,216,.22);
-      background:rgba(255,255,255,.8);
-      color:#0b2a78;
-    }
-    .entryAccessCard{
-      border:1px solid var(--line);
-      border-radius:22px;
-      background:rgba(255,255,255,.96);
-      padding:18px;
-      box-shadow:0 18px 45px rgba(15,23,42,.08);
-    }
-    .entryAccessCard h2{margin:0 0 6px 0}
-    .entrySectionLead{color:var(--muted);font-size:13px;line-height:1.45;margin-bottom:10px}
     .entryIntro{
       border:1px solid var(--line);
-      border-radius:22px;
-      background:
-        radial-gradient(900px 240px at 10% 0%, rgba(29,78,216,.08), transparent 56%),
-        radial-gradient(900px 260px at 100% 100%, rgba(4,120,87,.08), transparent 58%),
-        rgba(255,255,255,.96);
-      padding:20px;
-      box-shadow:0 16px 38px rgba(15,23,42,.07);
+      border-radius:16px;
+      background:rgba(255,255,255,.96);
+      padding:12px;
+      box-shadow:0 10px 24px rgba(15,23,42,.06);
       margin-top:10px;
-      text-align:center;
-    }
-    .entryIntroLogo{
-      width:124px;
-      height:124px;
-      object-fit:contain;
-      margin:0 auto 14px;
-      display:block;
-      filter:drop-shadow(0 14px 28px rgba(15,23,42,.12));
     }
     .entryCards{
       display:grid;
       grid-template-columns:1fr;
       gap:12px;
-      margin-top:16px;
+      margin-top:12px;
     }
     @media(min-width:700px){ .entryCards{grid-template-columns:1fr 1fr;} }
     .entryCard{
       border:1px solid var(--line);
-      border-radius:20px;
-      background:rgba(255,255,255,.97);
-      padding:18px;
+      border-radius:18px;
+      background:rgba(255,255,255,.96);
+      padding:16px;
       box-shadow:0 18px 45px rgba(15,23,42,.08);
-      text-align:left;
     }
     .entryCard h3{margin:0 0 6px 0;font-size:16px;color:var(--text)}
     .entryCard p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
@@ -1732,6 +1625,152 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
     .entryBackRow{display:flex;justify-content:flex-end;margin-top:10px}
   </style>
 
+
+  <style>
+    .brandHero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:8px 4px 2px}
+    .brandHeroLogo{width:min(220px,56vw);max-width:220px;aspect-ratio:1/1;object-fit:contain;border-radius:36px;background:#fff;padding:20px;box-shadow:0 22px 60px rgba(15,23,42,.14)}
+    .brandHero h2{margin:0;font-size:28px;letter-spacing:.2px}
+    .brandHero .lead{max-width:760px;color:var(--muted);font-size:14px;line-height:1.6}
+    .heroMiniTag{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.9);font-size:12px;font-weight:800;color:var(--text);box-shadow:0 10px 24px rgba(15,23,42,.06)}
+    .welcomeSection{margin-top:18px}
+    .welcomeSection .entryCards{margin-top:12px}
+    .institutionCard{border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,255,255,.88));box-shadow:0 18px 45px rgba(15,23,42,.08);padding:18px}
+    .institutionCard h2{margin:0 0 10px 0}
+    .institutionCard p{margin:0;color:var(--muted);line-height:1.6;font-size:13px}
+    .institutionStack{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+    .institutionPill{padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:#fff;font-size:12px;color:var(--muted);box-shadow:0 10px 24px rgba(15,23,42,.05)}
+    .institutionPill b{color:var(--text)}
+    .authWrap{margin-top:18px}
+  </style>
+
+  <style>
+    /* === Área inicial pacientes === */
+    .patientPortalWrap{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+    .patientPortalHeader{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      flex-wrap:wrap;
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:rgba(255,255,255,.96);
+      padding:18px;
+      box-shadow:0 18px 45px rgba(15,23,42,.08);
+    }
+    .patientPortalHeader h2{margin:8px 0 8px 0;font-size:24px}
+    .patientPortalHeader p{margin:0;color:var(--muted);max-width:860px;line-height:1.55}
+    .patientPortalLayout{
+      display:grid;
+      grid-template-columns:280px minmax(0,1fr);
+      gap:14px;
+      align-items:start;
+    }
+    @media(max-width: 860px){
+      .patientPortalLayout{grid-template-columns:1fr}
+    }
+    .patientSideMenu{
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:rgba(255,255,255,.96);
+      padding:14px;
+      box-shadow:0 18px 45px rgba(15,23,42,.08);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .patientMenuTitle{
+      font-size:12px;
+      font-weight:900;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.04em;
+      margin-bottom:2px;
+    }
+    .patientMenuItem{
+      width:100%;
+      text-align:left;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--text);
+      border-radius:14px;
+      padding:12px 14px;
+      font-weight:800;
+      box-shadow:0 8px 20px rgba(15,23,42,.05);
+      cursor:default;
+    }
+    .patientMenuItem.active{
+      background:var(--softAcc);
+      border-color:rgba(29,78,216,.28);
+      color:#0b2a78;
+    }
+    .patientMainPanel{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      min-width:0;
+    }
+    .patientSectionCard,
+    .patientMiniCard{
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:rgba(255,255,255,.96);
+      padding:18px;
+      box-shadow:0 18px 45px rgba(15,23,42,.08);
+    }
+    .patientSectionCard h3,
+    .patientMiniCard h4{margin:0 0 8px 0}
+    .patientSectionCard p,
+    .patientMiniCard p{margin:0;color:var(--muted);line-height:1.55}
+    .patientInfoGrid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+    }
+    @media(max-width: 860px){
+      .patientInfoGrid{grid-template-columns:1fr}
+    }
+  </style>
+
+
+  <style>
+    .mayoSidebar{
+      background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(246,250,255,.96));
+      border:1px solid #d7e3f3;
+      box-shadow:0 12px 32px rgba(15,23,42,.06);
+      padding:18px 16px;
+    }
+    .mayoSidebarTop{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      padding:6px 4px 16px 4px;
+      border-bottom:1px solid rgba(215,226,240,.95);
+      margin-bottom:16px;
+    }
+    .publicBrandLogo{width:58px;height:58px;border-radius:16px;background:#fff;object-fit:contain;padding:8px;border:1px solid rgba(215,226,240,.95);box-shadow:0 8px 20px rgba(15,23,42,.04)}
+    .mayoSidebarTop h2{margin:0;font-size:20px;letter-spacing:.01em;color:#163e72}
+    .mayoSidebarTop p{margin:4px 0 0 0;font-size:12px;line-height:1.5;color:#58708f}
+    .publicNavBox{display:flex;flex-direction:column;gap:10px}
+    .publicNavTitle{font-size:11px;font-weight:900;color:#58708f;text-transform:uppercase;letter-spacing:.08em}
+    .publicNavList{display:flex;flex-direction:column;gap:6px}
+    .publicNavSection{margin-top:8px;padding-top:10px;border-top:1px solid rgba(215,226,240,.9)}
+    .publicNavSection:first-child{margin-top:0;padding-top:0;border-top:none}
+    .publicNavSectionLabel{display:block;font-size:11px;font-weight:900;color:#7b8ea8;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px 2px}
+    .publicNavBtn{width:100%;text-align:left;border:1px solid transparent;background:transparent;color:#103b6d;padding:10px 12px;border-radius:10px;font-weight:800;cursor:pointer;box-shadow:none;transition:background .15s ease,border-color .15s ease,color .15s ease}
+    .publicNavBtn:hover{background:#f2f7fc;border-color:#d7e3f3}
+    .publicNavBtn.active{background:#eaf3fb;border-color:#c6d9ee;color:#0f3b70}
+    .publicNavHint{font-size:12px;color:#6c84a3;line-height:1.45;padding:8px 2px 0 2px}
+    #privatePanelActions{display:flex;flex-direction:column;align-items:stretch;gap:6px}
+    #privatePanelActions .btn{text-align:left;justify-content:flex-start;border-radius:10px;box-shadow:none;border-color:transparent;background:transparent;padding:10px 12px;color:#103b6d}
+    #privatePanelActions .btn:hover{background:#f2f7fc;border-color:#d7e3f3}
+    #privatePanelActions .btn.primary,#privatePanelActions .btn.good,#privatePanelActions .btn.bad,#privatePanelActions .btn.warn{background:#eaf3fb;border-color:#c6d9ee;color:#0f3b70}
+  </style>
+
 </head>
 
 <body>
@@ -1741,7 +1780,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
         <img class="logo" src="https://ceovlnst.github.io/vios/og-image.png" alt="VIOS" />
         <div>
           <h1>VIOS</h1>
-          <small id="appSubtitle">Gestión de Actividad</small>
+          <small id="appSubtitle">Cirugía ortopédica y traumatología especializada</small>
         </div>
       </div>
 
@@ -1756,108 +1795,39 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
     <div class="grid">
       <!-- LEFT -->
-      <div class="card">
-        <div id="entrySelectorBox" class="entryHero">
-          <div class="entryHeroLogoWrap">
-            <img class="entryHeroLogo" src="https://ceovlnst.github.io/vios/og-image.png" alt="VIOS" />
-          </div>
-          <div class="entryOverline">Plataforma VIOS</div>
-          <h2>Bienvenido a VIOS</h2>
-          <div class="entryHeroLead">
-            Acceso unificado para pacientes y profesionales. Selecciona tu área para continuar con la misma identidad visual del entorno actual.
-          </div>
-
-          <div class="entryTabs">
-            <button class="entryTab" id="btnEntryPatients" type="button">
-              <span class="entryTabMain">
-                <span class="entryTabTitle">Acceso pacientes</span>
-                <span class="entryTabSub">Zona independiente para pacientes. La diseñaremos a continuación con su propio flujo.</span>
-              </span>
-              <span class="entryTabArrow">→</span>
-            </button>
-            <button class="entryTab" id="btnEntryProfessionals" type="button">
-              <span class="entryTabMain">
-                <span class="entryTabTitle">Acceso profesionales</span>
-                <span class="entryTabSub">Entrada al entorno actual de VIOS con PIN, recuperación de acceso y alta profesional.</span>
-              </span>
-              <span class="entryTabArrow">→</span>
-            </button>
+      <div class="card mayoSidebar">
+        <div class="mayoSidebarTop">
+          <img class="publicBrandLogo" src="https://ceovlnst.github.io/vios/og-image.png" alt="VIOS" />
+          <div>
+            <h2>VIOS</h2>
+            <p>Unidad de cirugía ortopédica y traumatología especializada. El panel lateral concentra el acceso y la navegación; la ventana principal muestra el contenido.</p>
           </div>
         </div>
 
-        <div id="patientAccessBox" class="entryAccessCard hide">
-          <h2>Acceso pacientes</h2>
-          <div class="entrySectionLead">
-            Esta zona queda preparada para la futura experiencia de pacientes. De momento funciona como puerta de entrada independiente.
-          </div>
-          <div class="msg ok">
-            Próximo paso: diseñar aquí la página específica de pacientes con el mismo estilo visual de VIOS.
-          </div>
-          <div class="entryBackRow">
-            <button class="btn small" id="btnBackToEntryFromPatients" type="button">Volver</button>
-          </div>
-        </div>
-
-        <div id="professionalAccessBox" class="entryAccessCard hide">
-          <h2>Acceso profesionales</h2>
-          <div class="entrySectionLead">
-            Acceso para cirujanos, profesionales y administración, manteniendo exactamente el flujo actual del sistema.
-          </div>
-
-          <label>PIN (contraseña)</label>
-          <input id="pinInput" type="password" inputmode="numeric" placeholder="Introduce tu PIN" />
-
-          <div class="actions">
-            <button class="btn primary" id="btnLogin">Entrar</button>
-            <button class="btn" id="btnClear">Limpiar</button>
-          </div>
-
-          <div id="msgLogin" class="msg hide"></div>
-
-          <div class="hr"></div>
-
-          <h3 style="margin:0 0 8px 0">¿Olvidaste tu PIN?</h3>
-          <div class="row" style="gap:10px;flex-wrap:wrap;align-items:flex-end">
-            <div style="flex:1;min-width:240px">
-              <label>Email</label>
-              <input id="recoverEmail" type="email" placeholder="Correo Electrónico" />
+        <div id="publicNavBox" class="publicNavBox">
+          <div class="publicNavTitle" id="publicNavTitle">Navegación</div>
+          <div class="publicNavList" id="publicNavList">
+            <div class="publicNavSection">
+              <button class="publicNavBtn active" id="btnPublicHome" type="button">Inicio VIOS</button>
             </div>
-            <div class="actions" style="margin-top:26px">
-              <button class="btn" id="btnRecoverPin">Enviar PIN</button>
+            <div class="publicNavSection">
+              <span class="publicNavSectionLabel">Profesionales</span>
+              <button class="publicNavBtn" id="btnPublicProfessionals" type="button">Acceso profesionales</button>
+              <button class="publicNavBtn" id="btnPublicSignup" type="button">Darme de alta</button>
+              <button class="publicNavBtn" id="btnPublicRecover" type="button">Recuperar PIN</button>
+            </div>
+            <div class="publicNavSection">
+              <span class="publicNavSectionLabel">Pacientes</span>
+              <button class="publicNavBtn" id="btnPublicPatients" type="button">Área pacientes</button>
             </div>
           </div>
-          <div id="msgRecover" class="msg hide"></div>
-
-          <div class="hr"></div>
-
-          <div class="actions">
-            <button class="btn" id="btnToggleSignup">Darme de alta</button>
-          </div>
-
-          <div id="signupBox" class="hide">
-            <h3 style="margin-top:10px">Alta profesional</h3>
-
-            <label>Nombre</label><input id="suNombre" placeholder="Nombre" />
-            <label>Apellidos</label><input id="suApellidos" placeholder="Apellidos" />
-            <label>Servicio / Especialidad</label><select id="suEsp"></select>
-            <label>Correo</label><input id="suCorreo" placeholder="Correo electrónico" />
-            <label>Teléfono</label><input id="suTel" placeholder="Teléfono" />
-
-            <div class="actions">
-              <button class="btn good" id="btnSignup">Completar alta</button>
-            </div>
-            <div id="msgSignup" class="msg hide"></div>
-          </div>
-
-          <div class="entryBackRow">
-            <button class="btn small" id="btnBackToEntryFromProfessionals" type="button">Volver</button>
-          </div>
+          <div class="publicNavHint" id="publicNavHint">Selecciona una opción para mostrar el contenido en la ventana principal.</div>
         </div>
 
         <div class="hr"></div>
 
-        <h2>Panel</h2>
-        <div class="actions">
+        <div class="publicNavTitle">Entorno interno</div>
+        <div class="actions" id="privatePanelActions">
           <button class="btn hide" id="btnGoReserve">Solicitud de Actividad</button>
           <button class="btn hide" id="btnGoMine">Mis solicitudes</button>
 
@@ -2353,33 +2323,139 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
         <!-- DEFAULT -->
         <div id="viewWelcome">
-          <h2>Primera página</h2>
-          <div class="entryIntro">
-            <img class="entryIntroLogo" src="https://ceovlnst.github.io/vios/og-image.png" alt="VIOS" />
-            <div class="entryOverline">Gestión de actividad</div>
-            <h2 style="margin:14px 0 8px 0;font-size:28px;line-height:1.05">Una entrada común para todo VIOS</h2>
-            <div class="entryHeroLead" style="max-width:620px">
-              La portada separa claramente el acceso de pacientes y el acceso de profesionales, sin perder el lenguaje visual actual ni la lógica ya implementada para los usuarios internos.
+          <div id="heroInicio" class="brandHero">
+            <div class="heroMiniTag">VIOS · Cirugía ortopédica y traumatología especializada</div>
+            <img class="brandHeroLogo" src="https://ceovlnst.github.io/vios/og-image.png" alt="VIOS" />
+            <h2>Bienvenido a VIOS</h2>
+            <div class="lead">
+              Página principal de VIOS, una unidad especializada en cirugía ortopédica y traumatología avanzada.
+              Selecciona el tipo de acceso para entrar en el entorno profesional o en la primera versión del área de pacientes.
+            </div>
+          </div>
+
+          <div id="entrySelectorBox" class="welcomeSection">
+            <div class="patientSectionCard">
+              <h3>Unidad clínica especializada</h3>
+              <p>
+                VIOS se presenta como la página principal de un equipo dedicado a la cirugía ortopédica y traumatología especializada.
+                Desde aquí se articula una experiencia diferenciada para el paciente y una entrada profesional para la coordinación asistencial,
+                la actividad quirúrgica y la organización clínica.
+              </p>
+              <p style="margin-top:10px">
+                Utiliza el panel lateral para desplazarte entre el acceso profesional, la información para pacientes y las distintas secciones que vayan creciendo dentro del proyecto.
+              </p>
+            </div>
+          </div>
+
+          <div id="patientAccessBox" class="hide patientPortalWrap">
+            <div class="patientPortalHeader">
+              <div>
+                <div class="entryBadge">PACIENTES</div>
+                <h2>Bienvenida para pacientes</h2>
+                <p>
+                  Bienvenido a la primera versión del espacio para pacientes de VIOS. Esta página está pensada para ofrecer una entrada clara,
+                  elegante y profesional a un equipo centrado en cirugía ortopédica y traumatología especializada.
+                </p>
+              </div>
             </div>
 
-            <div class="entryCards">
-              <div class="entryCard">
-                <div class="entryBadge">PACIENTES</div>
-                <h3>Acceso pacientes</h3>
-                <p>Espacio reservado para la futura experiencia de pacientes, con su flujo específico y diferenciado del entorno profesional.</p>
-                <div class="actions">
-                  <button class="btn" id="btnWelcomePatients" type="button">Entrar como paciente</button>
-                </div>
-              </div>
+            <div class="patientMainPanel">
+              <section id="patientSectionIntro" class="patientSectionCard">
+                <h3>VIOS · Ortopedia y traumatología especializada</h3>
+                <p>
+                  VIOS reúne actividad clínica, superespecialización quirúrgica y una visión moderna de la atención al paciente.
+                  La idea de esta portada es que desde el primer contacto se perciba una identidad médica sólida, cercana y de alto nivel.
+                </p>
+                <p style="margin-top:10px">
+                  En esta fase inicial, el menú lateral te permite navegar por los grandes bloques que iremos desarrollando:
+                  equipo, localización asistencial, áreas de especialización y el componente de experiencia e innovación que define al proyecto.
+                </p>
+              </section>
 
-              <div class="entryCard">
-                <div class="entryBadge">PROFESIONALES</div>
-                <h3>Acceso profesionales</h3>
-                <p>Acceso directo al entorno actual de VIOS para cirujanos, profesionales y administración, con el mismo flujo de PIN y alta.</p>
-                <div class="actions">
-                  <button class="btn primary" id="btnWelcomeProfessionals" type="button">Entrar como profesional</button>
-                </div>
+              <section id="patientSectionTeam" class="patientSectionCard hide">
+                <h3>Equipo</h3>
+                <p>
+                  Este apartado estará dedicado a presentar al equipo médico y quirúrgico de VIOS, destacando su perfil en cirugía ortopédica,
+                  traumatología especializada y atención personalizada al paciente. La intención es transmitir confianza, criterio clínico y cercanía.
+                </p>
+              </section>
+
+              <section id="patientSectionLocation" class="patientSectionCard hide">
+                <h3>Dónde estamos</h3>
+                <p>
+                  Aquí se mostrará la localización asistencial del equipo, los centros de atención, la información práctica de acceso y los puntos de referencia
+                  que faciliten al paciente orientarse con claridad antes de su consulta o tratamiento.
+                </p>
+              </section>
+
+              <section id="patientSectionAreas" class="patientSectionCard hide">
+                <h3>Áreas de Especialización</h3>
+                <p>
+                  Esta sección se enfocará en las principales líneas asistenciales del equipo: patología de hombro, rodilla, cadera, medicina deportiva,
+                  cirugía reconstructiva, artroscopia avanzada y otras áreas de subespecialización propias de una unidad de alto nivel.
+                </p>
+              </section>
+
+              <section id="patientSectionInnovation" class="patientSectionCard hide">
+                <h3>Experiencia e Innovación</h3>
+                <p>
+                  VIOS quiere mostrar también su orientación hacia la cirugía avanzada, la innovación tecnológica, la planificación de precisión y la mejora continua,
+                  integrando experiencia clínica y visión moderna del tratamiento traumatológico y ortopédico.
+                </p>
+              </section>
+            </div>
+          </div>
+
+          <div id="professionalAccessBox" class="hide authWrap">
+            <h2>Acceso profesionales</h2>
+
+            <label>PIN (contraseña)</label>
+            <input id="pinInput" type="password" inputmode="numeric" placeholder="Introduce tu PIN" />
+
+            <div class="actions">
+              <button class="btn primary" id="btnLogin">Entrar</button>
+              <button class="btn" id="btnClear">Limpiar</button>
+            </div>
+
+            <div id="msgLogin" class="msg hide"></div>
+
+            <div class="hr"></div>
+
+            <h3 style="margin:0 0 8px 0">¿Olvidaste tu PIN?</h3>
+            <div class="row" style="gap:10px;flex-wrap:wrap;align-items:flex-end">
+              <div style="flex:1;min-width:240px">
+                <label>Email</label>
+                <input id="recoverEmail" type="email" placeholder="Correo Electrónico" />
               </div>
+              <div class="actions" style="margin-top:26px">
+                <button class="btn" id="btnRecoverPin">Enviar PIN</button>
+              </div>
+            </div>
+            <div id="msgRecover" class="msg hide"></div>
+
+            <div class="hr"></div>
+
+            <div class="actions">
+              <button class="btn" id="btnToggleSignup">Darme de alta</button>
+            </div>
+
+            <div id="signupBox" class="hide">
+              <h3 style="margin-top:10px">Alta profesional</h3>
+
+              <label>Nombre</label><input id="suNombre" placeholder="Nombre" />
+              <label>Apellidos</label><input id="suApellidos" placeholder="Apellidos" />
+              <label>Rol</label><select id="suEsp"></select>
+              <label>Correo</label><input id="suCorreo" placeholder="Correo electrónico" />
+              <label>Teléfono</label><input id="suTel" placeholder="Teléfono" />
+
+              <div class="actions">
+                <button class="btn good" id="btnSignup">Completar alta</button>
+              </div>
+              <div id="msgSignup" class="msg hide"></div>
+            </div>
+
+            <div class="entryBackRow">
+              <button class="btn small" id="btnBackToEntryFromProfessionals" type="button">Volver</button>
             </div>
           </div>
         </div>
@@ -2496,29 +2572,18 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
     return raw;
   }
-const SPECIALTIES = [
-    "Traumatología y Cirugía Ortopédica",
-    "Cirugía General y Digestiva",
-    "Anestesiología y Reanimación",
-    "Ginecología y Obstetricia",
-    "Urología",
-    "Oftalmología",
-    "Otorrinolaringología (ORL)",
-    "Neurocirugía",
-    "Cirugía Vascular",
-    "Cirugía Torácica",
-    "Cirugía Cardíaca",
-    "Cirugía Plástica, Estética y Reparadora",
-    "Cirugía Maxilofacial",
-    "Cirugía Pediátrica",
-    "Otros"
+const PROFESSIONAL_ROLES = [
+    "Cirujano",
+    "Administrador",
+    "Enfermería",
+    "Anestesia"
   ];
 
   function fillSpecialties(){
     const sel = $("suEsp");
     if(!sel) return;
     if(sel.dataset.filled) return;
-    sel.innerHTML = '<option value="">(Selecciona)</option>' + SPECIALTIES.map(s=>`<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join("");
+    sel.innerHTML = '<option value="">(Selecciona un rol)</option>' + PROFESSIONAL_ROLES.map(s=>`<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join("");
     sel.dataset.filled = "1";
   }
 
@@ -2577,7 +2642,7 @@ const SPECIALTIES = [
     // Subtítulo dinámico
     const sub = $("appSubtitle");
     if(sub){
-      sub.textContent = S.isMaster ? "Gestión de Actividad VIOS" : "Gestión de Actividad";
+      sub.textContent = S.isMaster ? "VIOS · Gestión y coordinación clínica" : "VIOS · Cirugía ortopédica y traumatología especializada";
     }
 
     document.body.classList.toggle("master", !!S.isMaster);
@@ -2591,18 +2656,144 @@ const SPECIALTIES = [
     hideAllViews();
     $(viewId).classList.remove("hide");
   }
-  function setEntryMode(mode){
+  S.publicMode = "home";
+  S.patientSection = "intro";
+
+  function setPublicNavActive(btnIds){
+    const ids = ["btnPublicHome","btnPublicProfessionals","btnPublicSignup","btnPublicRecover","btnPublicPatients","btnPatientMenuTeam","btnPatientMenuLocation","btnPatientMenuAreas","btnPatientMenuInnovation"];
+    ids.forEach(id=>{ const el=$(id); if(el) el.classList.remove("active"); });
+    (Array.isArray(btnIds)?btnIds:[btnIds]).filter(Boolean).forEach(id=>{ const el=$(id); if(el) el.classList.add("active"); });
+  }
+
+  function showPatientSection(section){
+    S.patientSection = section || "intro";
+    ["patientSectionIntro","patientSectionTeam","patientSectionLocation","patientSectionAreas","patientSectionInnovation"].forEach(id=>{ const el=$(id); if(el) el.classList.add("hide"); });
+    const map = {
+      intro:"patientSectionIntro",
+      team:"patientSectionTeam",
+      location:"patientSectionLocation",
+      areas:"patientSectionAreas",
+      innovation:"patientSectionInnovation"
+    };
+    const target = $(map[S.patientSection] || "patientSectionIntro");
+    if(target) target.classList.remove("hide");
+    const activeMap = {
+      intro:"btnPublicPatients",
+      team:"btnPatientMenuTeam",
+      location:"btnPatientMenuLocation",
+      areas:"btnPatientMenuAreas",
+      innovation:"btnPatientMenuInnovation"
+    };
+    setPublicNavActive(activeMap[S.patientSection] || "btnPublicPatients");
+  }
+
+  function renderPublicSidebar(){
+    const list = $("publicNavList");
+    const title = $("publicNavTitle");
+    const hint = $("publicNavHint");
+    if(!list) return;
+
+    if(S.pin){
+      if(title) title.textContent = "Entorno interno";
+      if(hint) hint.textContent = "Acceso activo. Utiliza las opciones del panel y las herramientas disponibles según tu perfil.";
+      setPublicNavActive([]);
+      return;
+    }
+
+    if(S.publicMode === "patients"){
+      if(title) title.textContent = "Área pacientes";
+      list.innerHTML = `
+        <div class="publicNavSection">
+          <button class="publicNavBtn" id="btnPublicHome" type="button">Inicio VIOS</button>
+        </div>
+        <div class="publicNavSection">
+          <span class="publicNavSectionLabel">Pacientes</span>
+          <button class="publicNavBtn" id="btnPublicPatients" type="button">Bienvenida pacientes</button>
+          <button class="publicNavBtn" id="btnPatientMenuTeam" type="button">Equipo</button>
+          <button class="publicNavBtn" id="btnPatientMenuLocation" type="button">Dónde estamos</button>
+          <button class="publicNavBtn" id="btnPatientMenuAreas" type="button">Áreas de Especialización</button>
+          <button class="publicNavBtn" id="btnPatientMenuInnovation" type="button">Experiencia e Innovación</button>
+        </div>
+        <div class="publicNavSection">
+          <span class="publicNavSectionLabel">Profesionales</span>
+          <button class="publicNavBtn" id="btnPublicProfessionals" type="button">Acceso profesionales</button>
+        </div>
+      `;
+      if(hint) hint.textContent = "Las secciones de pacientes se seleccionan aquí y se muestran en la ventana principal.";
+      if($("btnPublicHome")) $("btnPublicHome").onclick = openEntryLanding;
+      if($("btnPublicPatients")) $("btnPublicPatients").onclick = ()=>openPatientsEntry("intro");
+      if($("btnPublicProfessionals")) $("btnPublicProfessionals").onclick = openProfessionalsEntry;
+      if($("btnPatientMenuTeam")) $("btnPatientMenuTeam").onclick = ()=>openPatientsEntry("team");
+      if($("btnPatientMenuLocation")) $("btnPatientMenuLocation").onclick = ()=>openPatientsEntry("location");
+      if($("btnPatientMenuAreas")) $("btnPatientMenuAreas").onclick = ()=>openPatientsEntry("areas");
+      if($("btnPatientMenuInnovation")) $("btnPatientMenuInnovation").onclick = ()=>openPatientsEntry("innovation");
+      showPatientSection(S.patientSection || "intro");
+      return;
+    }
+
+    if(S.publicMode === "professionals"){
+      if(title) title.textContent = "Profesionales";
+      list.innerHTML = `
+        <div class="publicNavSection">
+          <button class="publicNavBtn" id="btnPublicHome" type="button">Inicio VIOS</button>
+        </div>
+        <div class="publicNavSection">
+          <span class="publicNavSectionLabel">Profesionales</span>
+          <button class="publicNavBtn" id="btnPublicProfessionals" type="button">Login profesional</button>
+          <button class="publicNavBtn" id="btnPublicSignup" type="button">Darme de alta</button>
+          <button class="publicNavBtn" id="btnPublicRecover" type="button">Recuperar PIN</button>
+        </div>
+        <div class="publicNavSection">
+          <span class="publicNavSectionLabel">Pacientes</span>
+          <button class="publicNavBtn" id="btnPublicPatients" type="button">Área pacientes</button>
+        </div>
+      `;
+      if(hint) hint.textContent = "Desde este panel puedes mostrar el login, el alta profesional o la recuperación de PIN en la ventana principal.";
+      if($("btnPublicHome")) $("btnPublicHome").onclick = openEntryLanding;
+      if($("btnPublicProfessionals")) $("btnPublicProfessionals").onclick = ()=>openProfessionalsEntry("login");
+      if($("btnPublicSignup")) $("btnPublicSignup").onclick = ()=>openProfessionalsEntry("signup");
+      if($("btnPublicRecover")) $("btnPublicRecover").onclick = ()=>openProfessionalsEntry("recover");
+      if($("btnPublicPatients")) $("btnPublicPatients").onclick = ()=>openPatientsEntry("intro");
+      setPublicNavActive([S.profSubMode === "signup" ? "btnPublicSignup" : S.profSubMode === "recover" ? "btnPublicRecover" : "btnPublicProfessionals"]);
+      return;
+    }
+
+    if(title) title.textContent = "Navegación";
+    list.innerHTML = `
+      <div class="publicNavSection">
+        <button class="publicNavBtn" id="btnPublicHome" type="button">Inicio VIOS</button>
+      </div>
+      <div class="publicNavSection">
+        <span class="publicNavSectionLabel">Profesionales</span>
+        <button class="publicNavBtn" id="btnPublicProfessionals" type="button">Acceso profesionales</button>
+        <button class="publicNavBtn" id="btnPublicSignup" type="button">Darme de alta</button>
+        <button class="publicNavBtn" id="btnPublicRecover" type="button">Recuperar PIN</button>
+      </div>
+      <div class="publicNavSection">
+        <span class="publicNavSectionLabel">Pacientes</span>
+        <button class="publicNavBtn" id="btnPublicPatients" type="button">Área pacientes</button>
+      </div>
+    `;
+    if(hint) hint.textContent = "Accede desde este panel y utiliza la ventana principal como espacio de contenido.";
+    if($("btnPublicHome")) $("btnPublicHome").onclick = openEntryLanding;
+    if($("btnPublicProfessionals")) $("btnPublicProfessionals").onclick = ()=>openProfessionalsEntry("login");
+    if($("btnPublicSignup")) $("btnPublicSignup").onclick = ()=>openProfessionalsEntry("signup");
+    if($("btnPublicRecover")) $("btnPublicRecover").onclick = ()=>openProfessionalsEntry("recover");
+    if($("btnPublicPatients")) $("btnPublicPatients").onclick = ()=>openPatientsEntry("intro");
+    setPublicNavActive("btnPublicHome");
+  }
+
+  function setEntryMode(mode, submode){
+    S.publicMode = mode || "home";
+    if(mode === "professionals") S.profSubMode = submode || "login";
+    const hero = $("heroInicio");
     const entry = $("entrySelectorBox");
     const prof = $("professionalAccessBox");
     const pat = $("patientAccessBox");
-    const btnPat = $("btnEntryPatients");
-    const btnProf = $("btnEntryProfessionals");
-
+    if(hero) hero.classList.toggle("hide", !!mode);
     if(entry) entry.classList.toggle("hide", !!mode);
     if(prof) prof.classList.toggle("hide", mode !== "professionals");
     if(pat) pat.classList.toggle("hide", mode !== "patients");
-    if(btnPat) btnPat.classList.toggle("active", mode === "patients");
-    if(btnProf) btnProf.classList.toggle("active", mode === "professionals");
 
     if(!mode){
       hideMsg($("msgLogin"));
@@ -2610,15 +2801,28 @@ const SPECIALTIES = [
       hideMsg($("msgSignup"));
       if($("signupBox")) $("signupBox").classList.add("hide");
     }
+
+    if(mode === "professionals"){
+      if($("signupBox")) $("signupBox").classList.toggle("hide", S.profSubMode !== "signup");
+      if(S.profSubMode === "recover" && $("recoverEmail")) $("recoverEmail").focus();
+      if(S.profSubMode === "login" && $("pinInput")) $("pinInput").focus();
+      if(S.profSubMode === "signup") fillSpecialties();
+    }
+
+    if(mode === "patients"){
+      showPatientSection(S.patientSection || submode || "intro");
+    }
+
+    renderPublicSidebar();
   }
-  function openProfessionalsEntry(){
+  function openProfessionalsEntry(submode){
     go("viewWelcome");
-    setEntryMode("professionals");
-    if($("pinInput")) $("pinInput").focus();
+    setEntryMode("professionals", submode || "login");
   }
-  function openPatientsEntry(){
+  function openPatientsEntry(section){
+    S.patientSection = section || "intro";
     go("viewWelcome");
-    setEntryMode("patients");
+    setEntryMode("patients", S.patientSection);
   }
   function openEntryLanding(){
     go("viewWelcome");
@@ -6668,10 +6872,6 @@ function openStructReportBlockModal(info){
     if($("btnSignup")) $("btnSignup").onclick = signup;
     if($("btnRecoverPin")) $("btnRecoverPin").onclick = recoverPin;
 
-    if($("btnEntryPatients")) $("btnEntryPatients").onclick = openPatientsEntry;
-    if($("btnEntryProfessionals")) $("btnEntryProfessionals").onclick = openProfessionalsEntry;
-    if($("btnWelcomePatients")) $("btnWelcomePatients").onclick = openPatientsEntry;
-    if($("btnWelcomeProfessionals")) $("btnWelcomeProfessionals").onclick = openProfessionalsEntry;
     if($("btnBackToEntryFromPatients")) $("btnBackToEntryFromPatients").onclick = openEntryLanding;
     if($("btnBackToEntryFromProfessionals")) $("btnBackToEntryFromProfessionals").onclick = openEntryLanding;
 
