@@ -1813,8 +1813,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
             <div class="publicNavSection">
               <span class="publicNavSectionLabel">Profesionales</span>
               <button class="publicNavBtn" id="btnPublicProfessionals" type="button">Acceso profesionales</button>
-              <button class="publicNavBtn" id="btnPublicSignup" type="button">Darme de alta</button>
-              <button class="publicNavBtn" id="btnPublicRecover" type="button">Recuperar PIN</button>
+                            <button class="publicNavBtn" id="btnPublicRecover" type="button">Recuperar PIN</button>
             </div>
             <div class="publicNavSection">
               <span class="publicNavSectionLabel">Pacientes</span>
@@ -1837,6 +1836,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
           <button class="btn hide" id="btnGoStruct">Gestor de Actividad</button>
           <button class="btn hide" id="btnGoWait">Lista de espera</button>
           <button class="btn hide" id="btnGoReport">Reporte</button>
+          <button class="btn hide" id="btnGoAdminSignup">Alta profesional</button>
         </div>
 
         <div id="msgMenu" class="msg hide"></div>
@@ -2436,7 +2436,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
             <div class="hr"></div>
 
             <div class="actions">
-              <button class="btn" id="btnToggleSignup">Darme de alta</button>
+              <button class="btn hide" id="btnToggleSignup">Alta profesional</button>
             </div>
 
             <div id="signupBox" class="hide">
@@ -2660,7 +2660,7 @@ const PROFESSIONAL_ROLES = [
   S.patientSection = "intro";
 
   function setPublicNavActive(btnIds){
-    const ids = ["btnPublicHome","btnPublicProfessionals","btnPublicSignup","btnPublicRecover","btnPublicPatients","btnPatientMenuTeam","btnPatientMenuLocation","btnPatientMenuAreas","btnPatientMenuInnovation"];
+    const ids = ["btnPublicHome","btnPublicProfessionals","btnPublicRecover","btnPublicPatients","btnPatientMenuTeam","btnPatientMenuLocation","btnPatientMenuAreas","btnPatientMenuInnovation"];
     ids.forEach(id=>{ const el=$(id); if(el) el.classList.remove("active"); });
     (Array.isArray(btnIds)?btnIds:[btnIds]).filter(Boolean).forEach(id=>{ const el=$(id); if(el) el.classList.add("active"); });
   }
@@ -2740,21 +2740,19 @@ const PROFESSIONAL_ROLES = [
         <div class="publicNavSection">
           <span class="publicNavSectionLabel">Profesionales</span>
           <button class="publicNavBtn" id="btnPublicProfessionals" type="button">Login profesional</button>
-          <button class="publicNavBtn" id="btnPublicSignup" type="button">Darme de alta</button>
-          <button class="publicNavBtn" id="btnPublicRecover" type="button">Recuperar PIN</button>
+                    <button class="publicNavBtn" id="btnPublicRecover" type="button">Recuperar PIN</button>
         </div>
         <div class="publicNavSection">
           <span class="publicNavSectionLabel">Pacientes</span>
           <button class="publicNavBtn" id="btnPublicPatients" type="button">Área pacientes</button>
         </div>
       `;
-      if(hint) hint.textContent = "Desde este panel puedes mostrar el login, el alta profesional o la recuperación de PIN en la ventana principal.";
+      if(hint) hint.textContent = "Desde este panel puedes mostrar el login profesional o la recuperación de PIN en la ventana principal.";
       if($("btnPublicHome")) $("btnPublicHome").onclick = openEntryLanding;
       if($("btnPublicProfessionals")) $("btnPublicProfessionals").onclick = ()=>openProfessionalsEntry("login");
-      if($("btnPublicSignup")) $("btnPublicSignup").onclick = ()=>openProfessionalsEntry("signup");
       if($("btnPublicRecover")) $("btnPublicRecover").onclick = ()=>openProfessionalsEntry("recover");
       if($("btnPublicPatients")) $("btnPublicPatients").onclick = ()=>openPatientsEntry("intro");
-      setPublicNavActive([S.profSubMode === "signup" ? "btnPublicSignup" : S.profSubMode === "recover" ? "btnPublicRecover" : "btnPublicProfessionals"]);
+      setPublicNavActive([S.profSubMode === "recover" ? "btnPublicRecover" : "btnPublicProfessionals"]);
       return;
     }
 
@@ -2766,8 +2764,7 @@ const PROFESSIONAL_ROLES = [
       <div class="publicNavSection">
         <span class="publicNavSectionLabel">Profesionales</span>
         <button class="publicNavBtn" id="btnPublicProfessionals" type="button">Acceso profesionales</button>
-        <button class="publicNavBtn" id="btnPublicSignup" type="button">Darme de alta</button>
-        <button class="publicNavBtn" id="btnPublicRecover" type="button">Recuperar PIN</button>
+                <button class="publicNavBtn" id="btnPublicRecover" type="button">Recuperar PIN</button>
       </div>
       <div class="publicNavSection">
         <span class="publicNavSectionLabel">Pacientes</span>
@@ -2803,6 +2800,9 @@ const PROFESSIONAL_ROLES = [
     }
 
     if(mode === "professionals"){
+      const canAdminSignup = !!S.pin && isMaster();
+      if($("btnToggleSignup")) $("btnToggleSignup").classList.toggle("hide", !canAdminSignup);
+      if(!canAdminSignup && S.profSubMode === "signup") S.profSubMode = "login";
       if($("signupBox")) $("signupBox").classList.toggle("hide", S.profSubMode !== "signup");
       if(S.profSubMode === "recover" && $("recoverEmail")) $("recoverEmail").focus();
       if(S.profSubMode === "login" && $("pinInput")) $("pinInput").focus();
@@ -2900,6 +2900,7 @@ $("btnGoGrid").classList.toggle("hide", !S.pin);
     $("btnGoStruct").classList.toggle("hide", !S.pin || !master);
     $("btnGoWait").classList.toggle("hide", !S.pin || !master);
     $("btnGoReport").classList.toggle("hide", !S.pin || !master);
+    if($("btnGoAdminSignup")) $("btnGoAdminSignup").classList.toggle("hide", !S.pin || !master);
   }
 
   function todayISO(){
@@ -3450,17 +3451,123 @@ S.doctor = doc;
     });
   }
 
-  function doPunchIn(){
+  function buildDeviceInfo_(){
+    const host = window.location.hostname || window.location.host || "";
+    const ua = navigator.userAgent || "";
+    return `${host} – ${ua}`;
+  }
+
+  function buildMapsUrl_(lat, lon){
+    if(!Number.isFinite(lat) || !Number.isFinite(lon)) return "";
+    return `https://www.google.com/maps?q=${encodeURIComponent(lat + "," + lon)}`;
+  }
+
+  async function reverseGeocodeText_(lat, lon){
+    if(!Number.isFinite(lat) || !Number.isFinite(lon)) return "";
+    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&zoom=18&addressdetails=1`;
+    try{
+      const ctl = new AbortController();
+      const timer = setTimeout(()=>ctl.abort(), 5000);
+      const resp = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Accept": "application/json",
+          "Accept-Language": "es"
+        },
+        signal: ctl.signal
+      });
+      clearTimeout(timer);
+      if(!resp.ok) throw new Error("Geocodificación inversa no disponible");
+      const data = await resp.json();
+      const a = data?.address || {};
+      const pieces = [
+        a.road || a.pedestrian || a.footway || a.cycleway || a.path || "",
+        a.house_number || "",
+        a.suburb || a.neighbourhood || a.city_district || "",
+        a.city || a.town || a.village || a.municipality || "",
+        a.state || "",
+        a.country || ""
+      ].map(x=>String(x||"").trim()).filter(Boolean);
+      const txt = pieces.join(", ") || String(data?.display_name || "").trim();
+      return txt;
+    }catch(_e){
+      return "";
+    }
+  }
+
+  function getCurrentPositionPromise_(options){
+    return new Promise((resolve, reject)=>{
+      if(!navigator.geolocation){
+        reject(new Error("Geolocalización no disponible en este dispositivo."));
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(resolve, reject, options || {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000
+      });
+    });
+  }
+
+  async function buildPunchContext_(){
+    const deviceInfo = buildDeviceInfo_();
+    const base = {
+      deviceInfo,
+      locationText: "",
+      mapsUrl: "",
+      latitude: "",
+      longitude: "",
+      accuracyM: "",
+      geoStatus: "UNAVAILABLE"
+    };
+
+    try{
+      const pos = await getCurrentPositionPromise_({
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000
+      });
+      const lat = Number(pos?.coords?.latitude);
+      const lon = Number(pos?.coords?.longitude);
+      const acc = Number(pos?.coords?.accuracy);
+      const mapsUrl = buildMapsUrl_(lat, lon);
+      let locationText = await reverseGeocodeText_(lat, lon);
+      if(!locationText){
+        const accTxt = Number.isFinite(acc) ? ` (±${Math.round(acc)} m)` : "";
+        locationText = `Ubicación aproximada: ${lat.toFixed(6)}, ${lon.toFixed(6)}${accTxt}`;
+      }
+      return {
+        deviceInfo,
+        locationText,
+        mapsUrl,
+        latitude: Number.isFinite(lat) ? lat : "",
+        longitude: Number.isFinite(lon) ? lon : "",
+        accuracyM: Number.isFinite(acc) ? acc : "",
+        geoStatus: "OK"
+      };
+    }catch(err){
+      const code = err && typeof err.code !== "undefined" ? Number(err.code) : null;
+      let geoStatus = "DENIED";
+      if(code === 2) geoStatus = "UNAVAILABLE";
+      else if(code === 3) geoStatus = "TIMEOUT";
+      else if(code === 1) geoStatus = "DENIED";
+      return {
+        ...base,
+        geoStatus
+      };
+    }
+  }
+
+  async function doPunchIn(){
     hideMsg($("msgTime"));
     const note = ($("timeNote").value || "").trim();
-    const loc  = `${window.location.hostname || ""} – ${navigator.userAgent || ""}`;
-    callGAS("punchIn", [S.pin, note, loc], {
+    const ctx = await buildPunchContext_();
+    callGAS("punchIn", [S.pin, note, ctx], {
       key:"punchIn",
       disable:[$("btnPunchIn"), $("btnPunchOut")],
       msg:"Registrando entrada…",
       onSuccess:(res)=>{
         showMsg($("msgTime"), res?.message || "Entrada registrada.", "ok");
-        // Forzamos estado local mientras refresca
         $("btnPunchIn").disabled = true;
         $("btnPunchOut").disabled = false;
         refreshTimeStatus();
@@ -3469,17 +3576,16 @@ S.doctor = doc;
     });
   }
 
-  function doPunchOut(){
+  async function doPunchOut(){
     hideMsg($("msgTime"));
     const note = ($("timeNote").value || "").trim();
-    const loc  = `${window.location.hostname || ""} – ${navigator.userAgent || ""}`;
-    callGAS("punchOut", [S.pin, note, loc], {
+    const ctx = await buildPunchContext_();
+    callGAS("punchOut", [S.pin, note, ctx], {
       key:"punchOut",
       disable:[$("btnPunchIn"), $("btnPunchOut")],
       msg:"Registrando salida…",
       onSuccess:(res)=>{
         showMsg($("msgTime"), res?.message || "Salida registrada.", "ok");
-        // Forzamos estado local mientras refresca
         $("btnPunchIn").disabled = false;
         $("btnPunchOut").disabled = true;
         refreshTimeStatus();
@@ -6893,6 +6999,7 @@ function openStructReportBlockModal(info){
 
     if($("btnGoWait")) $("btnGoWait").onclick    = openWaitlist;
     if($("btnGoReport")) $("btnGoReport").onclick  = ()=>go("viewReport");
+    if($("btnGoAdminSignup")) $("btnGoAdminSignup").onclick = ()=>{ go("viewWelcome"); setEntryMode("professionals","signup"); };
 
 
     // Control horario - extra
