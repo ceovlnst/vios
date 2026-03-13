@@ -1813,8 +1813,7 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
             <div class="publicNavSection">
               <span class="publicNavSectionLabel">Profesionales</span>
               <button class="publicNavBtn" id="btnPublicProfessionals" type="button">Acceso profesionales</button>
-                            <button class="publicNavBtn" id="btnPublicRecover" type="button">Recuperar PIN</button>
-            </div>
+                                        </div>
             <div class="publicNavSection">
               <span class="publicNavSectionLabel">Pacientes</span>
               <button class="publicNavBtn" id="btnPublicPatients" type="button">Área pacientes</button>
@@ -1825,13 +1824,13 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
         <div class="hr"></div>
 
-        <div class="publicNavTitle">Entorno interno</div>
         <div class="actions" id="privatePanelActions">
           <button class="btn hide" id="btnGoReserve">Solicitud de Actividad</button>
           <button class="btn hide" id="btnGoMine">Mis solicitudes</button>
 
           <button class="btn hide" id="btnGoTime">Control horario</button>
           <button class="btn hide" id="btnGoPin">Cambiar PIN</button>
+          <button class="btn hide" id="btnGoRecoverAccess">Recuperar PIN</button>
           <button class="btn hide" id="btnGoGrid">Calendario</button>
           <button class="btn hide" id="btnGoStruct">Gestor de Actividad</button>
           <button class="btn hide" id="btnGoWait">Lista de espera</button>
@@ -1939,6 +1938,24 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
             </div>
           </div>
           <div id="msgChangePin" class="msg hide"></div>
+        </div>
+
+        <div id="viewRecover" class="hide">
+          <h2>Recuperar PIN</h2>
+          <div class="msg" style="margin-bottom:10px">
+            Si has olvidado tu PIN, introduce tu correo profesional y te enviaremos tus credenciales al email registrado.
+          </div>
+
+          <div class="row" style="gap:12px;flex-wrap:wrap;align-items:flex-end">
+            <div style="flex:1;min-width:240px">
+              <label>Email</label>
+              <input id="recoverEmail" type="email" placeholder="Correo Electrónico" />
+            </div>
+            <div class="actions" style="margin-top:26px">
+              <button class="btn" id="btnRecoverPin">Enviar PIN</button>
+            </div>
+          </div>
+          <div id="msgRecover" class="msg hide"></div>
         </div>
 
 <div id="viewReserve" class="hide">
@@ -2421,20 +2438,6 @@ details[open] .gTeamChevron{ transform: rotate(180deg); transition:.15s ease; }
 
             <div class="hr"></div>
 
-            <h3 style="margin:0 0 8px 0">¿Olvidaste tu PIN?</h3>
-            <div class="row" style="gap:10px;flex-wrap:wrap;align-items:flex-end">
-              <div style="flex:1;min-width:240px">
-                <label>Email</label>
-                <input id="recoverEmail" type="email" placeholder="Correo Electrónico" />
-              </div>
-              <div class="actions" style="margin-top:26px">
-                <button class="btn" id="btnRecoverPin">Enviar PIN</button>
-              </div>
-            </div>
-            <div id="msgRecover" class="msg hide"></div>
-
-            <div class="hr"></div>
-
             <div class="actions">
               <button class="btn hide" id="btnToggleSignup">Alta profesional</button>
             </div>
@@ -2649,7 +2652,7 @@ const PROFESSIONAL_ROLES = [
 
   }
   function hideAllViews(){
-    ["viewWelcome","viewReserve","viewMine","viewTime","viewGrid","viewStruct","viewWait","viewReport","viewGroups"]
+    ["viewWelcome","viewReserve","viewMine","viewTime","viewGrid","viewStruct","viewWait","viewReport","viewGroups","viewPin","viewRecover"]
       .forEach(v => $(v).classList.add("hide"));
   }
   function go(viewId){
@@ -2688,20 +2691,21 @@ const PROFESSIONAL_ROLES = [
   }
 
   function renderPublicSidebar(){
+    const box = $("publicNavBox");
     const list = $("publicNavList");
     const title = $("publicNavTitle");
     const hint = $("publicNavHint");
     if(!list) return;
 
     if(S.pin){
-      if(title) title.textContent = "Entorno interno";
-      if(hint) hint.textContent = "Acceso activo. Utiliza las opciones del panel y las herramientas disponibles según tu perfil.";
-      setPublicNavActive([]);
+      if(box) box.classList.add("hide");
       return;
     }
 
+    if(box) box.classList.remove("hide");
+
     if(S.publicMode === "patients"){
-      if(title) title.textContent = "Área pacientes";
+      if(title) title.textContent = "Pacientes";
       list.innerHTML = `
         <div class="publicNavSection">
           <button class="publicNavBtn" id="btnPublicHome" type="button">Inicio VIOS</button>
@@ -2714,15 +2718,10 @@ const PROFESSIONAL_ROLES = [
           <button class="publicNavBtn" id="btnPatientMenuAreas" type="button">Áreas de Especialización</button>
           <button class="publicNavBtn" id="btnPatientMenuInnovation" type="button">Experiencia e Innovación</button>
         </div>
-        <div class="publicNavSection">
-          <span class="publicNavSectionLabel">Profesionales</span>
-          <button class="publicNavBtn" id="btnPublicProfessionals" type="button">Acceso profesionales</button>
-        </div>
       `;
       if(hint) hint.textContent = "Las secciones de pacientes se seleccionan aquí y se muestran en la ventana principal.";
       if($("btnPublicHome")) $("btnPublicHome").onclick = openEntryLanding;
       if($("btnPublicPatients")) $("btnPublicPatients").onclick = ()=>openPatientsEntry("intro");
-      if($("btnPublicProfessionals")) $("btnPublicProfessionals").onclick = openProfessionalsEntry;
       if($("btnPatientMenuTeam")) $("btnPatientMenuTeam").onclick = ()=>openPatientsEntry("team");
       if($("btnPatientMenuLocation")) $("btnPatientMenuLocation").onclick = ()=>openPatientsEntry("location");
       if($("btnPatientMenuAreas")) $("btnPatientMenuAreas").onclick = ()=>openPatientsEntry("areas");
@@ -2740,19 +2739,12 @@ const PROFESSIONAL_ROLES = [
         <div class="publicNavSection">
           <span class="publicNavSectionLabel">Profesionales</span>
           <button class="publicNavBtn" id="btnPublicProfessionals" type="button">Login profesional</button>
-                    <button class="publicNavBtn" id="btnPublicRecover" type="button">Recuperar PIN</button>
-        </div>
-        <div class="publicNavSection">
-          <span class="publicNavSectionLabel">Pacientes</span>
-          <button class="publicNavBtn" id="btnPublicPatients" type="button">Área pacientes</button>
-        </div>
+                  </div>
       `;
-      if(hint) hint.textContent = "Desde este panel puedes mostrar el login profesional o la recuperación de PIN en la ventana principal.";
+      if(hint) hint.textContent = "Desde este panel puedes acceder al login profesional en la ventana principal.";
       if($("btnPublicHome")) $("btnPublicHome").onclick = openEntryLanding;
       if($("btnPublicProfessionals")) $("btnPublicProfessionals").onclick = ()=>openProfessionalsEntry("login");
-      if($("btnPublicRecover")) $("btnPublicRecover").onclick = ()=>openProfessionalsEntry("recover");
-      if($("btnPublicPatients")) $("btnPublicPatients").onclick = ()=>openPatientsEntry("intro");
-      setPublicNavActive([S.profSubMode === "recover" ? "btnPublicRecover" : "btnPublicProfessionals"]);
+      setPublicNavActive(["btnPublicProfessionals"]);
       return;
     }
 
@@ -2764,20 +2756,17 @@ const PROFESSIONAL_ROLES = [
       <div class="publicNavSection">
         <span class="publicNavSectionLabel">Profesionales</span>
         <button class="publicNavBtn" id="btnPublicProfessionals" type="button">Acceso profesionales</button>
-                <button class="publicNavBtn" id="btnPublicRecover" type="button">Recuperar PIN</button>
-      </div>
+              </div>
       <div class="publicNavSection">
         <span class="publicNavSectionLabel">Pacientes</span>
         <button class="publicNavBtn" id="btnPublicPatients" type="button">Área pacientes</button>
       </div>
     `;
-    if(hint) hint.textContent = "Accede desde este panel y utiliza la ventana principal como espacio de contenido.";
+    if(hint) hint.textContent = "Selecciona el área profesional o de pacientes y la ventana principal mostrará el contenido correspondiente.";
     if($("btnPublicHome")) $("btnPublicHome").onclick = openEntryLanding;
     if($("btnPublicProfessionals")) $("btnPublicProfessionals").onclick = ()=>openProfessionalsEntry("login");
-    if($("btnPublicSignup")) $("btnPublicSignup").onclick = ()=>openProfessionalsEntry("signup");
-    if($("btnPublicRecover")) $("btnPublicRecover").onclick = ()=>openProfessionalsEntry("recover");
     if($("btnPublicPatients")) $("btnPublicPatients").onclick = ()=>openPatientsEntry("intro");
-    setPublicNavActive("btnPublicHome");
+    setPublicNavActive(["btnPublicHome"]);
   }
 
   function setEntryMode(mode, submode){
@@ -2804,8 +2793,7 @@ const PROFESSIONAL_ROLES = [
       if($("btnToggleSignup")) $("btnToggleSignup").classList.toggle("hide", !canAdminSignup);
       if(!canAdminSignup && S.profSubMode === "signup") S.profSubMode = "login";
       if($("signupBox")) $("signupBox").classList.toggle("hide", S.profSubMode !== "signup");
-      if(S.profSubMode === "recover" && $("recoverEmail")) $("recoverEmail").focus();
-      if(S.profSubMode === "login" && $("pinInput")) $("pinInput").focus();
+      if($("pinInput")) $("pinInput").focus();
       if(S.profSubMode === "signup") fillRoles();
     }
 
@@ -2817,7 +2805,7 @@ const PROFESSIONAL_ROLES = [
   }
   function openProfessionalsEntry(submode){
     go("viewWelcome");
-    setEntryMode("professionals", submode || "login");
+    setEntryMode("professionals", "login");
   }
   function openPatientsEntry(section){
     S.patientSection = section || "intro";
@@ -2895,6 +2883,7 @@ const PROFESSIONAL_ROLES = [
     $("btnGoTime").classList.toggle("hide", !S.pin || master);
 
         $("btnGoPin").classList.toggle("hide", !S.pin || master);
+        $("btnGoRecoverAccess").classList.toggle("hide", !S.pin);
 $("btnGoGrid").classList.toggle("hide", !S.pin);
 
     $("btnGoStruct").classList.toggle("hide", !S.pin || !master);
@@ -6989,6 +6978,7 @@ function openStructReportBlockModal(info){
     if($("btnGoMine")) $("btnGoMine").onclick    = ()=>go("viewMine");
     if($("btnGoTime")) $("btnGoTime").onclick    = ()=>{ go("viewTime"); initTimeView(); };
     if($("btnGoPin")) $("btnGoPin").onclick     = ()=>go("viewPin");
+    if($("btnGoRecoverAccess")) $("btnGoRecoverAccess").onclick = ()=>go("viewRecover");
     if($("btnGoGrid")) $("btnGoGrid").onclick    = ()=>{ go("viewGrid"); loadGrid(); };
     if($("btnGoStruct")) $("btnGoStruct").onclick  = ()=>{
       go("viewStruct");
